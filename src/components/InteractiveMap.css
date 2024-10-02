@@ -1,0 +1,12 @@
+path {
+    cursor: pointer;
+    transition: fill 0.3s;
+  }
+  
+  path:hover {
+    fill: #a3002b;
+  }
+
+  svg {
+    overflow: visible; /* Atau hidden tergantung kebutuhan */
+  }

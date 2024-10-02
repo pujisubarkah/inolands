@@ -1,0 +1,56 @@
+/* src/components/Navbar.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #a3002b;
+}
+
+span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.menu {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+}
+
+.menu li {
+    text-decoration: none;
+    color: white;
+    display: inline;
+    margin-right: 1rem;
+}
+
+.auth-buttons .masuk {
+    border: 1px solid #a3002b;
+    background-color: #a3002b;
+    color: white;
+    border: 2px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
