@@ -6,7 +6,7 @@ import Beranda from './pages/Beranda';
 import LayananInovasi from './pages/Layananinovasi'; // Tambahkan ini jika belum ada
 import CariInovasi from './pages/Cariinovasi';
 import Referensi from './pages/Referensi';
-import Login from './pages/Login';
+
 
 
 
@@ -21,7 +21,6 @@ const App = () => {
           <Route path="/layanan" element={<LayananInovasi />} />
           <Route path="/cari" element={<CariInovasi />} />
           <Route path="/referensi" element={<Referensi />} />
-          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
       <Footer />
