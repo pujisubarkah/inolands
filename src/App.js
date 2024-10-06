@@ -6,8 +6,8 @@ import Beranda from './pages/Beranda';
 import LayananInovasi from './pages/Layananinovasi'; // Tambahkan ini jika belum ada
 import CariInovasi from './pages/Cariinovasi';
 import Referensi from './pages/Referensi';
-
-
+import Berita from './components/Berita';
+import NewsDetail from './components/NewsDetail'; // Misalnya untuk menampilkan detail berita
 
 
 
@@ -21,6 +21,8 @@ const App = () => {
           <Route path="/layanan" element={<LayananInovasi />} />
           <Route path="/cari" element={<CariInovasi />} />
           <Route path="/referensi" element={<Referensi />} />
+          <Route path="/berita" element={<Berita />} /> {/* Tambahkan rute untuk Berita */}
+          <Route path="/news/:id" element={<NewsDetail />} /> {/* Rute ke halaman detail berita */}
         </Routes>
       </main>
       <Footer />

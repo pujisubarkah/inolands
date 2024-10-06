@@ -1,0 +1,57 @@
+
+.carousel {
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  align-items: center;
+  overflow: hidden;
+}
+
+
+.carousel-images {
+  width: 100%; /* Mengatur gambar agar mengambil 25% dari lebar container */
+  height: auto; /* Menjaga proporsi tinggi gambar */
+  flex-shrink: 0;
+  margin-right: 50px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+
+.carousel-image {
+  width: 15%; /* Mengatur gambar agar mengambil 25% dari lebar container */
+  height: auto; /* Menjaga proporsi tinggi gambar */
+  flex-shrink: 0;
+  transition: transform 0.5s ease-in-out;
+  margin-right: 40px;
+  align-items: center;
+}
+
+
+.carousel-button {
+  background-color: rgba(0, 0, 0, 0.3); /* Warna hitam dengan transparansi */
+  border: none;
+  color: white;
+  padding: 15px; /* Ukuran padding untuk membuat tombol lebih besar */
+  border-radius: 100%; /* Membuat tombol menjadi lingkaran */
+  cursor: pointer;
+  z-index: 1;
+  transition: background-color 0.3s ease; /* Animasi untuk hover */
+}
+
+.carousel-button:hover {
+  background-color: rgba(0, 0, 0, 0.5); /* Mengubah warna saat di-hover */
+}
+
+.carousel-button-prev {
+  position: absolute;
+  right: 500px;
+  transform: translateY(-50%);
+}
+
+.carousel-button-next {
+  position: absolute;
+  left: 500px;
+  transform: translateY(-50%);
+}

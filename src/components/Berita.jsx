@@ -1,61 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './Berita.css'; // Pastikan untuk membuat file CSS terpisah
+import NewsGrid from './NewsGrid';
+import Pagination from './Pagination';
+import { supabase } from '../supabaseClient'; // Import supabase client
 
 const Berita = () => {
-  const [news, setNews] = useState([]);
+  const [newsItems, setNewsItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8; // Tentukan jumlah item per halaman
 
+  // Fetch berita from Supabase
+  const fetchBerita = async () => {
+    const { data, error } = await supabase
+      .from('beritas')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching news:', error);
+    } else {
+      // Format data yang difetch agar sesuai dengan komponen `NewsGrid`
+      const formattedData = data.map((item) => ({
+        id: item.id,
+        title: item.title,
+        image: item.image_url, // Sesuaikan dengan atribut yang ada di API Supabase
+        description: item.deskripsi,
+        date: item.date,
+      }));
+
+      setNewsItems(formattedData);
+    }
+  };
+
+  // Fetch berita ketika komponen dipasang
   useEffect(() => {
-    // Mengambil data dari API Strapi
-    axios.get('http://localhost:1337/api/beritas?populate=*') // Sesuaikan URL API Strapi
-      .then(response => {
-        setNews(response.data.data); // Sesuaikan dengan struktur API Strapi
-      })
-      .catch(error => {
-        console.error('Error fetching news:', error);
-      });
+    fetchBerita();
   }, []);
 
-  return (
-    <div className="news-list">
-      <div className="featured-news">
-        {news.length > 0 && (
-          <div className="news-item large">
-            {/* Mengambil URL gambar dari berita pertama */}
-            <img 
-              src={news[0]?.attributes?.gambar?.formats?.large?.url 
-                ? `http://localhost:1337${news[0].attributes.gambar.formats.large.url}` 
-                : '/path/to/placeholder.jpg'} 
-              alt="News Image" 
-            />
-            <div className="news-content">
-              <p>{news[0]?.attributes?.berita}</p>
-              <a href={`/news/${news[0]?.id}`}>Selengkapnya</a>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="other-news">
-        {news.slice(1).map(item => (
-          <div className="news-item small" key={item.id}>
-            {/* Mengambil URL gambar dari berita lainnya */}
-            <img 
-              src={item?.attributes?.gambar?.formats?.small?.url 
-                ? `http://localhost:1337${item.attributes.gambar.formats.small.url}` 
-                : '/path/to/placeholder.jpg'} 
-              alt="News Image" 
-            />
-            <div className="news-content">
-              <p>{item?.attributes?.berita}</p>
-              <a href={`/news/${item.id}`}>Selengkapnya</a>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+ // Menghitung item yang ditampilkan pada halaman saat ini
+ const indexOfLastItem = currentPage * itemsPerPage;
+ const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+ const currentItems = newsItems.slice(indexOfFirstItem, indexOfLastItem);
+
+ // Fungsi untuk mengganti halaman
+ const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+ return (
+  <div className="app">
+    <NewsGrid items={currentItems} />
+    <Pagination
+      itemsPerPage={itemsPerPage}
+      totalItems={newsItems.length}
+      paginate={paginate}
+      currentPage={currentPage}
+    />
+  </div>
+);
 };
 
 export default Berita;
-
-
