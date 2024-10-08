@@ -4,25 +4,22 @@ import './Navbar.css';
 import Modal from 'react-modal';
 import Login from './Login';
 import Register from './Register';
-
-
-
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 
 function Navbar() {
-  const navigate = useNavigate(); // Ganti useHistory dengan useNavigate
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation(); // Menggunakan useTranslation
 
   const menu = [
-    { name: "Beranda", path: '/' },
-    { name: "Layanan Inovasi", path: '/layanan' },
-    { name: "Cari Inovasi", path: '/cari' },
-    { name: "Referensi", path: '/referensi' }
+    { name: t('Beranda'), path: '/' },
+    { name: t('Layanan Inovasi'), path: '/layanan' },
+    { name: t('Cari Inovasi'), path: '/cari' },
+    { name: t('Referensi'), path: '/referensi' }
   ];
 
-  // Atur root element modal
   Modal.setAppElement('#root');
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-  
 
   const openLoginModal = () => {
     setLoginModalOpen(true);
@@ -40,7 +37,10 @@ function Navbar() {
     setRegisterModalOpen(false);
   };
 
-
+  // Fungsi untuk mengganti bahasa
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   return (
     <nav className="navbar">
@@ -58,7 +58,17 @@ function Navbar() {
         ))}
       </ul>
       <ul className="auth-buttons">
-        <button onClick={openLoginModal}>Masuk</button> {/* Tombol untuk membuka modal login */}
+        <button onClick={openLoginModal}>Masuk</button>
+      </ul>
+
+      {/* Tombol translate dengan icon bendera */}
+      <ul className="translate-buttons">
+        <button onClick={() => changeLanguage('en')}>
+          <img src="/icons/uk-flag.png" alt="English" width="30" height="20" />
+        </button>
+        <button onClick={() => changeLanguage('id')}>
+          <img src="/icons/indonesia-flag.png" alt="Bahasa Indonesia" width="30" height="20" />
+        </button>
       </ul>
 
       {/* Modal login */}
@@ -72,7 +82,8 @@ function Navbar() {
         <button onClick={closeLoginModal} className="close-button">X</button>
         <Login closeModal={closeLoginModal} openRegisterModal={openRegisterModal} />
       </Modal>
-    {/* Register Modal */}
+
+      {/* Register Modal */}
       <Modal
         isOpen={isRegisterModalOpen}
         onRequestClose={closeRegisterModal}
@@ -84,7 +95,6 @@ function Navbar() {
         <Register closeModal={closeRegisterModal} />
       </Modal>
     </nav>
-
   );
 }
 

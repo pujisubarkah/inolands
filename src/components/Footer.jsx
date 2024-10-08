@@ -49,7 +49,7 @@ const Footer = () => {
 
           <div className="footer-section">
             <h4>Ikuti Kami</h4>
-            <a href="#"><img src="/youtube-icon.png" alt="Youtube Icon" /></a>
+            <a href="https://www.youtube.com"><img src="/youtube-icon.png" alt="YouTube Icon" /></a>
           </div>
         </div>
       </div>

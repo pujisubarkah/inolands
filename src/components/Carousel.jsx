@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Carousel.css'; // Menggunakan file CSS terpisah
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleArrowRight, faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faCircleArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabaseClient'; // Import supabase client
 

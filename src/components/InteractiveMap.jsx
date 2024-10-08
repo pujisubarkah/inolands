@@ -11,22 +11,28 @@ function InteractiveMap() {
   const [selectedProvinsi, setSelectedProvinsi] = useState(null);
   const [hoveredArea, setHoveredArea] = useState({ visible: false, text: '', x: 0, y: 0 });
 
-  // Memuat data provinsi saat komponen pertama kali dimuat
-  useEffect(() => {
-    const fetchProvinces = async () => {
-      const { data, error } = await supabase
-        .from('provinsis') // Gantilah dengan nama tabel provinsi Anda
-        .select('*'); // Mengambil semua kolom dari tabel provinsi
+  const fetchProvinces = async () => {
+    const { data, error } = await supabase
+      .from('provinsis')
+      .select(`id_provinsi, svg_path, provinsi(jumlah_inovasi)`)
+      .eq('id_provinsi', 'id_provinsi::text'); // Use type conversion to match id_provinsi types
+  
+    if (error) {
+      console.error("Error fetching provinsi:", error);
+    } else {
+      console.log(data); // Verifikasi data yang diambil
+      setProvinces(data);
+    }
+  };
 
-      if (error) {
-        console.error("Error fetching provinsi:", error);
-      } else {
-        setProvinces(data); // Simpan data provinsi
-      }
-    };
 
-    fetchProvinces();
-  }, []);
+  // Fungsi untuk mendapatkan ID gradien berdasarkan jumlah inovasi
+  const getFillGradient = (jumlah_inovasi) => {
+    if (jumlah_inovasi < 10) return 'url(#grad-red)'; // Gradien merah
+    if (jumlah_inovasi < 20) return 'url(#grad-orange)'; // Gradien oranye
+    if (jumlah_inovasi < 30) return 'url(#grad-yellow)'; // Gradien kuning
+    return 'url(#grad-green)'; // Gradien hijau
+  };
 
   // Fungsi untuk memuat data kabupaten berdasarkan id_provinsi
   const loadKabupaten = async (id_provinsi) => {
@@ -62,25 +68,43 @@ function InteractiveMap() {
 
   return (
     <div>
-      {/* Render peta berdasarkan apakah provinsi dipilih */}
-      {selectedProvinsi === null ? (
-        <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
-          {provinces.map((province) => (
-            <path
-              key={province.id}
-              d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''} // Pastikan svg_path tidak null
-              fill="white"
-              stroke="black"
-              strokeWidth="0.5"
-              onClick={() => loadKabupaten(province.id_provinsi)} // Muat kabupaten saat provinsi diklik
-              onMouseEnter={(event) => handleMouseEnter(event, province.nama)}
-              onMouseLeave={handleMouseLeave}
-              className="map-path" />
-          ))}
-        </svg>
-      ) : (
+      <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{ stopColor: '#ff0000', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#ffcccc', stopOpacity: 1 }} />
+          </linearGradient>
+          <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{ stopColor: '#ff9900', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#ffe5b5', stopOpacity: 1 }} />
+          </linearGradient>
+          <linearGradient id="grad-yellow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{ stopColor: '#ffff00', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#ffffcc', stopOpacity: 1 }} />
+          </linearGradient>
+          <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{ stopColor: '#00ff00', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: '#ccffcc', stopOpacity: 1 }} />
+          </linearGradient>
+        </defs>
 
-        <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" height="auto" preserveAspectRatio="xMidYMid meet">
+        {provinces.map((province) => (
+        <path
+        key={province.id_provinsi}
+        d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''} // Pastikan d-value valid
+        fill={getFillGradient(province.provinsi.jumlah_inovasi)} // Isi dengan warna gradien berdasarkan jumlah inovasi
+        stroke="black"
+        strokeWidth="0.5"
+        onClick={() => loadKabupaten(province.id_provinsi)} // Memuat kabupaten saat klik
+        onMouseEnter={(event) => handleMouseEnter(event, province.provinsi.nama)} // Event mouse enter
+        onMouseLeave={handleMouseLeave} // Event mouse leave
+        />
+        ))}
+      </svg>
+
+      {/* Peta Kabupaten */}
+      {selectedProvinsi !== null && (
+        <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
           {kabupaten.map((kab) => (
             // Pastikan kab.SVG_path tersedia sebelum diakses
             kab.svg_path ? (
@@ -92,7 +116,8 @@ function InteractiveMap() {
                 strokeWidth="1"
                 onMouseEnter={(event) => handleMouseEnter(event, kab.nama)}
                 onMouseLeave={handleMouseLeave}
-                className="map-path" />
+                className="map-path"
+              />
             ) : null // Jika tidak ada SVG_path, tidak merender apa pun
           ))}
           {/* Render label saat di-hover */}
@@ -112,15 +137,14 @@ function InteractiveMap() {
 
       {/* Tambahan: tombol untuk kembali ke peta provinsi */}
       {selectedProvinsi !== null && (
-      <div  div style={{ position: 'absolute', top: '200px', left: '20px', background: 'white', padding: '5px', borderRadius: '5px' }}>
-      <button onClick={goBackToProvinsi} style={{ background: 'none', border: 'none' }}>
-      <FontAwesomeIcon icon={faArrowLeft} size="2x" color="black" />
-      </button>
-    </div>
+        <div style={{ position: 'absolute', top: '200px', left: '20px', background: 'white', padding: '5px', borderRadius: '5px' }}>
+          <button onClick={goBackToProvinsi} style={{ background: 'none', border: 'none' }}>
+            <FontAwesomeIcon icon={faArrowLeft} size="2x" color="black" />
+          </button>
+        </div>
       )}
     </div>
   );
 }
-
 
 export default InteractiveMap;

@@ -131,3 +131,21 @@ input[type="Email"] {
     outline: none;
     transition: border 0.3s;
 }
+
+.translate-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .translate-buttons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .translate-buttons img {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
