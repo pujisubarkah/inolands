@@ -4,35 +4,69 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabaseClient'; // Import supabase client
 
-
+// Function to get the gradient color based on jumlah_inovasi
+const getFillGradient = (jumlah_inovasi) => {
+  if (jumlah_inovasi === 0) return 'white'; // White color if no innovations
+  if (jumlah_inovasi < 10) return 'url(#grad-green)'; // Green gradient
+  if (jumlah_inovasi < 20) return 'url(#grad-yellow)'; // Yellow gradient
+  if (jumlah_inovasi < 30) return 'url(#grad-orange)'; // Orange gradient
+  return 'url(#grad-red)'; // Red gradient for the highest number of innovations
+};
 function InteractiveMap() {
   const [provinces, setProvinces] = useState([]);
   const [kabupaten, setKabupaten] = useState([]);
   const [selectedProvinsi, setSelectedProvinsi] = useState(null);
   const [hoveredArea, setHoveredArea] = useState({ visible: false, text: '', x: 0, y: 0 });
 
-  const fetchProvinces = async () => {
-    const { data, error } = await supabase
-      .from('provinsis')
-      .select(`id_provinsi, svg_path, provinsi(jumlah_inovasi)`)
-      .eq('id_provinsi', 'id_provinsi::text'); // Use type conversion to match id_provinsi types
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        // Fetch provinces from the provinsis table
+        const { data: provincesData, error: provincesError } = await supabase
+          .from('provinsis')
+          .select('*');
   
-    if (error) {
-      console.error("Error fetching provinsi:", error);
-    } else {
-      console.log(data); // Verifikasi data yang diambil
-      setProvinces(data);
-    }
-  };
-
+        if (provincesError) {
+          throw provincesError;
+        }
+  
+        // Fetch jumlah_inovasi from the provinsi view for the fetched provinces
+        const provinceIds = provincesData.map(prov => prov.id_provinsi).filter(id => id !== null && id !== undefined);
+        const { data: provinsiData, error: provinsiError } = await supabase
+          .from('provinsi')
+          .select('id_provinsi, jumlah_inovasi')
+          .in('id_provinsi', provinceIds); // Use the `in` operator to filter
+  
+        if (provinsiError) {
+          throw provinsiError;
+        }
+  
+        // Combine the two datasets
+        const combinedData = provincesData.map(prov => ({
+          ...prov,
+          jumlah_inovasi: provinsiData.find(p => p.id_provinsi === prov.id_provinsi)?.jumlah_inovasi || 0,
+        }));
+  
+        console.log("Fetched combined provinces:", combinedData);
+        setProvinces(combinedData);
+      } catch (err) {
+        console.error("Error fetching provinces:", err.message);
+        alert(`Failed to fetch provinces: ${err.message}`);
+      }
+    };
+  
+    fetchProvinces();
+  }, []);
+  
 
   // Fungsi untuk mendapatkan ID gradien berdasarkan jumlah inovasi
   const getFillGradient = (jumlah_inovasi) => {
-    if (jumlah_inovasi < 10) return 'url(#grad-red)'; // Gradien merah
-    if (jumlah_inovasi < 20) return 'url(#grad-orange)'; // Gradien oranye
-    if (jumlah_inovasi < 30) return 'url(#grad-yellow)'; // Gradien kuning
-    return 'url(#grad-green)'; // Gradien hijau
+    if (jumlah_inovasi < 10) return 'white'; // Warna putih
+    if (jumlah_inovasi < 20) return 'url(#grad-yellow)'; // Gradien kuning
+    if (jumlah_inovasi < 30) return 'url(#grad-orange)'; // Gradien oranye
+    return 'url(#grad-red)'; // Gradien merah
   };
+  
 
   // Fungsi untuk memuat data kabupaten berdasarkan id_provinsi
   const loadKabupaten = async (id_provinsi) => {
@@ -89,16 +123,16 @@ function InteractiveMap() {
         </defs>
 
         {provinces.map((province) => (
-        <path
-        key={province.id_provinsi}
-        d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''} // Pastikan d-value valid
-        fill={getFillGradient(province.provinsi.jumlah_inovasi)} // Isi dengan warna gradien berdasarkan jumlah inovasi
-        stroke="black"
-        strokeWidth="0.5"
-        onClick={() => loadKabupaten(province.id_provinsi)} // Memuat kabupaten saat klik
-        onMouseEnter={(event) => handleMouseEnter(event, province.provinsi.nama)} // Event mouse enter
-        onMouseLeave={handleMouseLeave} // Event mouse leave
-        />
+          <path
+            key={province.id_provinsi}
+            d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''}
+            fill={getFillGradient(province.jumlah_inovasi || 0)} // Pastikan untuk menghindari null
+            stroke="black"
+            strokeWidth="0.5"
+            onClick={() => loadKabupaten(province.id_provinsi)} // Memuat kabupaten saat klik
+            onMouseEnter={(event) => handleMouseEnter(event, province.nama)} // Menambahkan event mouse enter
+            onMouseLeave={handleMouseLeave} // Menambahkan event mouse leave
+          />
         ))}
       </svg>
 
@@ -106,10 +140,10 @@ function InteractiveMap() {
       {selectedProvinsi !== null && (
         <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
           {kabupaten.map((kab) => (
-            // Pastikan kab.SVG_path tersedia sebelum diakses
+            // Pastikan kab.svg_path tersedia sebelum diakses
             kab.svg_path ? (
               <path
-                key={kab.id}
+                key={kab.id_kabupaten}
                 d={kab.svg_path.replace(/"/g, '')} // Menghapus tanda kutip
                 fill="white"
                 stroke="black"
@@ -118,7 +152,7 @@ function InteractiveMap() {
                 onMouseLeave={handleMouseLeave}
                 className="map-path"
               />
-            ) : null // Jika tidak ada SVG_path, tidak merender apa pun
+            ) : null // Jika tidak ada svg_path, tidak merender apa pun
           ))}
           {/* Render label saat di-hover */}
           {hoveredArea.visible && (
@@ -147,4 +181,4 @@ function InteractiveMap() {
   );
 }
 
-export default InteractiveMap;
+export default InteractiveMap; 
