@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // Add useContext here
 import { NavLink, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import Login from './Login';
 import Register from './Register';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
-import { useUser } from '../context/UserContext'; // Import useUser from UserContext
+import { useUser } from '../context/UserContext'; // Import useUser hook
 
 function Navbar() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation(); // Menggunakan useTranslation
-  const { user, setUser } = useUser(); // Access user and setUser from context
+  const { user, logout } = useUser(); // Use the custom hook to access user and logout function
+
 
   const menu = [
     { name: t('Beranda'), path: '/' },
@@ -43,6 +44,11 @@ function Navbar() {
     i18n.changeLanguage(lng);
   };
 
+  const handleLogout = () => {
+    logout(); // Call the logout function from context
+    navigate('/'); // Redirect to home or login page after logout
+  };
+
   return (
     <nav className="flex justify-between items-center p-5 bg-[#a3002b]">
       <div className="flex items-center">
@@ -68,7 +74,8 @@ function Navbar() {
       {/* Auth buttons */}
       <div>
         {user ? ( // If user is logged in, show the username
-          <span className="text-white text-[1.5rem]">Selamat Datang, {user.username}!</span>
+          <span onClick={handleLogout} className="text-white text-[1.5rem] cursor-pointer">
+            Selamat Datang, {user.username}! (Logout)   </span>
         ) : (
           <button
             onClick={openLoginModal}
