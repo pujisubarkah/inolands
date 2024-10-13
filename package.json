@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@react-oauth/google": "^0.12.1",
     "@supabase/realtime-js": "^2.10.6",
     "@supabase/supabase-js": "^2.45.4",
     "@testing-library/jest-dom": "^5.17.0",
@@ -19,6 +20,7 @@
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
     "i18next": "^23.15.2",
+    "node-polyfill-webpack-plugin": "^4.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -29,11 +31,14 @@
     "react-router-dom": "^6.26.2",
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4",
+    "webpack": "5",
+    "webpack-cli": "4",
+    "webpack-dev-server": "4",
     "ws": "^8.18.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts start --openssl-legacy-provider",
+    "build": "react-scripts build --openssl-legacy-provider",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -58,8 +63,8 @@
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
+    "react-app-rewired": "^2.2.1",
     "source-map-loader": "^5.0.0",
-    "tailwindcss": "^3.4.13",
-    "webpack": "^5.95.0"
+    "tailwindcss": "^3.4.13"
   }
 }

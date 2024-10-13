@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient'; // Make sure you import Supabase client
 import bcrypt from 'bcryptjs'; // Import bcrypt for password comparison
+import { useUser } from '../context/UserContext'; // Import useUser from context
 
 const Login = ({ closeModal, openRegisterModal }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const Login = ({ closeModal, openRegisterModal }) => {
     password: '',
   });
 
+  const { setUser } = useUser(); // Access setUser from the context
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -45,6 +47,10 @@ const Login = ({ closeModal, openRegisterModal }) => {
         alert('Login gagal. Email atau password salah.');
       } else {
         console.log('Login berhasil:', data);
+        
+        // Store the logged-in user in the context
+        setUser(data); // Save the user data in the context
+        
         // Redirect to the dashboard after successful login
         navigate('/Sidebar');
         closeModal(); // Close the modal after successful login
@@ -64,6 +70,11 @@ const Login = ({ closeModal, openRegisterModal }) => {
       if (error) {
         throw error;
       }
+
+      // Assuming Google login returns user data in supabase.auth.user()
+      const googleUser = supabase.auth.user();
+      setUser(googleUser); // Store the Google user in context
+      
       // Redirect to the dashboard after successful login
       navigate('/Sidebar');
       closeModal(); // Close the modal after successful login
