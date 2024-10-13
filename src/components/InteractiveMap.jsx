@@ -1,17 +1,8 @@
 import { useState, useEffect } from "react";
 import './InteractiveMap.css'; // Pastikan untuk membuat file CSS terpisah
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabaseClient'; // Import supabase client
 
-// Function to get the gradient color based on jumlah_inovasi
-const getFillGradient = (jumlah_inovasi) => {
-  if (jumlah_inovasi === 0) return 'white'; // White color if no innovations
-  if (jumlah_inovasi < 10) return 'url(#grad-green)'; // Green gradient
-  if (jumlah_inovasi < 20) return 'url(#grad-yellow)'; // Yellow gradient
-  if (jumlah_inovasi < 30) return 'url(#grad-orange)'; // Orange gradient
-  return 'url(#grad-red)'; // Red gradient for the highest number of innovations
-};
+
 function InteractiveMap() {
   const [provinces, setProvinces] = useState([]);
   const [kabupaten, setKabupaten] = useState([]);
@@ -62,11 +53,10 @@ function InteractiveMap() {
   // Fungsi untuk mendapatkan ID gradien berdasarkan jumlah inovasi
   const getFillGradient = (jumlah_inovasi) => {
     if (jumlah_inovasi < 10) return 'white'; // Warna putih
-    if (jumlah_inovasi < 20) return 'url(#grad-yellow)'; // Gradien kuning
-    if (jumlah_inovasi < 30) return 'url(#grad-orange)'; // Gradien oranye
-    return 'url(#grad-red)'; // Gradien merah
+    if (jumlah_inovasi < 20) return 'url(#grad-orange)'; // Gradien oranye
+    if (jumlah_inovasi < 30) return 'url(#grad-red)'; // Gradien merah
+    return 'url(#grad-green)'; // Gradien hijau
   };
-  
 
   // Fungsi untuk memuat data kabupaten berdasarkan id_provinsi
   const loadKabupaten = async (id_provinsi) => {
@@ -83,11 +73,6 @@ function InteractiveMap() {
     }
   };
 
-  // Fungsi untuk kembali ke peta provinsi
-  const goBackToProvinsi = () => {
-    setSelectedProvinsi(null); // Reset selectedProvinsi untuk kembali ke peta provinsi
-    setKabupaten([]); // Kosongkan data kabupaten
-  };
 
   const handleMouseEnter = (event, text) => {
     const svgRect = event.target.getBoundingClientRect();
@@ -123,14 +108,14 @@ function InteractiveMap() {
         </defs>
 
         {provinces.map((province) => (
-          <path
+          <path d="M10 10 H 90 V 90 H 10 Z" className="cursor-pointer transition-colors duration-300 hover:fill-[#a3002b]"
             key={province.id_provinsi}
             d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''}
             fill={getFillGradient(province.jumlah_inovasi || 0)} // Pastikan untuk menghindari null
             stroke="black"
             strokeWidth="0.5"
             onClick={() => loadKabupaten(province.id_provinsi)} // Memuat kabupaten saat klik
-            onMouseEnter={(event) => handleMouseEnter(event, province.nama)} // Menambahkan event mouse enter
+            onMouseEnter={(event) => handleMouseEnter(event, province.provinsi?.nama || '')} // Menambahkan event mouse enter
             onMouseLeave={handleMouseLeave} // Menambahkan event mouse leave
           />
         ))}
@@ -140,10 +125,10 @@ function InteractiveMap() {
       {selectedProvinsi !== null && (
         <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
           {kabupaten.map((kab) => (
-            // Pastikan kab.svg_path tersedia sebelum diakses
+            // Pastikan kab.SVG_path tersedia sebelum diakses
             kab.svg_path ? (
-              <path
-                key={kab.id_kabupaten}
+              <path 
+                key={kab.id}
                 d={kab.svg_path.replace(/"/g, '')} // Menghapus tanda kutip
                 fill="white"
                 stroke="black"
@@ -152,7 +137,7 @@ function InteractiveMap() {
                 onMouseLeave={handleMouseLeave}
                 className="map-path"
               />
-            ) : null // Jika tidak ada svg_path, tidak merender apa pun
+            ) : null // Jika tidak ada SVG_path, tidak merender apa pun
           ))}
           {/* Render label saat di-hover */}
           {hoveredArea.visible && (
@@ -167,15 +152,6 @@ function InteractiveMap() {
             </text>
           )}
         </svg>
-      )}
-
-      {/* Tambahan: tombol untuk kembali ke peta provinsi */}
-      {selectedProvinsi !== null && (
-        <div style={{ position: 'absolute', top: '200px', left: '20px', background: 'white', padding: '5px', borderRadius: '5px' }}>
-          <button onClick={goBackToProvinsi} style={{ background: 'none', border: 'none' }}>
-            <FontAwesomeIcon icon={faArrowLeft} size="2x" color="black" />
-          </button>
-        </div>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
 import './i18n'; // Import konfigurasi i18n
+import './index.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Beranda from './pages/Beranda';
