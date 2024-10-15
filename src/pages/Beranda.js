@@ -9,7 +9,7 @@ const Beranda = () => {
   const { t } = useTranslation(); // Mengambil fungsi t dari useTranslation
   return (
     <div className="Beranda">
-     
+   
       <Berita />
       <Carousel />
   
