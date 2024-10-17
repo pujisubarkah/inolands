@@ -206,34 +206,34 @@ function InteractiveMap() {
         </div>
       )}
 
-      {/* Legend */}
-      <div className="legend">
-        <h3>Legend</h3>
-        <div className="legend-item">
-    <div className="legend-color" style={{ backgroundColor: '#FFEDA0' }}></div>
-    <span>0</span>
-  </div>
-  <div className="legend-item">
-    <div className="legend-color" style={{ backgroundColor: '#FD8D3C' }}></div>
-    <span>1-50</span>
-  </div>
-  <div className="legend-item">
-    <div className="legend-color" style={{ backgroundColor: '#FC4E2A' }}></div>
-    <span>51-100</span>
-  </div>
-  <div className="legend-item">
-    <div className="legend-color" style={{ backgroundColor: '#E31A1C' }}></div>
-    <span>101-150</span>
-  </div>
-  <div className="legend-item">
-    <div className="legend-color" style={{ backgroundColor: '#BD0026' }}></div>
-    <span>151-200</span>
-  </div>
-  <div className="legend-item">
-    <div className="legend-color" style={{ backgroundColor: '#800026' }}></div>
-    <span>200+</span>
-  </div>
-</div>
+{/* Legend */}
+      <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '40%', justifyContent: 'center' }}>
+        <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
+        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+          <div className="legend-color" style={{ backgroundColor: '#FFEDA0', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+          <span>0</span>
+        </div>
+        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+          <div className="legend-color" style={{ backgroundColor: '#FD8D3C', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+          <span>1-50</span>
+        </div>
+        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+          <div className="legend-color" style={{ backgroundColor: '#FC4E2A', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+          <span>51-100</span>
+        </div>
+        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+          <div className="legend-color" style={{ backgroundColor: '#E31A1C', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+          <span>101-150</span>
+        </div>
+        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+          <div className="legend-color" style={{ backgroundColor: '#BD0026', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+          <span>151-200</span>
+        </div>
+        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+          <div className="legend-color" style={{ backgroundColor: '#800026', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+          <span>200+</span>
+        </div>
+      </div>
       </div>
     );
   }
