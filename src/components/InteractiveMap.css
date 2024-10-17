@@ -4,9 +4,31 @@ path {
   }
   
   path:hover {
-    fill: #a3002b;
+    fill: #ebdfe2;
   }
 
   svg {
     overflow: visible; /* Atau hidden tergantung kebutuhan */
   }
+  .map-kabupaten {
+    border: 1px solid #000;
+  }
+  
+  .legend {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border: 1px solid #000;
+  }
+  

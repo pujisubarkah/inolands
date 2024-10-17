@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import './InteractiveMap.css'; // Pastikan untuk membuat file CSS terpisah
-import { supabase } from '../supabaseClient'; // Import supabase client
+import './InteractiveMap.css';
+import { supabase } from '../supabaseClient';
 
 function InteractiveMap() {
   const [provinces, setProvinces] = useState([]);
   const [kabupaten, setKabupaten] = useState([]);
   const [selectedProvinsi, setSelectedProvinsi] = useState(null);
   const [hoveredArea, setHoveredArea] = useState({ visible: false, text: '', x: 0, y: 0 });
-  const [inovasiKabupaten, setInovasiKabupaten] = useState([]); // Menyimpan inovasi kabupaten
-  const [currentPage, setCurrentPage] = useState(1); // Halaman saat ini
-  const [itemsPerPage] = useState(5); // Jumlah inovasi per halaman
+  const [inovasiKabupaten, setInovasiKabupaten] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -18,19 +18,15 @@ function InteractiveMap() {
           .from('provinsis')
           .select('*');
 
-        if (provincesError) {
-          throw provincesError;
-        }
+        if (provincesError) throw provincesError;
 
-        const provinceIds = provincesData.map(prov => prov.id_provinsi).filter(id => id !== null && id !== undefined);
+        const provinceIds = provincesData.map(prov => prov.id_provinsi).filter(id => id);
         const { data: provinsiData, error: provinsiError } = await supabase
           .from('provinsi')
           .select('id_provinsi, jumlah_inovasi')
           .in('id_provinsi', provinceIds);
 
-        if (provinsiError) {
-          throw provinsiError;
-        }
+        if (provinsiError) throw provinsiError;
 
         const combinedData = provincesData.map(prov => ({
           ...prov,
@@ -47,38 +43,56 @@ function InteractiveMap() {
     fetchProvinces();
   }, []);
 
-  const getFillGradient = (jumlah_inovasi) => {
-    if (jumlah_inovasi > 0 && jumlah_inovasi <= 100 ) return 'url(#grad-red)';
-    if (jumlah_inovasi > 100 && jumlah_inovasi <= 200 ) return 'url(#grad-orange)';
-    if (jumlah_inovasi > 200 ) return 'url(#grad-green)';
-    return 'url(#white)';
+  const getChoroplethColor = (jumlah_inovasi) => {
+    if (jumlah_inovasi > 200) return '#800026'; // dark red
+    if (jumlah_inovasi > 150) return '#BD0026';
+    if (jumlah_inovasi > 100) return '#E31A1C';
+    if (jumlah_inovasi > 50) return '#FC4E2A';
+    if (jumlah_inovasi > 0) return '#FD8D3C';
+    return '#FFEDA0'; // lightest color for no innovation
+  
   };
 
   const loadKabupaten = async (id_provinsi) => {
-    const { data, error } = await supabase
-      .from('kabupatens')
-      .select('*')
-      .eq('id_provinsi', id_provinsi);
+    try {
+      const { data: kabupatenData, error: kabupatenError } = await supabase
+        .from('kabupatens')
+        .select('*')
+        .eq('id_provinsi', id_provinsi);
 
-    if (error) {
-      console.error("Error fetching kabupaten:", error);
-    } else {
-      setKabupaten(data);
+      if (kabupatenError) throw kabupatenError;
+
+      const kabupatenIds = kabupatenData.map(kab => kab.id);
+      const { data: kabkotData, error: kabkotError } = await supabase
+        .from('kabupaten') // Using views table 'kabkot'
+        .select('id_kabkot, jumlah_inovasi')
+        .in('id_kabkot', kabupatenIds);
+
+      if (kabkotError) throw kabkotError;
+
+      const combinedKabupaten = kabupatenData.map(kab => ({
+        ...kab,
+        jumlah_inovasi: kabkotData.find(k => k.id_kabkot === kab.id)?.jumlah_inovasi || 0,
+      }));
+
+      setKabupaten(combinedKabupaten);
       setSelectedProvinsi(id_provinsi);
+    } catch (err) {
+      console.error("Error fetching kabupaten or inovasi:", err.message);
     }
   };
 
   const handleKabupatenHover = async (kabupaten) => {
     const { data: inovasiData, error } = await supabase
-      .from('inovasis')
+      .from('inolands')
       .select('*')
-      .eq('id_kabkot', kabupaten.id);
+      .eq('id_kabkot', kabupaten.id_kabkot);
 
     if (error) {
       console.error("Error fetching inovasi:", error);
     } else {
-      setInovasiKabupaten(inovasiData); // Simpan inovasi kabupaten yang di-hover
-      setCurrentPage(1); // Reset halaman saat inovasi dimuat
+      setInovasiKabupaten(inovasiData);
+      setCurrentPage(1);
     }
   };
 
@@ -93,7 +107,6 @@ function InteractiveMap() {
     setHoveredArea({ ...hoveredArea, visible: false });
   };
 
-  // Pagination Logic
   const totalPages = Math.ceil(inovasiKabupaten.length / itemsPerPage);
   const currentInovasi = inovasiKabupaten.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -103,28 +116,12 @@ function InteractiveMap() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {/* Peta Provinsi */}
       <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{ stopColor: '#ff0000', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#ffcccc', stopOpacity: 1 }} />
-          </linearGradient>
-          <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{ stopColor: '#ff9900', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#ffe5b5', stopOpacity: 1 }} />
-          </linearGradient>
-          <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{ stopColor: '#00ff00', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#ccffcc', stopOpacity: 1 }} />
-          </linearGradient>
-        </defs>
-
         {provinces.map((province) => (
           <path
             key={province.id_provinsi}
             d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''}
-            fill={getFillGradient(province.jumlah_inovasi || 0)}
+            fill={getChoroplethColor(province.jumlah_inovasi || 0)}
             stroke="black"
             strokeWidth="0.5"
             onClick={() => loadKabupaten(province.id_provinsi)}
@@ -134,7 +131,6 @@ function InteractiveMap() {
         ))}
       </svg>
 
-      {/* Peta Kabupaten */}
       {selectedProvinsi !== null && (
         <div style={{ display: 'flex', width: '100%' }}>
           <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
@@ -143,12 +139,12 @@ function InteractiveMap() {
                 <path 
                   key={kab.id}
                   d={kab.svg_path.replace(/"/g, '')}
-                  fill="white"
+                  fill={getChoroplethColor(kab.jumlah_inovasi || 0)}
                   stroke="black"
                   strokeWidth="1"
                   onMouseEnter={(event) => {
                     handleKabupatenHover(kab);
-                    handleMouseEnter(event, kab.nama); // Menambahkan nama kabupaten di hover
+                    handleMouseEnter(event, kab.nama);
                   }}
                   onMouseLeave={handleMouseLeave}
                   className="map-path"
@@ -168,29 +164,62 @@ function InteractiveMap() {
             )}
           </svg>
 
-          {/* Daftar Inovasi */}
           <div style={{ marginLeft: '20px', width: '50%' }}>
             {currentInovasi.length > 0 ? (
               currentInovasi.map((inovasi) => (
                 <div key={inovasi.id}>
-                  <h4>{inovasi.judul}</h4>
-                  <p>{inovasi.deskripsi}</p>
+                  <h4>{inovasi.judul_inovasi}</h4>
+                  <p>{inovasi.urusan}</p>
                 </div>
               ))
             ) : (
-              <p>Tidak ada inovasi yang terdaftar di kabupaten ini.</p>
+              <p>Tidak ada inovasi untuk kabupaten ini.</p>
             )}
-            {/* Pagination Controls */}
-            <div>
-              <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Sebelumnya</button>
-              <span> Halaman {currentPage} dari {totalPages} </span>
-              <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Selanjutnya</button>
-            </div>
+
+            {totalPages > 1 && (
+              <div>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button key={i} onClick={() => handlePageChange(i + 1)}>
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
-    </div>
-  );
-}
+
+      {/* Legend */}
+      <div className="legend">
+        <h3>Legend</h3>
+        <div className="legend-item">
+    <div className="legend-color" style={{ backgroundColor: '#FFEDA0' }}></div>
+    <span>0</span>
+  </div>
+  <div className="legend-item">
+    <div className="legend-color" style={{ backgroundColor: '#FD8D3C' }}></div>
+    <span>1-50</span>
+  </div>
+  <div className="legend-item">
+    <div className="legend-color" style={{ backgroundColor: '#FC4E2A' }}></div>
+    <span>51-100</span>
+  </div>
+  <div className="legend-item">
+    <div className="legend-color" style={{ backgroundColor: '#E31A1C' }}></div>
+    <span>101-150</span>
+  </div>
+  <div className="legend-item">
+    <div className="legend-color" style={{ backgroundColor: '#BD0026' }}></div>
+    <span>151-200</span>
+  </div>
+  <div className="legend-item">
+    <div className="legend-color" style={{ backgroundColor: '#800026' }}></div>
+    <span>200+</span>
+  </div>
+</div>
+      </div>
+    );
+  }
+
 
 export default InteractiveMap;
