@@ -138,7 +138,7 @@ function InteractiveMap() {
             <path
               key={province.id_provinsi}
               d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''}
-              fill={getFillGradient(province.jumlah_inovasi || 0)}
+              fill={getChoroplethColor(province.jumlah_inovasi || 0)}
               stroke="black"
               strokeWidth="0.5"
               onClick={() => loadKabupaten(province.id_provinsi)}
