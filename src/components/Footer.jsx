@@ -26,7 +26,7 @@ const Footer = () => {
     <div className="grid grid-cols-4 gap-8">
       {/* Section 1: Tentang Kami */}
       <div className="footer-section">
-        <h4 className="text-2xl font-roboto mb-4"><b>Tentang Kami</b></h4>
+        <h4 className="text-2xl font-poppins mb-4"><b>Tentang Kami</b></h4>
         <ul className="list-none p-0">
           <li className="mb-2"><a href="https://tuxedovation.inovasi.litbang.kemendagri.go.id/" className="text-gray-800 hover:underline">Kementerian Dalam Negeri</a></li>
           <li className="mb-2"><a href="https://jippnas.menpan.go.id/" className="text-gray-800 hover:underline">Kementerian PANRB</a></li>
@@ -36,7 +36,7 @@ const Footer = () => {
 
       {/* Section 2: Jelajahi */}
       <div className="footer-section">
-        <h4 className="text-2xl font-roboto mb-4"><b>Jelajahi</b></h4>
+        <h4 className="text-2xl font-poppins mb-4"><b>Jelajahi</b></h4>
         <ul className="list-none p-0">
           <li className="mb-2"><a href="/" className="text-gray-800 hover:underline">Beranda</a></li>
           <li className="mb-2"><a href="/layanan" className="text-gray-800 hover:underline">Layanan Inovasi</a></li>
@@ -47,7 +47,7 @@ const Footer = () => {
 
       {/* Section 3: Hubungi Kami */}
       <div className="footer-section">
-        <h4 className="text-2xl font-roboto mb-4"><b>Hubungi Kami</b></h4>
+        <h4 className="text-2xl font-poppins mb-4"><b>Hubungi Kami</b></h4>
         <ul className="list-none p-0">
           <li className="mb-2">📞 (+6221) 3828601 - 89</li>
           <li className="mb-2">✉️ pian@lan.go.id</li>
@@ -66,7 +66,7 @@ const Footer = () => {
   </div>
 <br></br>
   {/* Footer Copyright */}
-  <div className="text-center bg-[#a3002b] text-[#f7f4f4] text-lg border-2 py-0.5 w-full m-0">
+  <div className="text-center bg-[darkred] text-[#f7f4f4] text-lg border-2 py-0.5 w-full m-0 font-poppins">
     <p>&copy; 2024 - Pusat Inovasi Administrasi Negara LANRI. All rights reserved.</p>
   </div>
 </footer>
