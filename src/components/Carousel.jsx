@@ -36,26 +36,31 @@ const Carousel = () => {
   };
 
   return (
-    <div className="carousel">
-      <button onClick={prevSlide} className="carousel-button-prev">
-        <FontAwesomeIcon icon={faCircleArrowLeft} size="2x" color="black" />
-      </button>
-      <div className="carousel-images">
-        {images.length > 0 && [...Array(3)].map((_, i) => {
-          const index = (currentIndex + i) % images.length;
-          return (
-            <img 
-              key={index}
-              src={images[index].link}
-              alt={`Slide ${index}`}
-              className="carousel-image"
-            />
-          );
-        })}
+    <div className="carousel-container">
+      <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0' }}>
+      INFOGRAFIS INOVASI
+      </h1>
+      <div className="carousel">
+        <button onClick={prevSlide} className="carousel-button-prev">
+          <FontAwesomeIcon icon={faCircleArrowLeft} size="2x" color="white" />
+        </button>
+        <div className="carousel-images">
+          {images.length > 0 && [...Array(3)].map((_, i) => {
+            const index = (currentIndex + i) % images.length;
+            return (
+              <img 
+                key={index}
+                src={images[index].link}
+                alt={`Slide ${index}`}
+                className="carousel-image"
+              />
+            );
+          })}
+        </div>
+        <button onClick={nextSlide} className="carousel-button-next">
+          <FontAwesomeIcon icon={faCircleArrowRight} size="2x" color="white" />
+        </button>
       </div>
-      <button onClick={nextSlide} className="carousel-button-next">
-        <FontAwesomeIcon icon={faCircleArrowRight} size="2x" color="black" />
-      </button>
     </div>
   );
 };
