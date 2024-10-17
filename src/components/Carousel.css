@@ -1,16 +1,36 @@
+.corousel-container {
+  display: flex;
+  flex-direction: column; /* Change to column to stack heading above carousel */
+  background-color: darkred; /* Background color remains dark red */
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.corousel-heading {
+  color: white; /* Text color remains white */
+  font-size: 24px; /* Font size remains the same */
+  margin-bottom: 20px; /* Changed margin to bottom for spacing below heading */
+}
 
 .carousel {
   display: flex;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: darkred; /* Background color remains dark red */
   align-items: center;
   overflow: hidden;
+  padding: 20px; /* Padding remains the same */
+  border-radius: 10px; /* Border-radius remains the same */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box-shadow remains the same */
 }
 
 
 .carousel-images {
-  width: 100%; /* Mengatur gambar agar mengambil 25% dari lebar container */
-  height: auto; /* Menjaga proporsi tinggi gambar */
+  width: 100%;
+  height: auto;
   flex-shrink: 0;
   margin-right: 50px;
   align-items: center;
@@ -18,40 +38,43 @@
   display: flex;
 }
 
-
 .carousel-image {
-  width: 15%; /* Mengatur gambar agar mengambil 25% dari lebar container */
-  height: auto; /* Menjaga proporsi tinggi gambar */
+  height: 400px; /* Set a fixed height for all images */
+  width: auto; /* Width will adjust to maintain aspect ratio */
   flex-shrink: 0;
   transition: transform 0.5s ease-in-out;
-  margin-right: 40px;
+  margin-right: 20px; /* Increased margin for more spacing */
   align-items: center;
+  border-radius: 10px; /* Added border-radius for rounded corners */
+  object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
 }
 
-
 .carousel-button {
-  background-color: rgba(0, 0, 0, 0.3); /* Warna hitam dengan transparansi */
+  background-color: white; /* Set button background color to white */
   border: none;
-  color: white;
-  padding: 15px; /* Ukuran padding untuk membuat tombol lebih besar */
-  border-radius: 100%; /* Membuat tombol menjadi lingkaran */
+  color: white; /* Set text color to dark red for contrast */
+  padding: 15px;
+  border-radius: 50%; /* Changed to 50% for a perfect circle */
   cursor: pointer;
   z-index: 1;
-  transition: background-color 0.3s ease; /* Animasi untuk hover */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Added transition for color change */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added shadow for button depth */
 }
 
 .carousel-button:hover {
-  background-color: rgba(0, 0, 0, 0.5); /* Mengubah warna saat di-hover */
+  background-color: #ffcccb; /* Set hover background color to light pink */
+  color: white; /* Change text color to white on hover */
 }
+
 
 .carousel-button-prev {
   position: absolute;
-  right: 500px;
+  left: 20px; /* Adjusted position for better alignment */
   transform: translateY(-50%);
 }
 
 .carousel-button-next {
   position: absolute;
-  left: 500px;
+  right: 20px; /* Adjusted position for better alignment */
   transform: translateY(-50%);
 }
