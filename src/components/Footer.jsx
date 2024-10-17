@@ -13,30 +13,30 @@ const Footer = () => {
     <div className="flex justify-between items-center mb-0">
       <img src="ino.png" alt="INO Logo" className="w-[150px] h-auto" />
       <div className="stakeholders">
-        <h3 className="mb-4">Pemangku Kepentingan INOLAND</h3>
+        <h4 className="text-2xl mb-4">Pemangku Kepentingan INOLAND</h4>
         <div className="flex items-center space-x-5">
-          <img src="/lanri.png" alt="lanri Logo" className="max-h-[80px]" />
-          <img src="/panrb.png" alt="panrb Logo" className="max-h-[80px]" />
-          <img src="/kemendagri.png" alt="kemendagri Logo" className="max-h-[80px]" />
+          <a href="https://lan.go.id/"><img src="/lanri.png" alt="lanri Logo" className="max-h-[80px]" /></a>
+          <a href="https://menpan.go.id/"><img src="/panrb.png" alt="panrb Logo" className="max-h-[80px]" /></a>
+          <a href="https://kemendagri.go.id/"><img src="/kemendagri.png" alt="kemendagri Logo" className="max-h-[80px]" /></a>
         </div>
       </div>
     </div>
-
+<br></br>
     {/* Footer Bottom */}
     <div className="grid grid-cols-4 gap-8">
       {/* Section 1: Tentang Kami */}
       <div className="footer-section">
-        <h4 className="text-2xl font-roboto mb-4">Tentang Kami</h4>
+        <h4 className="text-2xl font-roboto mb-4"><b>Tentang Kami</b></h4>
         <ul className="list-none p-0">
-          <li className="mb-2">Kementerian Dalam Negeri</li>
-          <li className="mb-2">Kementerian Pendayagunaan Aparatur Negara</li>
-          <li className="mb-2">Lembaga Administrasi Negara</li>
+          <li className="mb-2"><a href="https://tuxedovation.inovasi.litbang.kemendagri.go.id/" className="text-gray-800 hover:underline">Kementerian Dalam Negeri</a></li>
+          <li className="mb-2"><a href="https://jippnas.menpan.go.id/" className="text-gray-800 hover:underline">Kementerian PANRB</a></li>
+          <li className="mb-2"><a href="https://inoland.lan.go.id" className="text-gray-800 hover:underline">Lembaga Administrasi Negara</a></li>
         </ul>
       </div>
 
       {/* Section 2: Jelajahi */}
       <div className="footer-section">
-        <h4 className="text-2xl font-roboto mb-4">Jelajahi</h4>
+        <h4 className="text-2xl font-roboto mb-4"><b>Jelajahi</b></h4>
         <ul className="list-none p-0">
           <li className="mb-2"><a href="/" className="text-gray-800 hover:underline">Beranda</a></li>
           <li className="mb-2"><a href="/layanan" className="text-gray-800 hover:underline">Layanan Inovasi</a></li>
@@ -47,27 +47,27 @@ const Footer = () => {
 
       {/* Section 3: Hubungi Kami */}
       <div className="footer-section">
-        <h4 className="text-2xl font-roboto mb-4">Hubungi Kami</h4>
+        <h4 className="text-2xl font-roboto mb-4"><b>Hubungi Kami</b></h4>
         <ul className="list-none p-0">
           <li className="mb-2">📞 (+6221) 3828601 - 89</li>
-          <li className="mb-2">✉️ pian.lan.go.id</li>
+          <li className="mb-2">✉️ pian@lan.go.id</li>
           <li className="mb-2">📍Jl. Veteran No 10 Jakarta Pusat - 10110</li>
         </ul>
       </div>
 
       {/* Section 4: Ikuti Kami */}
       <div className="footer-section">
-        <h4 className="text-2xl font-roboto mb-4">Ikuti Kami</h4>
+        <h4 className="text-2xl font-roboto mb-4"><b>Ikuti Kami</b></h4>
         <a href="https://www.youtube.com">
           <img src="/youtube-icon.png" alt="YouTube Icon" className="max-h-[40px]" />
         </a>
       </div>
     </div>
   </div>
-
+<br></br>
   {/* Footer Copyright */}
   <div className="text-center bg-[#a3002b] text-[#f7f4f4] text-lg border-2 py-0.5 w-full m-0">
-    <p>&copy; 2024 Pusat Inovasi Administrasi Negara. All rights reserved.</p>
+    <p>&copy; 2024 - Pusat Inovasi Administrasi Negara LANRI. All rights reserved.</p>
   </div>
 </footer>
 

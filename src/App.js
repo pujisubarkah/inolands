@@ -27,11 +27,6 @@ const App = () => {
     <UserProvider> {/* Wrap your components with UserProvider */}
       <Router>
         <Navbar />
-        <div>
-          {/* Tambahkan tombol untuk mengganti bahasa */}
-          <button onClick={() => changeLanguage('en')}>English</button>
-          <button onClick={() => changeLanguage('id')}>Bahasa Indonesia</button>
-        </div>
         <main>
           <Routes>
             <Route path="/" element={<Beranda />} />

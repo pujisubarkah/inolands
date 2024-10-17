@@ -48,10 +48,10 @@ function InteractiveMap() {
   }, []);
 
   const getFillGradient = (jumlah_inovasi) => {
-    if (jumlah_inovasi < 10) return 'white';
-    if (jumlah_inovasi < 20) return 'url(#grad-orange)';
-    if (jumlah_inovasi < 30) return 'url(#grad-red)';
-    return 'url(#grad-green)';
+    if (jumlah_inovasi > 0 && jumlah_inovasi <= 100 ) return 'url(#grad-red)';
+    if (jumlah_inovasi > 100 && jumlah_inovasi <= 200 ) return 'url(#grad-orange)';
+    if (jumlah_inovasi > 200 ) return 'url(#grad-green)';
+    return 'url(#white)';
   };
 
   const loadKabupaten = async (id_provinsi) => {
