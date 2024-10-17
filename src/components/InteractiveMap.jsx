@@ -50,6 +50,7 @@ function InteractiveMap() {
     if (jumlah_inovasi > 50) return '#FC4E2A';
     if (jumlah_inovasi > 0) return '#FD8D3C';
     return '#FFEDA0'; // lightest color for no innovation
+  
   };
 
   const loadKabupaten = async (id_provinsi) => {
@@ -63,7 +64,7 @@ function InteractiveMap() {
 
       const kabupatenIds = kabupatenData.map(kab => kab.id);
       const { data: kabkotData, error: kabkotError } = await supabase
-        .from('kabkot') // Using views table 'kabkot'
+        .from('kabupaten') // Using views table 'kabkot'
         .select('id_kabkot, jumlah_inovasi')
         .in('id_kabkot', kabupatenIds);
 
@@ -85,7 +86,7 @@ function InteractiveMap() {
     const { data: inovasiData, error } = await supabase
       .from('inolands')
       .select('*')
-      .eq('id_kabkot', kabupaten.id);
+      .eq('id_kabkot', kabupaten.id_kabkot);
 
     if (error) {
       console.error("Error fetching inovasi:", error);
@@ -96,9 +97,9 @@ function InteractiveMap() {
   };
 
   const handleMouseEnter = (event, text) => {
-    const svgRect = event.target.getBoundingClientRect();
-    const x = event.clientX - svgRect.left;
-    const y = event.clientY - svgRect.top;
+    const x = 750; // Adjust this value based on your box width and desired margin
+    const y = 20; // Adjust this value based on your desired margin from the top
+
     setHoveredArea({ visible: true, text, x, y });
   };
 
@@ -115,21 +116,49 @@ function InteractiveMap() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
-        {provinces.map((province) => (
-          <path
-            key={province.id_provinsi}
-            d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''}
-            fill={getChoroplethColor(province.jumlah_inovasi || 0)}
-            stroke="black"
-            strokeWidth="0.5"
-            onClick={() => loadKabupaten(province.id_provinsi)}
-            onMouseEnter={(event) => handleMouseEnter(event, province.provinsi?.nama || '')}
-            onMouseLeave={handleMouseLeave}
-          />
-        ))}
-      </svg>
+      {/* Peta Provinsi */}
+      <div style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+        <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{ stopColor: '#ff0000', stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: '#ffcccc', stopOpacity: 1 }} />
+            </linearGradient>
+            <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{ stopColor: '#ff9900', stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: '#ffe5b5', stopOpacity: 1 }} />
+            </linearGradient>
+            <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{ stopColor: '#00ff00', stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: '#ccffcc', stopOpacity: 1 }} />
+            </linearGradient>
+          </defs>
 
+          {provinces.map((province) => (
+            <path
+              key={province.id_provinsi}
+              d={province.svg_path ? province.svg_path.replace(/"/g, '') : ''}
+              fill={getFillGradient(province.jumlah_inovasi || 0)}
+              stroke="black"
+              strokeWidth="0.5"
+              onClick={() => loadKabupaten(province.id_provinsi)}
+              onMouseEnter={(event) => handleMouseEnter(event, `${province.nama || ''}  ${province.jumlah_inovasi} inovasi`)}
+              onMouseLeave={handleMouseLeave}
+            />
+          ))}
+
+          {hoveredArea.visible && (
+            <foreignObject x={hoveredArea.x} y={hoveredArea.y} width="200" height="75">
+              <div style={{ background: 'white', border: 'solid #ccc', borderRadius: '5px', padding: '5px' }}>
+                <strong>{hoveredArea.text.split('  ')[0]}</strong>
+                <br />
+                {hoveredArea.text.split('  ')[1]}
+                <br/>
+              </div>
+            </foreignObject>
+          )}
+        </svg>
+      </div>
       {selectedProvinsi !== null && (
         <div style={{ display: 'flex', width: '100%' }}>
           <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
@@ -150,25 +179,14 @@ function InteractiveMap() {
                 />
               ) : null
             ))}
-            {hoveredArea.visible && (
-              <text
-                x={hoveredArea.x}
-                y={hoveredArea.y}
-                fill="black"
-                fontSize="20px"
-                pointerEvents="none"
-              >
-                {hoveredArea.text}
-              </text>
-            )}
           </svg>
 
           <div style={{ marginLeft: '20px', width: '50%' }}>
             {currentInovasi.length > 0 ? (
               currentInovasi.map((inovasi) => (
                 <div key={inovasi.id}>
-                  <h4>{inovasi.judul}</h4>
-                  <p>{inovasi.deskripsi}</p>
+                  <h4>{inovasi.judul_inovasi}</h4>
+                  <p>{inovasi.urusan}</p>
                 </div>
               ))
             ) : (
@@ -188,8 +206,8 @@ function InteractiveMap() {
         </div>
       )}
 
-     {/* Legend */}
-     <div className="legend">
+      {/* Legend */}
+      <div className="legend">
         <h3>Legend</h3>
         <div className="legend-item">
     <div className="legend-color" style={{ backgroundColor: '#FFEDA0' }}></div>
@@ -222,3 +240,4 @@ function InteractiveMap() {
 
 
 export default InteractiveMap;
+
