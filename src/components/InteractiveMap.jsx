@@ -50,7 +50,6 @@ function InteractiveMap() {
     if (jumlah_inovasi > 50) return '#FC4E2A';
     if (jumlah_inovasi > 0) return '#FD8D3C';
     return '#FFEDA0'; // lightest color for no innovation
-  
   };
 
   const loadKabupaten = async (id_provinsi) => {
@@ -64,7 +63,7 @@ function InteractiveMap() {
 
       const kabupatenIds = kabupatenData.map(kab => kab.id);
       const { data: kabkotData, error: kabkotError } = await supabase
-        .from('kabupaten') // Using views table 'kabkot'
+        .from('kabkot') // Using views table 'kabkot'
         .select('id_kabkot, jumlah_inovasi')
         .in('id_kabkot', kabupatenIds);
 
@@ -86,7 +85,7 @@ function InteractiveMap() {
     const { data: inovasiData, error } = await supabase
       .from('inolands')
       .select('*')
-      .eq('id_kabkot', kabupaten.id_kabkot);
+      .eq('id_kabkot', kabupaten.id);
 
     if (error) {
       console.error("Error fetching inovasi:", error);
@@ -168,8 +167,8 @@ function InteractiveMap() {
             {currentInovasi.length > 0 ? (
               currentInovasi.map((inovasi) => (
                 <div key={inovasi.id}>
-                  <h4>{inovasi.judul_inovasi}</h4>
-                  <p>{inovasi.urusan}</p>
+                  <h4>{inovasi.judul}</h4>
+                  <p>{inovasi.deskripsi}</p>
                 </div>
               ))
             ) : (
@@ -189,8 +188,8 @@ function InteractiveMap() {
         </div>
       )}
 
-      {/* Legend */}
-      <div className="legend">
+     {/* Legend */}
+     <div className="legend">
         <h3>Legend</h3>
         <div className="legend-item">
     <div className="legend-color" style={{ backgroundColor: '#FFEDA0' }}></div>
@@ -223,4 +222,3 @@ function InteractiveMap() {
 
 
 export default InteractiveMap;
-
