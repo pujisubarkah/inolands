@@ -62,17 +62,21 @@ function InteractiveMap() {
 
       if (kabupatenError) throw kabupatenError;
 
-      const kabupatenIds = kabupatenData.map(kab => kab.id);
+      console.log('kabupatenData:', kabupatenData);
+
+      const kabupatenIds = kabupatenData.map(kab => kab.id_kabkot);
       const { data: kabkotData, error: kabkotError } = await supabase
-        .from('kabupaten') // Using views table 'kabkot'
+        .from('kabkot') // Using views table 'kabkot'
         .select('id_kabkot, jumlah_inovasi')
         .in('id_kabkot', kabupatenIds);
 
       if (kabkotError) throw kabkotError;
 
+      console.log('kabupatenData:', kabupatenData);
+
       const combinedKabupaten = kabupatenData.map(kab => ({
         ...kab,
-        jumlah_inovasi: kabkotData.find(k => k.id_kabkot === kab.id)?.jumlah_inovasi || 0,
+        jumlah_inovasi: kabkotData.find(k => k.id_kabkot === kab.id_kabkot)?.jumlah_inovasi || 0,
       }));
 
       setKabupaten(combinedKabupaten);
@@ -206,7 +210,7 @@ function InteractiveMap() {
         </div>
       )}
 
-{/* Legend */}
+      {/* Legend */}
       <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '40%', justifyContent: 'center' }}>
         <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
         <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
@@ -234,8 +238,8 @@ function InteractiveMap() {
           <span>200+</span>
         </div>
       </div>
-      </div>
-    );
+    </div>
+  );
   }
 
 
