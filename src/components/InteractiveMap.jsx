@@ -6,6 +6,7 @@ function InteractiveMap() {
   const [provinces, setProvinces] = useState([]);
   const [kabupaten, setKabupaten] = useState([]);
   const [selectedProvinsi, setSelectedProvinsi] = useState(null);
+  const [selectedKabkot, setSelectedKabkot] = useState(null);
   const [hoveredArea, setHoveredArea] = useState({ visible: false, text: '', x: 0, y: 0 });
   const [inovasiKabupaten, setInovasiKabupaten] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -86,16 +87,17 @@ function InteractiveMap() {
     }
   };
 
-  const handleKabupatenHover = async (kabupaten) => {
+  const loadInovasi = async (id_kabkot) => {
     const { data: inovasiData, error } = await supabase
       .from('inolands')
       .select('*')
-      .eq('id_kabkot', kabupaten.id_kabkot);
+      .eq('id_kabkot', id_kabkot);
 
     if (error) {
       console.error("Error fetching inovasi:", error);
     } else {
       setInovasiKabupaten(inovasiData);
+      setSelectedKabkot(id_kabkot);
       setCurrentPage(1);
     }
   };
@@ -164,7 +166,7 @@ function InteractiveMap() {
         </svg>
       </div>
       {selectedProvinsi !== null && (
-        <div style={{ display: 'flex', width: '100%' }}>
+        <div style={{ display: 'flex', width: '100%', marginTop: '20px' }}>
           <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
             {kabupaten.map((kab) => (
               kab.svg_path ? (
@@ -174,43 +176,98 @@ function InteractiveMap() {
                   fill={getChoroplethColor(kab.jumlah_inovasi || 0)}
                   stroke="black"
                   strokeWidth="1"
-                  onMouseEnter={(event) => {
-                    handleKabupatenHover(kab);
-                    handleMouseEnter(event, kab.nama);
-                  }}
-                  onMouseLeave={handleMouseLeave}
-                  className="map-path"
-                />
-              ) : null
-            ))}
-          </svg>
-
-          <div style={{ marginLeft: '20px', width: '50%' }}>
-            {currentInovasi.length > 0 ? (
-              currentInovasi.map((inovasi) => (
-                <div key={inovasi.id}>
-                  <h4>{inovasi.judul_inovasi}</h4>
-                  <p>{inovasi.urusan}</p>
-                </div>
-              ))
-            ) : (
-              <p>Tidak ada inovasi untuk kabupaten ini.</p>
-            )}
-
-            {totalPages > 1 && (
-              <div>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button key={i} onClick={() => handlePageChange(i + 1)}>
-                    {i + 1}
-                  </button>
+                  onClick={() => loadInovasi(kab.id_kabkot)}
+                  />
+                  ) : null
                 ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+                </svg>
 
-      {/* Legend */}
+                <div style={{ marginLeft: '20px', width: '50%' }}>
+                  {selectedProvinsi && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+                      <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '45%', textAlign: 'center' }}>
+                        <strong>{provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama}</strong>
+                        <br />
+                        {provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.jumlah_inovasi} inovasi
+                      </div>
+                      {(kabupaten.length > 0 && (
+                        <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '45%', textAlign: 'center' }}>
+                          <strong>{kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.nama}</strong>
+                          <br />
+                          {inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.jumlah_inovasi : 'NA'} inovasi
+                        </div>
+                      )) || (kabupaten.length === 0 && <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '45%', textAlign: 'center' }}>
+                      <strong>{kabupaten.find(kab => kab.id_kabkot === selectedKabkot)?.nama}</strong>
+                      <br />
+                      NA
+                    </div>)}
+                    </div>
+                  )}
+                {currentInovasi.length > 0 ? (
+                  <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f9f9f9', textAlign: 'left' }}>
+                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Judul Inovasi</th>
+                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Urusan</th>
+                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Inovator/Deskripsi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentInovasi.map((inovasi) => (
+                    <tr key={inovasi.id} style={{ backgroundColor: '#fff', borderBottom: '1px solid #ddd' }}>
+                      <td style={{ padding: '10px' }}>{inovasi.judul_inovasi}</td>
+                      <td style={{ padding: '10px' }}>{inovasi.urusan}</td>
+                      <td style={{ padding: '10px' }}>{inovasi.inovator}</td>
+                    </tr>
+                    ))}
+                  </tbody>
+                  </table>
+                ) : (
+                  <p>{kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.nama || 'Kabupaten ini'} tidak memiliki inovasi.</p>
+                )}
+
+                {totalPages > 1 && (
+                  <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => (
+                    <button
+                    key={i}
+                    onClick={() => handlePageChange(i + 1)}
+                    style={{
+                      padding: '5px 10px',
+                      margin: '0 5px',
+                      border: 'none',
+                      borderRadius: '3px',
+                      backgroundColor: currentPage === i + 1 ? '#007bff' : '#f9f9f9',
+                      color: currentPage === i + 1 ? '#fff' : '#000',
+                      cursor: 'pointer',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }}
+                    >
+                    {i + 1}
+                    </button>
+                  ))}
+                  {totalPages > 5 && (
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      style={{
+                        padding: '5px 10px',
+                        margin: '0 5px',
+                        border: 'none',
+                        borderRadius: '3px',
+                        backgroundColor: '#f9f9f9',
+                        color: '#000',
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                    >
+                      Next
+                    </button>
+                  )}
+                  </div>
+                )}
+                </div>
+              </div>
+              )}
       <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '40%', justifyContent: 'center' }}>
         <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
         <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
