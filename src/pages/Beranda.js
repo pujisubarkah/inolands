@@ -11,6 +11,7 @@ const Beranda = () => {
     <div className="Beranda">
    
       <Berita />
+      <hr style={{ border: '1px solid #ccc', margin: '20px 0' }} />
       <Carousel />
   
     </div>
