@@ -208,6 +208,7 @@ function InteractiveMap() {
                   <thead>
                     <tr style={{ backgroundColor: '#f9f9f9', textAlign: 'left' }}>
                     <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Judul Inovasi</th>
+                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Tahun</th>
                     <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Urusan</th>
                     <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Inovator/Deskripsi</th>
                     </tr>
@@ -216,6 +217,7 @@ function InteractiveMap() {
                     {currentInovasi.map((inovasi) => (
                     <tr key={inovasi.id} style={{ backgroundColor: '#fff', borderBottom: '1px solid #ddd' }}>
                       <td style={{ padding: '10px' }}>{inovasi.judul_inovasi}</td>
+                      <td style={{ padding: '10px' }}>{inovasi.tahun}</td>
                       <td style={{ padding: '10px' }}>{inovasi.urusan}</td>
                       <td style={{ padding: '10px' }}>{inovasi.inovator}</td>
                     </tr>
