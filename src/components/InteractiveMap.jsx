@@ -121,6 +121,9 @@ function InteractiveMap() {
   };
 
   return (
+ <div className="app">
+   
+
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {/* Peta Provinsi */}
       <div style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
@@ -298,6 +301,7 @@ function InteractiveMap() {
         </div>
       </div>
     </div>
+  </div>
   );
   }
 

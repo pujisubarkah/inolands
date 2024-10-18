@@ -1,36 +1,77 @@
-import React, { useState } from 'react';
-import './VideoSection.css'; // Pastikan untuk menambahkan styling
+import React, { useState, useEffect } from 'react';
+import jsPDF from 'jspdf'; 
+import './VideoSection.css'; 
 
 const VideoSection = () => {
   const videos = [
     {
       id: 1,
-      title: "Drump UP",
+      title: "PENGENALAN LAB INOVASI",
       views: 169,
-      src: "https://youtube.com/embed/gJ0jAmLssjc",
-      description: "Tahap membantung kesadaran kolektif untuk berinovasi.",
+      src: "https://youtube.com/embed/n9JVaNiQ8Rg",
+      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
       quiz: {
-        question: "Apakah yang menjadi tujuan dari drump up",
-        options: ["Menginspirasi", "mengembangkan semangat", "memebentuk kemauan berinovasi", "Semua Benar"],
+        question: "Apakah yang menjadi tujuan dari drump up?",
+        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
         correctAnswer: "Semua Benar",
       },
     },
     {
       id: 2,
-      title: "Diagnose",
-      views: 250,
-      src: "https://youtube.com/embed/QExvuVbnMwM",
-      description: "Tingkatkan kemampuan public speaking Anda dengan teknik lanjutan.",
+      title: "DRUMP UP",
+      views: 169,
+      src: "https://youtube.com/embed/gJ0jAmLssjc",
+      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
       quiz: {
-        question: "Apa yang dimaksud dengan diagnose",
-        options: ["identifikasi kesenjangan kondisi saat ini dengan seharusnya", "fasilitasi dalam menemukan ide inovasi", "mengali potensi yang dimiliki untuk mengembangkan", "Semua Benar"],
+        question: "Apakah yang menjadi tujuan dari drump up?",
+        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
         correctAnswer: "Semua Benar",
       },
     },
-    // Tambahkan video dan kuis lainnya di sini...
+    {
+      id: 3,
+      title: "DIAGNOSE",
+      views: 169,
+      src: "https://youtube.com/embed/QExvuVbnMwM",
+      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
+      quiz: {
+        question: "Apakah yang menjadi tujuan dari drump up?",
+        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
+        correctAnswer: "Semua Benar",
+      },
+    },
+    {
+      id: 4,
+      title: "DESAIN",
+      views: 169,
+      src: "https://youtube.com/embed/rei_mhPsCm0",
+      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
+      quiz: {
+        question: "Apakah yang menjadi tujuan dari drump up?",
+        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
+        correctAnswer: "Semua Benar",
+      },
+    },
+   {
+      id: 5,
+      title: "DISPLAY",
+      views: 250,
+      src: "https://youtube.com/embed/KArqARoQI5w",
+      description: "Tingkatkan kemampuan public speaking Anda dengan teknik lanjutan.",
+      quiz: {
+        question: "Apa yang dimaksud dengan diagnose?",
+        options: [
+          "Identifikasi kesenjangan kondisi saat ini dengan seharusnya",
+          "Fasilitasi dalam menemukan ide inovasi",
+          "Menggali potensi yang dimiliki untuk mengembangkan",
+          "Semua Benar"
+        ],
+        correctAnswer: "Semua Benar",
+      },
+    },
   ];
 
-  const Quiz = ({ quiz }) => {
+  const Quiz = ({ quiz, onQuizComplete }) => {
     const [selectedOption, setSelectedOption] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -41,6 +82,9 @@ const VideoSection = () => {
     const handleSubmit = (event) => {
       event.preventDefault();
       setIsSubmitted(true);
+      if (selectedOption === quiz.correctAnswer) {
+        onQuizComplete();
+      }
     };
 
     return (
@@ -60,7 +104,7 @@ const VideoSection = () => {
               </label>
             </div>
           ))}
-          <button type="submit">Kirim</button>
+          <button type="submit" disabled={!selectedOption}>Kirim</button>
         </form>
         {isSubmitted && (
           <div className="quiz-result">
@@ -75,40 +119,124 @@ const VideoSection = () => {
     );
   };
 
+  const [selectedVideo, setSelectedVideo] = useState(videos[0]);
+  const [completedQuizzes, setCompletedQuizzes] = useState(new Array(videos.length).fill(false));
+  const [allQuizzesCompleted, setAllQuizzesCompleted] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  // Load progress from localStorage
+  useEffect(() => {
+    const savedProgress = JSON.parse(localStorage.getItem('quizProgress'));
+    if (savedProgress) {
+      setCompletedQuizzes(savedProgress);
+    }
+  }, []);
+
+  // Save progress to localStorage
+  useEffect(() => {
+    localStorage.setItem('quizProgress', JSON.stringify(completedQuizzes));
+    if (completedQuizzes.every(completed => completed)) {
+      setAllQuizzesCompleted(true);
+    }
+  }, [completedQuizzes]);
+
+  const handleQuizComplete = (videoIndex) => {
+    const newCompletedQuizzes = [...completedQuizzes];
+    newCompletedQuizzes[videoIndex] = true;
+    setCompletedQuizzes(newCompletedQuizzes);
+  };
+
+  const handleDownloadCertificate = (username) => {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'px',
+      format: [600, 400], // Adjust the certificate size
+    });
+
+    const img = new Image();
+    img.src = '/certificate_template.jpg';
+
+    img.onload = () => {
+      doc.addImage(img, 'JPEG', 0, 0, 600, 400); // Add the image as a background
+  
+    // Add text over the image
+    doc.setFontSize(24);
+    doc.setTextColor('#000');
+    doc.text(`Sertifikat Kelulusan`, 400, 100, { align: 'center' });
+    doc.setFontSize(18);
+    doc.text(`Diberikan Kepada`, 400, 140, { align: 'center' });
+    doc.text(`${userName}`, 400, 180, { align: 'center' });
+    doc.text(`Telah Menyelesaikan Pembelajaran Laboratorium Inovasi 20JP`, 400, 200, { align: 'center' });
+    doc.text('Tanggal: ' + new Date().toLocaleDateString(), 400, 260, { align: 'center' });
+    doc.save(`Sertifikat-Kelulusan.pdf`);
+  };
+};
+
   return (
-    <section className="video-section">
-     <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0' }}>
-      LABORATORIUM INOVASI
-    </h1>
-    <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1,5rem', textAlign: 'justify', margin: '20px 0' }}> Model Laboratorium Inovasi  memiliki 5 tahapan atau yang dikenal dengan istilah 5D. 
-      Tahap pertama adalah Drum Up yang digunakan untuk membangkitkan semangat untuk ber-inovasi. 
-      Tahap kedua adalah Diagnose sebagai kegiatan mengidentifikasi potensi dan kemudian memunculkan ide inovasi. 
-      Tahap selanjutnya adalah Design yang akan mengupas tentang bagaimana mendesain sebuah inovasi sampai dengan rencana aksi yang akan dilakukan. 
-      Masuk tahap keempat ada Delivery yang diisi dengan pemantauan rencana aksi inovasi yang dilakukan. Tahap kelima adalah Display untuk memamerkan 
-      hasil inovasi yang dilakukan oleh pemerintah daerah, biasanya dikemas dalam sebuah acara bertajuk Gelar Karya Inovasi.</h2>
-      <div className="video-wrapper">
-        {videos.map(video => (
-          <div className="video-item" key={video.id}>
-            <h2>{video.title}</h2>
-          <p>{video.subtitle}</p>
-            <iframe
-              width="500"
-              height="300"
-              src={video.src}
-              title={video.title}
+    <div className="container flex flex-col md:flex-row">
+      <aside className="sidebar p-4 w-full md:w-1/3 bg-gray-100">
+        <ul>
+          {videos.map((video, index) => (
+            <li 
+              key={video.id} 
+              onClick={() => setSelectedVideo(video)}
+              className={`cursor-pointer mb-2 flex justify-between items-center ${completedQuizzes[index] ? 'text-green-600' : 'text-black'}`}
+            >
+              <span className="font-semibold">{video.title}</span>
+              {/* Tampilkan bintang emas jika video selesai */}
+              {completedQuizzes[index] && (
+                <span role="img" aria-label="completed">⭐</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </aside>
+      
+      <section className="video-section p-4 w-full md:w-2/3">
+        <h1 className="text-3xl font-bold text-center mb-6">LABORATORIUM INOVASI</h1>
+        <div className="video-wrapper mb-4">
+          <div className="video-item">
+             <iframe
+              width="100%"
+              height="500"
+              src={selectedVideo.src}
+              title={selectedVideo.title}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
+              className="mb-4"
             ></iframe>
-            <div className="video-info">
-              <p className="video-views">{video.views} views</p>
-              <p className="video-description">{video.description}</p>
+            <div className="video-info mb-4">
+              <p className="video-views text-gray-600">{selectedVideo.views} views</p>
+              <p className="video-description">{selectedVideo.description}</p>
             </div>
-            <Quiz quiz={video.quiz} />
+            <Quiz 
+              quiz={selectedVideo.quiz} 
+              onQuizComplete={() => handleQuizComplete(selectedVideo.id - 1)} 
+            />
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+
+        {allQuizzesCompleted && (
+          <div className="certificate-section">
+            <input 
+              type="text" 
+              placeholder="Masukkan Nama" 
+              value={userName} 
+              onChange={(e) => setUserName(e.target.value)}
+              className="border p-2 mb-4 w-full"
+            />
+            <button 
+              onClick={handleDownloadCertificate} 
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
+              disabled={!userName}
+            >
+              Unduh Sertifikat
+            </button>
+          </div>
+        )}
+      </section>
+    </div>
   );
 };
 
