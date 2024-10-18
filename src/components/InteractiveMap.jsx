@@ -150,7 +150,7 @@ function InteractiveMap() {
               onClick={() => loadKabupaten(province.id_provinsi)}
               onMouseEnter={(event) => handleMouseEnter(event, `${province.nama || ''}  ${province.jumlah_inovasi} inovasi`)}
               onMouseLeave={handleMouseLeave}
-            />
+            ><title>{province.nama}</title></path>
           ))}
 
           {hoveredArea.visible && (
@@ -177,7 +177,7 @@ function InteractiveMap() {
                   stroke="black"
                   strokeWidth="1"
                   onClick={() => loadInovasi(kab.id_kabkot)}
-                  />
+                  ><title>{kab.nama}</title></path>
                   ) : null
                 ))}
                 </svg>
