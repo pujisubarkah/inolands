@@ -71,7 +71,7 @@ function Navbar() {
       <div className="flex items-center gap-4">
         {user ? (
           <span onClick={handleLogout} className="text-white text-lg cursor-pointer">
-            Selamat Datang, {user.username}! (Logout)
+            Selamat Datang, {user.email || user.username}! (Logout)
           </span>
         ) : (
           <button
@@ -127,3 +127,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

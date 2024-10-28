@@ -63,26 +63,26 @@ const Login = ({ closeModal, openRegisterModal }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      const { error } = await supabase.auth.signIn({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
       });
-
+  
       if (error) {
         throw error;
       }
-
-      // Assuming Google login returns user data in supabase.auth.user()
-      const googleUser = supabase.auth.user();
-      setUser(googleUser); // Store the Google user in context
+  
+      // Jika login berhasil, data user akan tersedia di `data.user`
+      setUser(data.user); // Simpan data user Google di context
       
-      // Redirect to the dashboard after successful login
+      // Redirect ke halaman dashboard setelah login
       navigate('/Sidebar');
-      closeModal(); // Close the modal after successful login
+      closeModal(); // Tutup modal setelah login berhasil
     } catch (error) {
       console.error('Error during Google login:', error.message);
       alert('Terjadi kesalahan saat login dengan Google.');
     }
   };
+  
 
   const handleContactAdmin = () => {
     const { email } = formData;
