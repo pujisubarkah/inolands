@@ -63,26 +63,31 @@ const Login = ({ closeModal, openRegisterModal }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-      });
-  
-      if (error) {
-        throw error;
-      }
-  
-      // Jika login berhasil, data user akan tersedia di `data.user`
-      setUser(data.user); // Simpan data user Google di context
-      
-      // Redirect ke halaman dashboard setelah login
-      navigate('/Sidebar');
-      closeModal(); // Tutup modal setelah login berhasil
+        const { user, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+        });
+
+        if (error) {
+            throw error; // Handle the error if login fails
+        }
+
+        // If login is successful, user data will be available in `user`
+        setUser(user); // Store user data in context
+
+        // Redirect to the home page or dashboard after successful login
+        navigate('/Sidebar');
+
+        // Only close the modal after confirming the user is set
+        // Optionally, you can add a timeout here to give time for the UI to update
+        setTimeout(() => {
+            closeModal(); // Close the modal after a brief delay
+        }, 500); // Delay in milliseconds (adjust as needed)
     } catch (error) {
-      console.error('Error during Google login:', error.message);
-      alert('Terjadi kesalahan saat login dengan Google.');
+        console.error('Error during Google login:', error.message);
+        alert('Terjadi kesalahan saat login dengan Google.');
     }
-  };
-  
+};
+
 
   const handleContactAdmin = () => {
     const { email } = formData;

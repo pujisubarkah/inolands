@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Import useTranslation
-import './i18n'; // Import konfigurasi i18n
-import './index.css';
+import './index.css'; // Pastikan TailwindCSS di-import
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Beranda from './pages/Beranda';
@@ -11,20 +9,22 @@ import CariInovasi from './pages/Cariinovasi';
 import Referensi from './pages/Referensi';
 import Berita from './components/Berita';
 import NewsDetail from './components/NewsDetail';
+import Sidebar from './components/Sidebar';
+import ChatbotComponent from './components/ChatbotComponent'; // Import Chatbot
 
 // Import UserProvider
-import { UserProvider } from './context/UserContext'; // Ensure this is the correct path
+import { UserProvider } from './context/UserContext';
 
 const App = () => {
-  const { t, i18n } = useTranslation(); // Gunakan useTranslation untuk mengakses fungsi t dan i18n
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false); // State untuk visibilitas chatbot
 
-  // Fungsi untuk mengubah bahasa
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+  // Fungsi untuk toggle chatbot
+  const toggleChatbot = () => {
+    setIsChatbotOpen(!isChatbotOpen);
   };
 
   return (
-    <UserProvider> {/* Wrap your components with UserProvider */}
+    <UserProvider>
       <Router>
         <Navbar />
         <main>
@@ -35,11 +35,27 @@ const App = () => {
             <Route path="/referensi" element={<Referensi />} />
             <Route path="/berita" element={<Berita />} />
             <Route path="/news/:id" element={<NewsDetail />} />
+            <Route path="/sidebar" element={<Sidebar />} />
           </Routes>
         </main>
         <Footer />
+
+        {/* Avatar yang selalu muncul di pojok bawah kanan */}
+        <div
+          className="fixed bottom-4 right-4 w-12 h-12  bg-transparent rounded-full flex items-center justify-center cursor-pointer z-50"
+          onClick={toggleChatbot} // Men-toggle chatbot saat avatar diklik
+        >
+          <img
+            src="/ino.png"
+            alt="Chatbot Avatar"
+            className="w-12 h-12 rounded-full"
+          />
+        </div>
+
+        {/* Chatbot Component */}
+        {isChatbotOpen && <ChatbotComponent closeChatbot={toggleChatbot} />}
       </Router>
-    </UserProvider> 
+    </UserProvider>
   );
 };
 

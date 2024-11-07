@@ -70,9 +70,12 @@ function Navbar() {
 
       <div className="flex items-center gap-4">
         {user ? (
-          <span onClick={handleLogout} className="text-white text-lg cursor-pointer">
+          <button
+            onClick={handleLogout}
+            className="text-white text-lg cursor-pointer border-none bg-transparent hover:text-gray-300 transition"
+          >
             Selamat Datang, {user.email || user.username}! (Logout)
-          </span>
+          </button>
         ) : (
           <button
             onClick={openLoginModal}
@@ -127,4 +130,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
