@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import Modal from 'react-modal';
+import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import Login from './Login';
-import Register from './Register';
 import { useTranslation } from 'react-i18next';
-import { useUser } from '../context/UserContext';
+import { supabase } from '../supabaseClient'; // Make sure you import Supabase client
 
 function Navbar() {
-  const navigate = useNavigate();
+  const [isModalOpen, setModalOpen] = useState(false); // State for modal
+  const [user, setUser] = useState(null); // State to store user information
   const { t, i18n } = useTranslation();
-  const { user, logout } = useUser();
 
   const menu = [
     { name: t('Beranda'), path: '/' },
@@ -18,34 +16,62 @@ function Navbar() {
     { name: t('Referensi'), path: '/referensi' }
   ];
 
-  Modal.setAppElement('#root');
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-
-  const openLoginModal = () => {
-    setLoginModalOpen(true);
-  };
-
-  const closeLoginModal = () => {
-    setLoginModalOpen(false);
-  };
-
-  const openRegisterModal = () => {
-    setRegisterModalOpen(true);
-  };
-
-  const closeRegisterModal = () => {
-    setRegisterModalOpen(false);
-  };
-
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  const openModal = () => setModalOpen(true);
+
+  const closeModal = () => setModalOpen(false);
+
+  // Function for Logout
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.error('Error during logout:', error.message);
+    } else {
+        setUser(null); // Reset user state to null after logout
+    }
   };
+
+  // Effect to check user status and fetch cart item count
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUser = session?.user || null;
+
+      // Check if currentUser exists before making any queries
+      if (currentUser) {
+        const { error: profileError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', currentUser.id)
+          .single();
+
+        if (profileError) {
+          console.error('Error fetching user profile:', profileError.message);
+        } else {
+          setUser(currentUser);
+        }
+      }
+    }
+
+  getSession(); // Call getSession when the component mounts
+
+  // Listen for auth state changes
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') {
+      setUser(session.user);
+    } else if (event === 'SIGNED_OUT') {
+      setUser(null);
+    }
+  });
+
+  // Cleanup the listener on component unmount
+  return () => {
+    subscription.unsubscribe();
+  };
+}, []);
 
   return (
     <nav className="flex justify-between items-center p-4 bg-[darkred] shadow-md">
@@ -78,7 +104,7 @@ function Navbar() {
           </button>
         ) : (
           <button
-            onClick={openLoginModal}
+            onClick={openModal}
             className="border-2 border-white bg-[darkred] text-white py-2 px-4 rounded-lg cursor-pointer text-lg hover:bg-white hover:text-[darkred] transition"
           >
             Masuk
@@ -94,37 +120,17 @@ function Navbar() {
         </div>
       </div>
 
-      <Modal
-        isOpen={isLoginModalOpen}
-        onRequestClose={closeLoginModal}
-        contentLabel="Login Modal"
-        className="bg-white p-5 max-w-md mx-auto rounded-lg shadow-lg animate-fadeIn"
-        overlayClassName="fixed inset-0 bg-[rgba(0,0,0,0.75)] flex items-center justify-center"
-      >
-        <button
-          onClick={closeLoginModal}
-          className="absolute top-2 right-2 bg-transparent text-lg text-gray-800 hover:text-black transition duration-300 cursor-pointer"
-        >
-          &times;
-        </button>
-        <Login closeModal={closeLoginModal} openRegisterModal={openRegisterModal} />
-      </Modal>
-
-      <Modal
-        isOpen={isRegisterModalOpen}
-        onRequestClose={closeRegisterModal}
-        contentLabel="Register Modal"
-        className="bg-white p-5 max-w-md mx-auto rounded-lg shadow-lg animate-fadeIn"
-        overlayClassName="fixed inset-0 bg-[rgba(0,0,0,0.75)] flex items-center justify-center"
-      >
-        <button
-          onClick={closeRegisterModal}
-          className="absolute top-2 right-2 bg-transparent text-lg text-gray-800 hover:text-black transition duration-300 cursor-pointer"
-        >
-          &times;
-        </button>
-        <Register closeModal={closeRegisterModal} />
-      </Modal>
+      {/* Login Form Overlay */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded shadow-lg w-1/3">
+            <Login isOpen={isModalOpen} onClose={closeModal} onLoginSuccess={(loggedInUser) => {
+              setUser(loggedInUser);
+              closeModal();
+            }} />
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
