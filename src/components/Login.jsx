@@ -1,69 +1,43 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient'; // Make sure you import Supabase client
-import bcrypt from 'bcryptjs'; // Import bcrypt for password comparison
-import { useUser } from '../context/UserContext'; // Import useUser from context
 
-const Login = ({ closeModal, openRegisterModal }) => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+const Login = ({  isOpen, onClose  }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null); // Untuk menangani kesalahan login
+  const navigate = useNavigate(); // Gunakan useNavigate untuk redirecting
+  
+  const signInWithEmail = async () => {
+    // Reset error sebelum mencoba login
+    setError(null);
 
-  const { setUser } = useUser(); // Access setUser from the context
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+    // Attempt login with email and password
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const { email, password } = formData;
-
-    try {
-      // Query Supabase to find the user with the provided email
-      const { data, error } = await supabase
-        .from('user_id') // Replace 'user_id' with the correct table name in Supabase
-        .select('*')
-        .eq('email', email)
-        .single(); // Retrieve a single user record
-
-      if (error || !data) {
-        console.error('Login failed:', error ? error.message : 'User not found');
-        alert('Login gagal. Email atau password salah.');
-        return; // Exit the function if user is not found
+    if (error) {
+      console.error('Error logging in with email and password:', error.message);
+      setError('Invalid email or password');
+    } else {
+      console.log('Logged in successfully:', data);
+      navigate('/Sidebar', { replace: true }); // Redirect to /Penilaian without adding to history
+      onClose(); // Tutup modal setelah login berhasil
       }
+    };
 
-      // Compare the provided password with the hashed password
-      const isMatch = await bcrypt.compare(password, data.password);
-
-      if (!isMatch) {
-        console.error('Incorrect password');
-        alert('Login gagal. Email atau password salah.');
-      } else {
-        console.log('Login berhasil:', data);
-        
-        // Store the logged-in user in the context
-        setUser(data); // Save the user data in the context
-        
-        // Redirect to the dashboard after successful login
-        navigate('/Sidebar');
-        closeModal(); // Close the modal after successful login
-      }
-    } catch (error) {
-      console.error('Error during login:', error.message);
-      alert('Terjadi kesalahan saat login.');
-    }
-  };
+    const handleSubmit = async (e) => {
+      e.preventDefault(); // Prevent form submission
+      await signInWithEmail();  // Panggil fungsi sign-in
+    };
+  
+      if (!isOpen) return null; // Jika modal tidak terbuka, kembalikan null
 
   const handleGoogleLogin = async () => {
     try {
-        const { user, error } = await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
         });
 
@@ -71,16 +45,13 @@ const Login = ({ closeModal, openRegisterModal }) => {
             throw error; // Handle the error if login fails
         }
 
-        // If login is successful, user data will be available in `user`
-        setUser(user); // Store user data in context
-
         // Redirect to the home page or dashboard after successful login
         navigate('/Sidebar');
 
         // Only close the modal after confirming the user is set
         // Optionally, you can add a timeout here to give time for the UI to update
         setTimeout(() => {
-            closeModal(); // Close the modal after a brief delay
+            onClose(); // Close the modal after a brief delay
         }, 500); // Delay in milliseconds (adjust as needed)
     } catch (error) {
         console.error('Error during Google login:', error.message);
@@ -88,21 +59,9 @@ const Login = ({ closeModal, openRegisterModal }) => {
     }
 };
 
-
-  const handleContactAdmin = () => {
-    const { email } = formData;
-
-    if (!email) {
-      alert('Silakan masukkan email Anda terlebih dahulu.');
-      return;
-    }
-
-    alert(`Silakan hubungi admin untuk reset password`);
-  };
-
   return (
     <div className="relative max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg flex flex-col">
-      <button onClick={closeModal} className="absolute top-[0px] right-[20px] text-5xl text-gray-700 hover:text-gray-900">
+      <button onClick={onClose} className="absolute top-[0px] right-[20px] text-5xl text-gray-700 hover:text-gray-900">
         &times;
       </button>
 
@@ -122,8 +81,8 @@ const Login = ({ closeModal, openRegisterModal }) => {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />
@@ -134,12 +93,18 @@ const Login = ({ closeModal, openRegisterModal }) => {
               <input
                 type="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />
             </div>
+
+            {error && (
+                <div className="mb-4 text-red-500">
+                  {error}
+                </div>
+              )}
 
             <button
               type="submit"
@@ -152,10 +117,6 @@ const Login = ({ closeModal, openRegisterModal }) => {
               Belum punya akun?{' '}
               <button
                 type="button"
-                onClick={() => {
-                  closeModal();
-                  openRegisterModal();
-                }}
                 className="text-blue-600 hover:underline"
               >
                 Daftar di sini
@@ -165,7 +126,6 @@ const Login = ({ closeModal, openRegisterModal }) => {
             <p className="mt-2 text-sm text-gray-600">
               <button
                 type="button"
-                onClick={handleContactAdmin}
                 className="text-blue-600 hover:underline"
               >
                 Lupa Password? 
@@ -187,4 +147,3 @@ const Login = ({ closeModal, openRegisterModal }) => {
 };
 
 export default Login;
-
