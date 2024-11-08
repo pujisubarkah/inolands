@@ -2,19 +2,30 @@ import React, { useState } from 'react';
 
 const ChatbotComponent = ({ closeChatbot }) => {
   const [messages, setMessages] = useState([
-    { text: 'Selamat datang di Inolands', sender: 'bot' },
+    { text: 'Pergi ke pasar beli rambutan, pulang-pulang bawa ikan patin. Selamat datang di Inolands, yuk ngobrol lanjutkan pesan! 😊', sender: 'bot' },
   ]);
   const [inputMessage, setInputMessage] = useState('');
+
+  // Fungsi untuk memilih respons chatbot berdasarkan input
+  const getBotResponse = (message) => {
+    if (message.includes('halo')) return 'Halo juga! Ada yang bisa Ino bantu? 😊';
+    if (message.includes('pantun')) return 'Jalan-jalan ke Surabaya, jangan lupa beli oleh-oleh. Salam kenal dari Ino, teman setia ngobrol sehari-hari!';
+    return 'Terima kasih atas pesan Anda!';
+  };
 
   // Fungsi untuk mengirim pesan
   const handleSendMessage = () => {
     if (inputMessage.trim() === '') return;
 
+    // Tambah pesan pengguna
     setMessages([...messages, { text: inputMessage, sender: 'user' }]);
+
+    // Buat respons dari chatbot
+    const botResponse = getBotResponse(inputMessage.toLowerCase());
 
     setMessages((prevMessages) => [
       ...prevMessages,
-      { text: 'Terima kasih atas pesan Anda!', sender: 'bot' },
+      { text: botResponse, sender: 'bot' },
     ]);
 
     setInputMessage('');
