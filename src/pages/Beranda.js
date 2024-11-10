@@ -5,7 +5,6 @@ import Berita from '../components/Berita';
 import Carousel from '../components/Carousel';
 import { useNavigate } from 'react-router-dom';
 
-
 const Beranda = () => {
   const navigate = useNavigate();
 
