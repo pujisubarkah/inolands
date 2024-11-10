@@ -17,8 +17,8 @@ const NewsGrid = ({ items }) => {
         <div key={item.id} className="news-item" onClick={() => handleItemClick(item.id)}>
           <img src={item.image} alt={item.title} className="news-image" />
           <div className="news-content">
-            <h3>{item.title}</h3>
-            <p>{item.date}</p>
+            <h3><b>{item.title}</b></h3>
+            <p style={{ color: 'darkred' }}>{item.date}</p>
           </div>
         </div>
       ))}
