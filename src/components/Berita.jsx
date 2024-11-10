@@ -12,7 +12,8 @@ const Berita = () => {
   const fetchBerita = async () => {
     const { data, error } = await supabase
       .from('beritas')
-      .select('*');
+      .select('*')
+      .order('date', { ascending: false });
 
     if (error) {
       console.error('Error fetching news:', error);
