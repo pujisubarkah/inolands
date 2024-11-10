@@ -1,8 +1,6 @@
 // src/pages/Register.js
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient'; // import the Supabase client
-import bcrypt from 'bcryptjs';
-
 
 const Register = ({ closeModal }) => {
   const [formData, setFormData] = useState({
@@ -32,38 +30,27 @@ const Register = ({ closeModal }) => {
     }
 
     try {
-       // Check if username already exists
-    const { data: existingUser, error: fetchError } = await supabase
-    .from('user_id') // your users table
-    .select('username')
-    .eq('username', formData.username)
-    .single();
+      // Sign up the user using Supabase Auth
+      const { user, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password, // Supabase handles password hashing internally
+      });
 
-  if (fetchError && fetchError.code !== 'PGRST116') { // Check for a specific error
-    throw fetchError; // Handle other errors
-  }
+      if (error) throw error;
 
-  if (existingUser) {
-    setErrorMessage("Username already exists!");
-    return;
-  }
-
-  // Hash the password before storing it
-  const hashedPassword = await bcrypt.hash(formData.password, 10); // Hash the password
-     
-      // Insert the new user data into the 'users' table in Supabase
-      const { data, error } = await supabase
-        .from('user_id') // your table name
+      // Optionally, you can save additional user info (like username, instansi) to your custom table
+      const { data, insertError } = await supabase
+        .from('user_id') // your custom user table
         .insert([
           {
             username: formData.username,
             instansi: formData.instansi,
-            email: formData.email,
-            password: hashedPassword, // Store the hashed password
+            email: formData.email, // store additional user info
+            user_id: user.id, // store the Supabase user ID for reference
           },
         ]);
 
-      if (error) throw error;
+      if (insertError) throw insertError;
 
       console.log("User registered:", data);
       setErrorMessage('');

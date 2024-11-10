@@ -8964,10 +8964,22 @@ react-async-script@^1.2.0:
     hoist-non-react-statics "^3.3.0"
     prop-types "^15.5.0"
 
+react-chatbot-kit@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/react-chatbot-kit/-/react-chatbot-kit-2.2.2.tgz"
+  integrity sha512-8p/i0KkzkhoyG2XsL6Pb6f72k9j7GYNAc5SOa4f9OZwbCD3Q34uEruNPc06qa1wZHKfT6aFna19PA2plFuO2NA==
+  dependencies:
+    react-conditionally-render "^1.0.2"
+
 react-chatbotify@^2.0.0-beta.22:
   version "2.0.0-beta.22"
   resolved "https://registry.npmjs.org/react-chatbotify/-/react-chatbotify-2.0.0-beta.22.tgz"
   integrity sha512-NlD85BUuVug7VmkbNQTLNcYfXEjwDvz16vfshqx1IzvcMIYFqN4MqLJ36C3+RtGeVvPukuXi0tg1uNGbNSeAQw==
+
+react-conditionally-render@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/react-conditionally-render/-/react-conditionally-render-1.0.2.tgz"
+  integrity sha512-CtjIgaLHVDSgHis3gv/PT/8EnD6GPUL8PrhUjh7DP6S5Y3p56dGu7y2nVg6pYv1kv+fGznRhRmX3assr/vRw3A==
 
 react-dev-utils@^12.0.1:
   version "12.0.1"

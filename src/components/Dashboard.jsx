@@ -4,9 +4,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 
-function Sidebar() {
+function Dashboard() {
   return (
-    <div className="sidebar">
+    <div className="dashboard">
       <h2>Menu</h2>
       <ul>
         <li>
@@ -21,4 +21,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default Dashboard;
