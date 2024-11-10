@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient'; // Make sure Supabase client is imported
-import Register from './Register'; // Ensure the Register component is imported
+import { supabase } from '../supabaseClient'; // Pastikan Supabase client diimpor
+import Register from './Register'; // Pastikan Anda mengimpor komponen modal registrasi
 
 const Login = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null); 
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false); 
-  const [resetEmail, setResetEmail] = useState(''); 
-  const [resetError, setResetError] = useState(null); 
-  const [resetSuccess, setResetSuccess] = useState(false); 
-  const navigate = useNavigate(); 
+  const [error, setError] = useState(null); // Untuk menangani kesalahan login
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false); // State untuk modal register
+  const [resetEmail, setResetEmail] = useState(''); // State untuk email reset password
+  const [resetError, setResetError] = useState(null); // Untuk menangani kesalahan reset
+  const [resetSuccess, setResetSuccess] = useState(false); // Untuk menampilkan pesan sukses reset
+  const navigate = useNavigate(); // Gunakan useNavigate untuk redirect
 
+  // Menentukan redirect URL berdasarkan apakah di localhost atau di server eksternal
   const isLocal = window.location.hostname === 'localhost';
-  const redirectUrl = isLocal
-    ? 'http://localhost:3000/'  
-    : 'https://inolands.vercel.app/';
 
   const signInWithEmail = async () => {
     setError(null);
@@ -24,16 +22,41 @@ const Login = ({ isOpen, onClose }) => {
       email,
       password,
     });
-
+  
     if (error) {
       console.error('Error logging in with email and password:', error.message);
       setError('Invalid email or password');
     } else {
       console.log('Logged in successfully:', data);
-      navigate('/dashboard', { replace: true }); 
+  
+      // Fetch user profile or user role
+      const { data: user, error: userError } = await supabase.auth.getUser(); // Get logged-in user
+      if (userError) {
+        console.error('Error getting user:', userError.message);
+        setError('Error getting user');
+        return;
+      }
+      const { data: userProfile, error: profileError } = await supabase
+        .from('users') // Assuming you have a table like user_profiles
+        .select('role_id') // Select the role of the user
+        .eq('id', user.id)
+        .single();
+  
+      if (profileError) {
+        console.error('Error fetching user profile:', profileError.message);
+      } else {
+        // Check the user's role and redirect accordingly
+        if (userProfile.role_id === '1') {
+          navigate('/dashboard', { replace: true }); // Admin redirected to dashboard
+        } else {
+          navigate('/', { replace: true }); // Non-admin redirected to home
+        }
+      }
+  
       onClose();
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,23 +65,32 @@ const Login = ({ isOpen, onClose }) => {
 
   const handleGoogleLogin = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        redirectTo: redirectUrl,
-      });
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            redirectTo: window.location.hostname === 'localhost' 
+                ? 'http://localhost:3000/' 
+                : 'https://inolands.vercel.app/',
+        });
 
-      if (error) throw error;
+        if (error) {
+            throw error;
+        }
 
-      window.location.href = `${redirectUrl}dashboard`;
+        // Redirect manual jika perlu
+        if (window.location.hostname === 'localhost') {
+            window.location.href = 'http://localhost:3000/Dashboard';
+        } else {
+            window.location.href = 'https://inolands.vercel.app/';
+        }
 
     } catch (error) {
-      console.error('Error during Google login:', error.message);
-      alert('Terjadi kesalahan saat login dengan Google.');
+        console.error('Error during Google login:', error.message);
+        alert('Terjadi kesalahan saat login dengan Google.');
     }
-  };
+};
 
   const handleRegisterRedirect = () => {
-    setIsRegisterOpen(true); 
+    setIsRegisterOpen(true); // Menampilkan modal register
   };
 
   const handlePasswordReset = async () => {
@@ -77,15 +109,17 @@ const Login = ({ isOpen, onClose }) => {
 
   return (
     <div className="relative max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg flex flex-col">
-      <button onClick={onClose} className="absolute top-0 right-5 text-5xl text-gray-700 hover:text-gray-900">
+      <button onClick={onClose} className="absolute top-[0px] right-[20px] text-5xl text-gray-700 hover:text-gray-900">
         &times;
       </button>
 
       <div className="flex">
+        {/* Left side - Logo */}
         <div className="bg-transparent p-6 flex flex-col justify-center items-center w-1/3 rounded-l-lg">
           <img src="/ino.png" alt="Logo" className="w-32 h-auto mb-4" />
         </div>
 
+        {/* Right side - Login Form */}
         <div className="p-6 w-2/3">
           <form onSubmit={handleSubmit}>
             <h2 className="text-2xl font-bold mb-4">Login</h2>
@@ -131,7 +165,7 @@ const Login = ({ isOpen, onClose }) => {
               Belum punya akun?{' '}
               <button
                 type="button"
-                onClick={handleRegisterRedirect} 
+                onClick={handleRegisterRedirect} // Buka modal pendaftaran
                 className="text-blue-600 hover:underline"
               >
                 Daftar di sini
@@ -141,7 +175,7 @@ const Login = ({ isOpen, onClose }) => {
             <p className="mt-2 text-sm text-gray-600">
               <button
                 type="button"
-                onClick={() => setResetEmail('')} 
+                onClick={() => setResetEmail('')} // Reset email untuk reset password
                 className="text-blue-600 hover:underline"
               >
                 Lupa Password? 
@@ -158,10 +192,12 @@ const Login = ({ isOpen, onClose }) => {
         </div>
       </div>
 
+      {/* Modal Registrasi */}
       {isRegisterOpen && (
         <Register isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
       )}
 
+      {/* Modal Reset Password */}
       {resetEmail && (
         <div className="modal-container">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">

@@ -9,7 +9,7 @@ import CariInovasi from './pages/Cariinovasi';
 import Referensi from './pages/Referensi';
 import Berita from './components/Berita';
 import NewsDetail from './components/NewsDetail';
-import Dashboard from './components/Dashboard';
+import Dashboard from './pages/Dashboard';
 import LoadingSpinner from './components/LoadingSpinner';
 import Register from './components/Register'; // Import Register component
 import Login from './components/Login'; // Import LoginModal component
@@ -26,6 +26,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null); // User authentication state
   const [isRegister, setIsRegister] = useState(false); // State to toggle between Login and Register
+  const [userRole, setUserRole] = useState(null); // Store the user's role
 
   const toggleChatbot = () => {
     setIsChatbotOpen(!isChatbotOpen);
@@ -44,7 +45,20 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      if (user) {
+        setUser(user);
+
+        // Fetch user role (assuming role is stored in a 'users' table, adjust based on your setup)
+        const { data, error } = await supabase
+          .from('users')
+          .select('role_id')
+          .eq('id', user.id)
+          .single(); // Fetch the role of the user
+
+        if (data) {
+          setUserRole(data.role_id);
+        }
+      }
     };
 
     fetchUser();
@@ -71,9 +85,15 @@ const App = () => {
             <Route path="/referensi" element={<Referensi />} />
             <Route path="/berita" element={<Berita />} />
             <Route path="/news/:id" element={<NewsDetail />} />
+            
+            {/* Conditional Route Redirection based on user role */}
             <Route 
               path="/dashboard" 
-              element={user ? <Dashboard /> : <Navigate to="/" />} 
+              element={userRole === 1 ? <Dashboard /> : <Navigate to="/" replace />} 
+            />
+            <Route 
+              path="/" 
+              element={userRole === 2 ? <Beranda /> : <Navigate to="/" replace />} 
             />
           </Routes>
         </main>
@@ -110,14 +130,16 @@ const App = () => {
           </div>
         )}
 
-        {/* Login or Register Form */}
-        <div className="modal-container">
-          {isRegister ? (
-            <Register closeModal={handleToggleForm} />
-          ) : (
-            <Login closeModal={handleToggleForm} setUser={setUser} />
-          )}
-        </div>
+        {/* Login or Register Form - Only render modal if it's toggled */}
+        {isRegister !== null && (
+          <div className="modal-container">
+            {isRegister ? (
+              <Register closeModal={handleToggleForm} />
+            ) : (
+              <Login closeModal={handleToggleForm} setUser={setUser} />
+            )}
+          </div>
+        )}
       </Router>
     </UserProvider>
   );

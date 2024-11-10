@@ -146,7 +146,7 @@ const VideoSection = () => {
     setCompletedQuizzes(newCompletedQuizzes);
   };
 
-  const handleDownloadCertificate = (username) => {
+  const handleDownloadCertificate = () => {
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'px',
@@ -194,6 +194,9 @@ const VideoSection = () => {
       
       <section className="video-section p-4 w-full md:w-2/3">
         <h1 className="text-3xl font-bold text-center mb-6">LABORATORIUM INOVASI</h1>
+        <p className="text-lg text-gray-700 mb-4">Lembaga Administrasi Negara (LAN) pada tahun 2015 dan tahun 2016 telah menjalin kerjasama dengan beberapa pemerintah daerah untuk melakukan pendampingan, 
+asistensi, dan fasilitasi inovasi melalui program yang disebut dengan Laboratorium Inovasi. </p>
+       
         <div className="video-wrapper mb-4">
           <div className="video-item">
              <iframe
@@ -201,7 +204,7 @@ const VideoSection = () => {
               height="500"
               src={selectedVideo.src}
               title={selectedVideo.title}
-              frameBorder="0"
+              frameBorder={0}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="mb-4"
