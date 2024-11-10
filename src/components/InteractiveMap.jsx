@@ -125,9 +125,15 @@ function InteractiveMap() {
    
 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    
       {/* Peta Provinsi */}
       <div style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-        <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
+      <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
+      SEBARAN INOVASI
+    </h1>
+    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+    
+       <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="grad-red" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" style={{ stopColor: '#ff0000', stopOpacity: 1 }} />
@@ -231,45 +237,65 @@ function InteractiveMap() {
                   <p>{kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.nama || 'Kabupaten ini'} tidak memiliki inovasi.</p>
                 )}
 
-                {totalPages > 1 && (
-                  <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
-                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => (
-                    <button
-                    key={i}
-                    onClick={() => handlePageChange(i + 1)}
-                    style={{
-                      padding: '5px 10px',
-                      margin: '0 5px',
-                      border: 'none',
-                      borderRadius: '3px',
-                      backgroundColor: currentPage === i + 1 ? '#007bff' : '#f9f9f9',
-                      color: currentPage === i + 1 ? '#fff' : '#000',
-                      cursor: 'pointer',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                    }}
-                    >
-                    {i + 1}
-                    </button>
-                  ))}
-                  {totalPages > 5 && (
-                    <button
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      style={{
-                        padding: '5px 10px',
-                        margin: '0 5px',
-                        border: 'none',
-                        borderRadius: '3px',
-                        backgroundColor: '#f9f9f9',
-                        color: '#000',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                      }}
-                    >
-                      Next
-                    </button>
-                  )}
-                  </div>
-                )}
+{totalPages > 1 && (
+                        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                            {currentPage > 1 && (
+                                <button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    style={{
+                                        padding: '5px 10px',
+                                        margin: '0 5px',
+                                        border: 'none',
+                                        borderRadius: '3px',
+                                        backgroundColor: '#f9f9f9',
+                                        color: '#000',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                    }}
+                                >
+                                    Prev
+                                </button>
+                            )}
+                            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                                const pageNumber = currentPage > 3 ? currentPage - 2 + i : i + 1;
+                                return (
+                                    <button
+                                        key={pageNumber}
+                                        onClick={() => handlePageChange(pageNumber)}
+                                        style={{
+                                            padding: '5px 10px',
+                                            margin: '0 5px',
+                                            border: 'none',
+                                            borderRadius: '3px',
+                                            backgroundColor: currentPage === pageNumber ? '#444' : '#f9f9f9',
+                                            color: currentPage === pageNumber ? '#fff' : '#000',
+                                            cursor: 'pointer',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        {pageNumber}
+                                    </button>
+                                );
+                            })}
+                            {currentPage < totalPages && (
+                                <button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    style={{
+                                        padding: '5px 10px',
+                                        margin: '0 5px',
+                                        border: 'none',
+                                        borderRadius: '3px',
+                                        backgroundColor: '#f9f9f9',
+                                        color: '#000',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                    }}
+                                >
+                                    Next
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
               </div>
               )}
