@@ -299,7 +299,7 @@ function InteractiveMap() {
                 </div>
               </div>
               )}
-      <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '40%', justifyContent: 'center' }}>
+      <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '50%', justifyContent: 'center' }}>
         <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
         <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
           <div className="legend-color" style={{ backgroundColor: '#FFEDA0', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
