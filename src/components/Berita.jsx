@@ -46,9 +46,10 @@ const Berita = () => {
 
  return (
   <div className="app">
-    <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0' }}>
+    <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
       BERITA INOVASI
     </h1>
+    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
     <NewsGrid items={currentItems} />
     <Pagination
       itemsPerPage={itemsPerPage}
