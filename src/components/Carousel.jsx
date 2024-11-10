@@ -37,9 +37,11 @@ const Carousel = () => {
 
   return (
     <div className="carousel-container">
-      <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0' }}>
+      <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
       INFOGRAFIS INOVASI
-      </h1>
+    </h1>
+    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+    
       <div className="carousel">
         <button onClick={prevSlide} className="carousel-button-prev">
           <FontAwesomeIcon icon={faCircleArrowLeft} size="2x" color="white" />
