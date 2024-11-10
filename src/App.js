@@ -76,7 +76,10 @@ const App = () => {
   return (
     <UserProvider>
       <Router>
-        <Navbar user={user} />
+        {/* Navbar yang tetap terlihat saat discroll */}
+        <div className="sticky top-0 z-50">
+          <Navbar user={user} />
+        </div>
         <main>
           <Routes>
             <Route path="/" element={<Beranda />} />
