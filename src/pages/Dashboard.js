@@ -1,55 +1,80 @@
 // src/components/dashboard.jsx
+import React, { useState, useEffect } from 'react';
+import Diagnose from '../dashboard/Diagnose';
+import Ide from '../dashboard/Ide';
+import Rencana from '../dashboard/Rencana';
 
+const Dashboard = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedForm, setSelectedForm] = useState(null);
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
-function Dashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-  // Toggle the sidebar visibility
+  // Toggle sidebar visibility
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  // Close sidebar or dropdown when clicking outside
+  const handleClickOutside = (e) => {
+    if (!e.target.closest('.sidebar') && !e.target.closest('.dropdown')) {
+      setIsSidebarOpen(false);
+      setIsDropdownOpen(false);
+    }
+  };
+
+  // Add event listener for clicks outside
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  // Render the selected form component
+  const renderForm = () => {
+    if (selectedForm === 'Diagnose') {
+      return <Diagnose />;
+    }
+    if (selectedForm === 'IdeInovasi') {
+      return <Ide />;
+    }
+    if (selectedForm === 'RencanaAksi') {
+      return <Rencana />;
+    }
+    return null;
+  };
+
   return (
-    <div className="flex min-h-screen">
+    <div className="md:flex flex-col md:flex-row md:min-h-screen w-full">
       {/* Sidebar */}
-      <div
-        className={`bg-gray-800 text-white p-6 w-64 ${isSidebarOpen ? 'block' : 'hidden'} md:block`}
-      >
-        <h2 className="text-2xl font-bold mb-4">Menu</h2>
-        <ul>
-          <li>
-            <Link to="/" className="block py-2 hover:bg-gray-700 px-2 rounded">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/innovation-form" className="block py-2 hover:bg-gray-700 px-2 rounded">
-              Form Inovasi
-            </Link>
-          </li>
-          {/* Add more menu items as needed */}
-        </ul>
+      <div className={`sidebar flex flex-col w-full md:w-64 text-gray-700 bg-white dark:bg-gray-800 bg-opacity-60 backdrop-filter backdrop-blur-lg ${isSidebarOpen ? 'block' : 'hidden'} md:block`}>
+        <div className="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between">
+          <button className="text-lg font-semibold tracking-widest text-gray-900 uppercase dark:text-white">
+            Form Inovasi
+          </button>
+          <button onClick={toggleSidebar} className="rounded-lg md:hidden focus:outline-none">
+            <svg fill="currentColor" viewBox="0 0 20 20" className="w-6 h-6">
+              <path d="M3 5h14a1 1 0 110 2H3a1 1 0 110-2zm0 5h14a1 1 0 110 2H3a1 1 0 110-2zm0 5h14a1 1 0 110 2H3a1 1 0 110-2z" />
+            </svg>
+          </button>
+        </div>
+        <nav className="px-4 pb-4 md:pb-0 md:overflow-y-auto">
+          <button onClick={() => setSelectedForm('IdeInovasi')} className="block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg">
+            Form Ide Inovasi
+          </button>
+          <button onClick={() => setSelectedForm('Diagnose')} className="block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg hover:bg-gray-200">
+            Form Diagnose Inovasi
+          </button>
+          <button onClick={() => setSelectedForm('RencanaAksi')} className="block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg hover:bg-gray-200">
+            Form Rencana Aksi Inovasi
+          </button>
+        </nav>
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 p-6">
-        <button
-          onClick={toggleSidebar}
-          className="md:hidden mb-4 p-2 bg-blue-500 text-white rounded-md"
-        >
-          {isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
-        </button>
-
-        <div>
-          <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-          <p>Welcome to the dashboard!</p>
-        </div>
+      {/* Main Content */}
+      <div className="flex-grow p-4">
+        {renderForm()}
       </div>
     </div>
   );
-}
+};
 
 export default Dashboard;
