@@ -9,9 +9,11 @@ const NewsGrid = ({ items }) => {
     navigate(`/news/${id}`);
   };
 
+  const sortedItems = items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return (
     <div className="news-grid">
-      {items.map((item) => (
+      {sortedItems.map((item) => (
         <div key={item.id} className="news-item" onClick={() => handleItemClick(item.id)}>
           <img src={item.image} alt={item.title} className="news-image" />
           <div className="news-content">
