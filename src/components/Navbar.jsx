@@ -80,7 +80,7 @@ function Navbar() {
         <span className="text-white font-bold text-2xl">INOLAND</span>
       </div>
 
-      <ul className="flex gap-6 list-none font-open-sans text-lg text-white">
+      <ul className="flex gap-6 list-none font-poppins font-bold text-lg text-white">
         {menu.map((item) => (
           <li key={item.name}>
             <NavLink
