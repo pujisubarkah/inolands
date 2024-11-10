@@ -73,6 +73,17 @@ function InteractiveMap() {
 
       if (kabkotError) throw kabkotError;
 
+      const { data: inovasiData, error:inovasiError } = await supabase
+      .from('inolands')
+      .select('*')
+      .eq('id_provinsi', id_provinsi);
+
+      if (inovasiError) {
+        console.error("Error fetching inovasi:", inovasiError);
+      } else {
+        setInovasiKabupaten(inovasiData);
+      }
+
       console.log('kabupatenData:', kabupatenData);
 
       const combinedKabupaten = kabupatenData.map(kab => ({
@@ -175,6 +186,12 @@ function InteractiveMap() {
         </svg>
       </div>
       {selectedProvinsi !== null && (
+        <div>
+        <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
+        DAFTAR INOVASI
+      </h1>
+      <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+      
         <div style={{ display: 'flex', width: '100%', marginTop: '20px' }}>
           <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
             {kabupaten.map((kab) => (
@@ -194,13 +211,13 @@ function InteractiveMap() {
                 <div style={{ marginLeft: '20px', width: '50%' }}>
                   {selectedProvinsi && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                      <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '45%', textAlign: 'center' }}>
+                      <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
                         <strong>{provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama}</strong>
                         <br />
                         {provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.jumlah_inovasi} inovasi
                       </div>
                       {(kabupaten.length > 0 && (
-                        <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '45%', textAlign: 'center' }}>
+                        <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
                           <strong>{kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.nama}</strong>
                           <br />
                           {inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.jumlah_inovasi : 'NA'} inovasi
@@ -213,22 +230,22 @@ function InteractiveMap() {
                     </div>
                   )}
                 {currentInovasi.length > 0 ? (
-                  <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', margin: '20px 0' }}>
                   <thead>
-                    <tr style={{ backgroundColor: '#f9f9f9', textAlign: 'left' }}>
-                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Judul Inovasi</th>
-                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Tahun</th>
-                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Inovator</th>
-                    <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Deskripsi</th>
-                    </tr>
+                      <tr style={{ backgroundColor: '#444', color: 'white', textAlign: 'left' }}>
+                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Judul Inovasi</th>
+                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Tahun</th>
+                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Inovator</th>
+                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Deskripsi</th>
+                      </tr>
                   </thead>
                   <tbody>
                     {currentInovasi.map((inovasi) => (
                     <tr key={inovasi.id} style={{ backgroundColor: '#fff', borderBottom: '1px solid #ddd' }}>
-                      <td style={{ padding: '10px' }}>{inovasi.judul_inovasi}</td>
-                      <td style={{ padding: '10px' }}>{inovasi.tahun}</td>
-                      <td style={{ padding: '10px' }}>{inovasi.inovator}</td>
-                      <td style={{ padding: '10px' }}>{inovasi.deskripsi}</td>
+                      <td style={{ padding: '15px' }}>{inovasi.judul_inovasi}</td>
+                      <td style={{ padding: '15px' }}>{inovasi.tahun}</td>
+                      <td style={{ padding: '15px' }}>{inovasi.inovator}</td>
+                      <td style={{ padding: '15px' }}>{inovasi.deskripsi}</td>
                     </tr>
                     ))}
                   </tbody>
@@ -298,6 +315,7 @@ function InteractiveMap() {
                     )}
                 </div>
               </div>
+  </div>
               )}
       <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '50%', justifyContent: 'center' }}>
         <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
