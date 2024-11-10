@@ -68,13 +68,13 @@
 
 
 .carousel-button-prev {
-  position: absolute;
-  left: 20px; /* Adjusted position for better alignment */
+  position: relative;
+  left: 50px; /* Adjusted position for better alignment */
   transform: translateY(-50%);
 }
 
 .carousel-button-next {
-  position: absolute;
-  right: 20px; /* Adjusted position for better alignment */
+  position: relative;
+  right: 50px; /* Adjusted position for better alignment */
   transform: translateY(-50%);
 }
