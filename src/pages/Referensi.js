@@ -4,10 +4,10 @@ import Berita from '../components/Berita';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faChartPie, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 
-const Sidebar = () => {
+const Referensi = () => {
 
   const [activeComponent, setActiveComponent] = React.useState('Berita');
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const handleBeritaClick = () => {
     setActiveComponent('Berita');
@@ -100,4 +100,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default Referensi;
