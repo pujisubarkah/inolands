@@ -1,13 +1,103 @@
-// src/pages/LayananInovasi.js
-
 import React from 'react';
-import Carousel from '../components/Carousel';
+import Infografis from '../components/Carousel';
+import Berita from '../components/Berita';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight, faChevronLeft, faChartPie, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 
+const Sidebar = () => {
 
-const Referensi = () => {
+  const [activeComponent, setActiveComponent] = React.useState('Berita');
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+
+  const handleBeritaClick = () => {
+    setActiveComponent('Berita');
+  };
+
+  const handleInfografisClick = () => {
+    setActiveComponent('Infografis');
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
- <Carousel />
+    <div style={{ display: 'flex' }}>
+      <div style={{ 
+        width: isSidebarOpen ? '250px' : '50px', 
+        transition: 'width 0.3s', 
+        overflow: 'hidden', 
+        backgroundColor: '#333', 
+        color: '#fff', 
+        padding: '10px' 
+      }}>
+        <button 
+          onClick={toggleSidebar} 
+          style={{
+            backgroundColor: '#444',
+            color: '#fff',
+            border: 'none',
+            padding: '10px 20px',
+            cursor: 'pointer',
+            borderRadius: '5px',
+            width: '100%',
+            marginBottom: '10px',
+            zIndex: '1000',
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          <FontAwesomeIcon icon={isSidebarOpen ? faChevronLeft : faChevronRight} />
+        </button>
+        <ul style={{ listStyleType: 'none', padding: '0' }}>
+          <li style={{ marginBottom: '10px' }}>
+            <button 
+              onClick={handleBeritaClick} 
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faNewspaper} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Berita</span>}
+            </button>
+          </li>
+          <li>
+            <button 
+              onClick={handleInfografisClick} 
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faChartPie} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Infografis</span>}
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div style={{ flex: 1, padding: '10px' }}>
+        {activeComponent === 'Berita' && <Berita />}
+        {activeComponent === 'Infografis' && <Infografis />}
+      </div>
+    </div>
   );
 };
 
-export default Referensi;
+export default Sidebar;
