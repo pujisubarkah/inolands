@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf'; 
 import './VideoSection.css'; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight, faChevronLeft, faBook, faStar } from '@fortawesome/free-solid-svg-icons';
 
 const VideoSection = () => {
   const videos = [
     {
       id: 1,
-      title: "PENGENALAN LAB INOVASI",
+      title: "LABORATORIUM INOVASI",
       views: 169,
       src: "https://youtube.com/embed/n9JVaNiQ8Rg",
-      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
+      description: "Laboratorium Inovasi merupakan salah satu terobosan Lembaga Administrasi Negara (LAN) dalam mendorong Reformasi Birokrasi di tingkat daerah. Hal ini sejalan dengan pesan Presiden RI Joko Widodo yang meminta seluruh elemen pemerintah untuk bekerja tidak menggunakan cara-cara biasa namun menggagas terobosan baru untuk mempercepat pelayanan kepada masyarakat.",
       quiz: {
-        question: "Apakah yang menjadi tujuan dari drump up?",
-        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
-        correctAnswer: "Semua Benar",
+        question: "Apa tujuan utama dari Laboratorium Inovasi yang digagas oleh LAN?",
+        options: ["Meningkatkan anggaran pemerintah daerah",
+           "Mendorong Reformasi Birokrasi di tingkat daerah",
+           "Mengadakan pelatihan bagi pegawai pemerintah",
+           "Menambah jumlah pegawai pemerintah daerah"],
+        correctAnswer: "Mendorong Reformasi Birokrasi di tingkat daerah",
       },
     },
     {
@@ -21,11 +26,14 @@ const VideoSection = () => {
       title: "DRUMP UP",
       views: 169,
       src: "https://youtube.com/embed/gJ0jAmLssjc",
-      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
+      description: "Tahap Drum Up adalah tahap membangun kesadaran dan keinginan untuk berinovasi. Tahapan Drum Up bertujuan untuk menginspirasi dan mengembangkan semangat inovasi peserta Labinov baik secara individu mapun kolektif. Dengan demikian, willingness to innovate atau kemauan berinovasi akan terbentuk yang merupakan modal awal untuk melanjutkan ke tahap-tahap Labinov berikutnya.",
       quiz: {
-        question: "Apakah yang menjadi tujuan dari drump up?",
-        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
-        correctAnswer: "Semua Benar",
+        question: "Apa tujuan dari Tahap Drum Up dalam Laboratorium Inovasi?",
+        options: ["Menyusun rencana aksi inovasi",
+          "Mengidentifikasi kesenjangan layanan publik",
+          "Membangun kesadaran dan keinginan untuk berinovasi",
+          "Melakukan monitoring inovasi yang sudah diterapkan"],
+        correctAnswer: "Membangun kesadaran dan keinginan untuk berinovasi",
       },
     },
     {
@@ -33,11 +41,14 @@ const VideoSection = () => {
       title: "DIAGNOSE",
       views: 169,
       src: "https://youtube.com/embed/QExvuVbnMwM",
-      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
+      description: "Tahap Diagnose adalah tahap proses mengidentifikasi kesenjangan antara kondisi saat ini dan kondisi yang seharusnya/diharapkan terjadi, yang hal tersebut dapat dijadikan sebagai pijakan untuk adanya inovasi. Tahap Diagnose ini bertujuan untuk memfasilitasi peserta untuk menemukan ide inovasi, yaitu gagasan-gagasan yang mengandung unsur kebaruan, serta diharapkan akan dapat meningkatkan kinerja organisasinya.",
       quiz: {
-        question: "Apakah yang menjadi tujuan dari drump up?",
-        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
-        correctAnswer: "Semua Benar",
+        question: "Apa yang menjadi fokus utama dalam Tahap Diagnose?",
+        options: ["Mencari pendanaan untuk inovasi",
+          "Mengidentifikasi kesenjangan antara kondisi saat ini dan kondisi yang diharapkan",
+          "Menyusun jadwal pelaksanaan inovasi",
+          "Menyebarluaskan hasil inovasi"],
+        correctAnswer: "Mengidentifikasi kesenjangan antara kondisi saat ini dan kondisi yang diharapkan",
       },
     },
     {
@@ -45,28 +56,46 @@ const VideoSection = () => {
       title: "DESAIN",
       views: 169,
       src: "https://youtube.com/embed/rei_mhPsCm0",
-      description: "Tahap membangun kesadaran kolektif untuk berinovasi.",
+      description: "Tahap Design merupakan penuangan ide inovasi yang telah dihasilkan pada Tahap Diagnose ke dalam suatu rancangan rencana aksi yang teknis dan detail. Tahap Design inovasi sangat penting karena akan mendetailkan langkah-langkah mewujudkan ide inovasi yang sudah digagas.",
       quiz: {
-        question: "Apakah yang menjadi tujuan dari drump up?",
-        options: ["Menginspirasi", "Mengembangkan semangat", "Membentuk kemauan berinovasi", "Semua Benar"],
-        correctAnswer: "Semua Benar",
+        question: "Apa yang dihasilkan pada Tahap Design dalam Laboratorium Inovasi?",
+        options: ["Ide inovasi baru",
+           "Penyebarluasan hasil inovasi",
+           "Rancangan rencana aksi yang teknis dan detail",
+           "Kesadaran untuk berinovasi"],
+        correctAnswer: "Rancangan rencana aksi yang teknis dan detail",
+      },
+    },
+    {
+      id: 5,
+      title: "DELIVER",
+      views: 169,
+      src: "https://youtube.com/embed/KArqARoQI5w",
+      description: "Tahap Deliver atau tahap pelaksanaan inovasi merupakan tahap dimana peserta Labinov mulai melaksanakan ide inovasi yang dihasilkan pada tahap Diagnose berdasarkan jadwal atau agenda Rencana Aksi Inovasi yang telah disusun pada tahap Design. Pada Tahap Deliver terdapat 2 (dua) kegiatan utama, yaitu Launching Inovasi dan Monitoring Inovasi.",
+      quiz: {
+        question: "Apa saja kegiatan utama yang dilakukan pada Tahap Deliver?",
+        options: ["Drum Up dan Diagnose",
+          "Penyusunan rencana dan identifikasi ide",
+          "Launching Inovasi dan Monitoring Inovasi",
+          "Penilaian hasil inovasi"],
+        correctAnswer: "Launching Inovasi dan Monitoring Inovasi",
       },
     },
    {
-      id: 5,
+      id: 6,
       title: "DISPLAY",
       views: 250,
       src: "https://youtube.com/embed/KArqARoQI5w",
-      description: "Tingkatkan kemampuan public speaking Anda dengan teknik lanjutan.",
+      description: "Display Inovasi yaitu kegiatan penyebarluasan hasil pelaksanaan atau implementasi inovasi yang telah diperjanjikan oleh Pimpinan Tertinggi Instansi Pemerintah dan Pimpinan Unit Organisasi instansi pemerintah yang didampingi. Hal ini merupakan salah satu bentuk akuntabilitas pemerintah kepada masyarakat dalam meningkatkan kinerja pemberian layanan pada masyarakat.",
       quiz: {
-        question: "Apa yang dimaksud dengan diagnose?",
+        question: "Apa tujuan utama dari Display Inovasi dalam Laboratorium Inovasi?",
         options: [
-          "Identifikasi kesenjangan kondisi saat ini dengan seharusnya",
-          "Fasilitasi dalam menemukan ide inovasi",
-          "Menggali potensi yang dimiliki untuk mengembangkan",
-          "Semua Benar"
+          "Memperkenalkan inovasi kepada pimpinan",
+          "Meminta masukan dari masyarakat",
+          "Menyebarluaskan hasil implementasi inovasi kepada masyarakat sebagai bentuk akuntabilitas",
+          "Mengidentifikasi ide-ide baru untuk inovasi lanjutan"
         ],
-        correctAnswer: "Semua Benar",
+        correctAnswer: "Menyebarluaskan hasil implementasi inovasi kepada masyarakat sebagai bentuk akuntabilitas",
       },
     },
   ];
@@ -88,33 +117,40 @@ const VideoSection = () => {
     };
 
     return (
-      <div className="quiz-section">
-        <h3>{quiz.question}</h3>
-        <form onSubmit={handleSubmit}>
-          {quiz.options.map((option, index) => (
-            <div key={index}>
-              <label>
-                <input
-                  type="radio"
-                  value={option}
-                  checked={selectedOption === option}
-                  onChange={handleOptionChange}
-                />
-                {option}
-              </label>
-            </div>
-          ))}
-          <button type="submit" disabled={!selectedOption}>Kirim</button>
-        </form>
-        {isSubmitted && (
-          <div className="quiz-result">
-            {selectedOption === quiz.correctAnswer ? (
-              <p>Jawaban Anda Benar!</p>
-            ) : (
-              <p>Jawaban Anda Salah. Jawaban yang benar adalah: {quiz.correctAnswer}</p>
-            )}
-          </div>
+      <div className="quiz-section p-4 bg-gray-100 rounded-lg shadow-md">
+      <h3 className="text-xl font-semibold mb-4">{quiz.question}</h3>
+      <form onSubmit={handleSubmit}>
+        {quiz.options.map((option, index) => (
+        <div key={index} className="mb-2">
+          <label className="flex items-center">
+          <input
+            type="radio"
+            value={option}
+            checked={selectedOption === option}
+            onChange={handleOptionChange}
+            className="mr-2"
+          />
+          <span className="text-gray-700">{option}</span>
+          </label>
+        </div>
+        ))}
+        <button 
+        type="submit" 
+        disabled={!selectedOption} 
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+        >
+        Kirim
+        </button>
+      </form>
+      {isSubmitted && (
+        <div className="quiz-result mt-4 p-3 rounded-lg" style={{ backgroundColor: selectedOption === quiz.correctAnswer ? '#d4edda' : '#f8d7da' }}>
+        {selectedOption === quiz.correctAnswer ? (
+          <p className="text-green-800">Jawaban Anda Benar!</p>
+        ) : (
+          <p className="text-red-800">Jawaban Anda Salah. Jawaban yang benar adalah: {quiz.correctAnswer}</p>
         )}
+        </div>
+      )}
       </div>
     );
   };
@@ -172,74 +208,119 @@ const VideoSection = () => {
   };
 };
 
+const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+const toggleSidebar = () => {
+  setIsSidebarOpen(!isSidebarOpen);
+};
+
   return (
-    <div className="container flex flex-col md:flex-row">
-      <aside className="sidebar p-4 w-full md:w-1/3 bg-gray-100">
-        <ul>
+    <div style={{ display: 'flex'}}>
+      <div style={{ 
+        width: isSidebarOpen ? '250px' : '50px', 
+        transition: 'width 0.3s', 
+        overflow: 'hidden', 
+        backgroundColor: '#2c3e50', 
+        color: '#ecf0f1', 
+        padding: '10px' 
+      }}>
+        <button 
+          onClick={toggleSidebar} 
+          style={{
+            backgroundColor: '#34495e',
+            color: '#ecf0f1',
+            border: 'none',
+            padding: '10px 20px',
+            cursor: 'pointer',
+            borderRadius: '5px',
+            width: '100%',
+            marginBottom: '10px',
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          <FontAwesomeIcon icon={isSidebarOpen ? faChevronLeft : faChevronRight} />
+        </button>
+        <ul style={{ listStyleType: 'none', padding: '0' }}>
           {videos.map((video, index) => (
-            <li 
-              key={video.id} 
-              onClick={() => setSelectedVideo(video)}
-              className={`cursor-pointer mb-2 flex justify-between items-center ${completedQuizzes[index] ? 'text-green-600' : 'text-black'}`}
-            >
-              <span className="font-semibold">{video.title}</span>
-              {/* Tampilkan bintang emas jika video selesai */}
-              {completedQuizzes[index] && (
-                <span role="img" aria-label="completed">⭐</span>
-              )}
+            <li key={video.id} style={{ marginBottom: '10px' }}>
+              <button 
+                onClick={() => setSelectedVideo(video)}
+                style={{
+                  backgroundColor: '#34495e',
+                  color: '#ecf0f1',
+                  border: 'none',
+                  padding: '10px 20px',
+                  cursor: 'pointer',
+                  borderRadius: '5px',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+                }}
+              >
+                <FontAwesomeIcon icon={faBook} /> 
+                {isSidebarOpen && <span style={{ marginLeft: '10px' }}>{video.title + '  '}    
+                  {completedQuizzes[index] && (
+                  <FontAwesomeIcon icon={faStar} />
+                )}</span>}
+              </button>
             </li>
           ))}
         </ul>
-      </aside>
-      
-      <section className="video-section p-4 w-full md:w-2/3">
-        <h1 className="text-3xl font-bold text-center mb-6">LABORATORIUM INOVASI</h1>
-        <p className="text-lg text-gray-700 mb-4">Lembaga Administrasi Negara (LAN) pada tahun 2015 dan tahun 2016 telah menjalin kerjasama dengan beberapa pemerintah daerah untuk melakukan pendampingan, 
-asistensi, dan fasilitasi inovasi melalui program yang disebut dengan Laboratorium Inovasi. </p>
-       
-        <div className="video-wrapper mb-4">
-          <div className="video-item">
-             <iframe
-              width="100%"
-              height="500"
-              src={selectedVideo.src}
-              title={selectedVideo.title}
-              frameBorder={0}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="mb-4"
-            ></iframe>
-            <div className="video-info mb-4">
-              <p className="video-views text-gray-600">{selectedVideo.views} views</p>
-              <p className="video-description">{selectedVideo.description}</p>
+      </div>
+      <div style={{ flex: 1, padding: '20px', backgroundColor: '#ecf0f1' }}>
+        <section className="video-section p-4 w-full md:w-2/3 mx-auto bg-white shadow-lg rounded-lg">
+        <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
+        {selectedVideo.title}
+    </h1>
+    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+    
+          <p className="text-lg text-gray-700 mb-4">{selectedVideo.description}</p>
+         
+          <div className="video-wrapper mb-4">
+            <div className="video-item">
+               <iframe
+                width="100%"
+                height="500"
+                src={selectedVideo.src}
+                title={selectedVideo.title}
+                frameBorder={0}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="mb-4 rounded-lg"
+              ></iframe>
+              <div className="video-info mb-4">
+                <p className="video-views text-gray-600">{selectedVideo.views} views</p>
+              </div>
+              <Quiz 
+                quiz={selectedVideo.quiz} 
+                onQuizComplete={() => handleQuizComplete(selectedVideo.id - 1)} 
+              />
             </div>
-            <Quiz 
-              quiz={selectedVideo.quiz} 
-              onQuizComplete={() => handleQuizComplete(selectedVideo.id - 1)} 
-            />
           </div>
-        </div>
 
-        {allQuizzesCompleted && (
-          <div className="certificate-section">
-            <input 
-              type="text" 
-              placeholder="Masukkan Nama" 
-              value={userName} 
-              onChange={(e) => setUserName(e.target.value)}
-              className="border p-2 mb-4 w-full"
-            />
-            <button 
-              onClick={handleDownloadCertificate} 
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
-              disabled={!userName}
-            >
-              Unduh Sertifikat
-            </button>
-          </div>
-        )}
-      </section>
-    </div>
+          {allQuizzesCompleted && (
+            <div className="certificate-section mt-6">
+              <input 
+                type="text" 
+                placeholder="Masukkan Nama" 
+                value={userName} 
+                onChange={(e) => setUserName(e.target.value)}
+                className="border p-2 mb-4 w-full rounded-lg"
+              />
+              <button 
+                onClick={handleDownloadCertificate} 
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
+                disabled={!userName}
+              >
+                Unduh Sertifikat
+              </button>
+            </div>
+          )}
+        </section>
+      </div>
+      </div>
   );
 };
 
