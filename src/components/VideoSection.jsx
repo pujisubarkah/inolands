@@ -220,15 +220,15 @@ const toggleSidebar = () => {
         width: isSidebarOpen ? '250px' : '50px', 
         transition: 'width 0.3s', 
         overflow: 'hidden', 
-        backgroundColor: '#2c3e50', 
-        color: '#ecf0f1', 
+        backgroundColor: '#333', 
+        color: '#fff', 
         padding: '10px' 
       }}>
         <button 
           onClick={toggleSidebar} 
           style={{
-            backgroundColor: '#34495e',
-            color: '#ecf0f1',
+            backgroundColor: '#444',
+            color: '#fff',
             border: 'none',
             padding: '10px 20px',
             cursor: 'pointer',
@@ -247,8 +247,8 @@ const toggleSidebar = () => {
               <button 
                 onClick={() => setSelectedVideo(video)}
                 style={{
-                  backgroundColor: '#34495e',
-                  color: '#ecf0f1',
+                  backgroundColor: '#444',
+                  color: '#fff',
                   border: 'none',
                   padding: '10px 20px',
                   cursor: 'pointer',
