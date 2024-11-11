@@ -1,8 +1,9 @@
 import React from 'react';
 import Infografis from '../components/Carousel';
 import Berita from '../components/Berita';
+import Tuxedovation from '../components/Tuxedovation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronLeft, faChartPie, faNewspaper } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faChevronLeft, faChartPie, faNewspaper, faVideo } from '@fortawesome/free-solid-svg-icons';
 
 const Referensi = () => {
 
@@ -15,6 +16,10 @@ const Referensi = () => {
 
   const handleInfografisClick = () => {
     setActiveComponent('Infografis');
+  };
+
+  const handleTuxedoClick = () => {
+    setActiveComponent('Tuxedovation');
   };
 
   const toggleSidebar = () => {
@@ -70,7 +75,7 @@ const Referensi = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Berita</span>}
             </button>
           </li>
-          <li>
+          <li style={{ marginBottom: '10px' }}>
             <button 
               onClick={handleInfografisClick} 
               style={{
@@ -90,11 +95,32 @@ const Referensi = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Infografis</span>}
             </button>
           </li>
+          <li style={{ marginBottom: '10px' }}>
+            <button 
+              onClick={handleTuxedoClick} 
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faVideo} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Tuxedovation</span>}
+            </button>
+          </li>
         </ul>
       </div>
       <div style={{ flex: 1, padding: '10px' }}>
         {activeComponent === 'Berita' && <Berita />}
         {activeComponent === 'Infografis' && <Infografis />}
+        {activeComponent === 'Tuxedovation' && <Tuxedovation />}
       </div>
     </div>
   );
