@@ -41,10 +41,10 @@ const NewsDetail = () => {
     <div className="news-detail">
       {newsDetail && (
         <>
-          <h2>{newsDetail.title}</h2>
-          <img src={newsDetail.image_url} alt={newsDetail.title} />
-          <p>{newsDetail.date}</p>
-          <p>{newsDetail.deskripsi}</p>
+          <h1 className="news-title">{newsDetail.title}</h1>
+          <img className="news-detail-image" src={newsDetail.image_url} alt={newsDetail.title} />
+          <p className="news-date">{newsDetail.date}</p>
+          <p className="news-description">{newsDetail.deskripsi}</p>
         </>
       )}
     </div>
