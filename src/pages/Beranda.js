@@ -22,7 +22,7 @@ const Beranda = () => {
         <div className="flex items-center justify-center bg-darkred text-white py-12 px-6 rounded-lg" style={{ margin: '20px', padding: '20px' }}>
           <img src="https://lnauvznspseugfqxpwjc.supabase.co/storage/v1/object/public/assets/hero-img.png" alt="Illustration of people interacting with technology" className="w-2/5 max-w-md mr-6"/>
           <div className="text-left w-3/5">
-            <h1 className="text-3xl font-bold mb-4">EKOSISTEM PENGETAHUAN INOVASI</h1>
+            <h1 className="text-3xl font-bold mb-4">INOLAND</h1>
             <p className="text-base mb-6">
               INOLAND adalah web informasi oleh Pusat Inovasi Administrasi Negara yang juga merupakan sistem integrasi
               untuk penguatan kapasitas berinovasi terdiri dari berbagai program advokasi pembelajaran inovasi
