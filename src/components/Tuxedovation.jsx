@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import NewsGrid from './NewsGrid';
-import Pagination from './Pagination';
-import { supabase } from '../supabaseClient'; // Import supabase client
-// https://api.indeks.inovasi.litbang.kemendagri.go.id/tuxe/new-release?offset=0
 
-const Berita = () => {
+const Tuxe = () => {
   const [newsItems, setNewsItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   
   const itemsPerPage = 20; // Tentukan jumlah item per halaman
+  const totalPages = 100;
+
+  const handlePageChange = (newPage) => {
+      setCurrentPage(newPage);
+  };
 
   // Fetch berita from API
-  const fetchBeritaFromAPI = async (offset) => {
+  const fetchBeritaFromAPI = async () => {
     try {
+      const offset = (currentPage - 1) * 20;
       const response = await fetch(`https://api.indeks.inovasi.litbang.kemendagri.go.id/tuxe/new-release?offset=${offset}`);
       const data = await response.json();
 
@@ -26,6 +28,7 @@ const Berita = () => {
       }));
 
       setNewsItems(formattedData);
+      console.log('api:', response.url);
     } catch (error) {
       console.error('Error fetching news from API:', error);
     }
@@ -33,8 +36,8 @@ const Berita = () => {
 
   // Fetch berita ketika komponen dipasang
   useEffect(() => {
-    fetchBeritaFromAPI((currentPage * 20) - 20);
-  }, []);
+    fetchBeritaFromAPI();
+  }, [currentPage]);
 
   const handleItemClick = (id) => {
     window.open(`https://tuxedovation.inovasi.litbang.kemendagri.go.id/detail_inovasi/${id}`, '_blank');
@@ -49,11 +52,7 @@ const Berita = () => {
  const sortedItems = currentItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
 
- const totalPages = 100;
 
- const handlePageChange = (newPage) => {
-     setCurrentPage(newPage);
- };
 
  return (
   <div className="app">
@@ -135,4 +134,4 @@ const Berita = () => {
 );
 };
 
-export default Berita;
+export default Tuxe;
