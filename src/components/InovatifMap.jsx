@@ -56,26 +56,7 @@ function InovatifMap() {
   return (
     <div className="app">
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {/* Year Buttons */}
-        <div style={{ marginBottom: '20px' }}>
-          {['Tahun_2019', 'Tahun_2020', 'Tahun_2021', 'Tahun_2022', 'Tahun_2023'].map((year) => (
-            <button
-              key={year}
-              onClick={() => handleYearClick(year)}
-              style={{
-                padding: '10px',
-                margin: '0 5px',
-                backgroundColor: selectedYear === year ? '#8B0000' : '#8B0000', // Dark red when selected, light grey otherwise
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}
-            >
-              {year.split('_')[1]} {/* Show the year part */}
-            </button>
-          ))}
-        </div>
+        
 
         {/* Peta Provinsi */}
         <div style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '5px', width: '100%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
@@ -83,7 +64,27 @@ function InovatifMap() {
             PETA INDEKS INOVASI DAERAH
           </h1>
           <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
-          
+         {/* Year Buttons */}
+<div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+  {['Tahun_2019', 'Tahun_2020', 'Tahun_2021', 'Tahun_2022', 'Tahun_2023'].map((year) => (
+    <button
+      key={year}
+      onClick={() => handleYearClick(year)}
+      style={{
+        padding: '10px',
+        margin: '0 5px',
+        backgroundColor: selectedYear === year ? '#8B0000' : '#8B0000',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+      }}
+    >
+      {year.split('_')[1]} {/* Show the year part */}
+    </button>
+  ))}
+</div>
+
           <svg baseProfile="tiny" viewBox="0 0 981.98602 441.06508" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
             {provinces.map((province) => {
               const innovationValue = province[selectedYear] || 'Belum Mengisi Data'; // Get innovation value based on selected year
