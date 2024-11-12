@@ -1,39 +1,25 @@
 // src/i18n.js
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-
-const resources = {
-  en: {
-    translation: {
-      "home": "Home",
-      "innovation_services": "Innovation Services",
-      "search_innovations": "Search Innovations",
-      "references": "References",
-      "news": "News",
-      "welcome_message": "Welcome to the Innovation Platform",
-    }
-  },
-  id: {
-    translation: {
-      "home": "Beranda",
-      "innovation_services": "Layanan Inovasi",
-      "search_innovations": "Cari Inovasi",
-      "references": "Referensi",
-      "news": "Berita",
-      "welcome_message": "Selamat datang di Platform Inovasi",
-    }
-  }
-};
+import LanguageDetector from 'i18next-browser-languagedetector';
+import translationEN from './locales/en.json';
+import translationID from './locales/id.json';
 
 i18n
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources,
-    lng: 'en', // Set bahasa default
-    fallbackLng: 'en',
-    interpolation: {
-      escapeValue: false
-    }
+    resources: {
+      en: { translation: translationEN },
+      id: { translation: translationID },
+    },
+    fallbackLng: 'en', // Bahasa fallback jika bahasa pengguna tidak tersedia
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ['querystring', 'cookie', 'localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
   });
 
 export default i18n;
+

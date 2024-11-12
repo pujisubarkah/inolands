@@ -1,10 +1,11 @@
 import React from 'react';
 import Infografis from '../components/Carousel';
-import Berita from '../components/Berita';
+import InovatifMap from '../components/InovatifMap';
 import Tuxedovation from '../components/Tuxedovation';
 import Jippnas from '../components/Jippnas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faChartPie, faNewspaper, faVideo } from '@fortawesome/free-solid-svg-icons';
+import InovasiLAN from '../components/InovasiLAN';
 
 const Referensi = () => {
 
@@ -12,11 +13,11 @@ const Referensi = () => {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const handleBeritaClick = () => {
-    setActiveComponent('Berita');
+    setActiveComponent('Inovatif Map');
   };
 
   const handleInfografisClick = () => {
-    setActiveComponent('Infografis');
+    setActiveComponent('List Inovasi');
   };
 
   const handleTuxedoClick = () => {
@@ -77,7 +78,7 @@ const Referensi = () => {
               }}
             >
               <FontAwesomeIcon icon={faNewspaper} />
-              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Berita</span>}
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Peta Indeks Inovasi Daerah</span>}
             </button>
           </li>
           <li style={{ marginBottom: '10px' }}>
@@ -97,7 +98,7 @@ const Referensi = () => {
               }}
             >
               <FontAwesomeIcon icon={faChartPie} />
-              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Infografis</span>}
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>List Inovasi</span>}
             </button>
           </li>
           <li style={{ marginBottom: '10px' }}>
@@ -143,8 +144,8 @@ const Referensi = () => {
         </ul>
       </div>
       <div style={{ flex: 1, padding: '10px' }}>
-        {activeComponent === 'Berita' && <Berita />}
-        {activeComponent === 'Infografis' && <Infografis />}
+        {activeComponent === 'Inovatif Map' && <InovatifMap />}
+        {activeComponent === 'List Inovasi' && <InovasiLAN />}
         {activeComponent === 'Tuxedovation' && <Tuxedovation />}
         {activeComponent === 'Jippnas' && <Jippnas />}
       </div>
