@@ -70,7 +70,7 @@ const VideoSection = () => {
       id: 5,
       title: "DELIVER",
       views: 169,
-      src: "https://youtube.com/embed/KArqARoQI5w",
+      src: "https://youtube.com/embed/1EA5t8j4YhY",
       description: "Tahap Deliver atau tahap pelaksanaan inovasi merupakan tahap dimana peserta Labinov mulai melaksanakan ide inovasi yang dihasilkan pada tahap Diagnose berdasarkan jadwal atau agenda Rencana Aksi Inovasi yang telah disusun pada tahap Design. Pada Tahap Deliver terdapat 2 (dua) kegiatan utama, yaitu Launching Inovasi dan Monitoring Inovasi.",
       quiz: {
         question: "Apa saja kegiatan utama yang dilakukan pada Tahap Deliver?",
@@ -190,20 +190,32 @@ const VideoSection = () => {
     });
 
     const img = new Image();
-    img.src = '/certificate_template.jpg';
+    img.src = '/certificate_template.png';
 
     img.onload = () => {
       doc.addImage(img, 'JPEG', 0, 0, 600, 400); // Add the image as a background
   
     // Add text over the image
-    doc.setFontSize(24);
+    doc.setFontSize(28);
     doc.setTextColor('#000');
-    doc.text(`Sertifikat Pembelajaran Mandiri`, 400, 100, { align: 'center' });
-    doc.setFontSize(18);
-    doc.text(`Diberikan Kepada`, 400, 140, { align: 'center' });
-    doc.text(`${userName}`, 400, 180, { align: 'center' });
-    doc.text(`Telah Mengikuti Pembelajaran Mandiri Laboratorium Inovasi`, 400, 200, { align: 'center' });
-    doc.text('Tanggal: ' + new Date().toLocaleDateString(), 400, 260, { align: 'center' });
+    doc.setFont('helvetica', 'bold');
+    doc.text(`SERTIFIKAT`, 300, 100, { align: 'center' });
+    doc.setFontSize(16);
+    doc.text(`Pembelajaran Mandiri Lab Inovasi`, 300, 120, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Diberikan Kepada`, 300, 150, { align: 'center' });
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${userName}`, 300, 200, { align: 'center' });
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Telah Mengikuti Pembelajaran Mandiri Laboratorium Inovasi`, 300, 240, { align: 'center' });
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date().toLocaleDateString('id-ID', options);
+    doc.text('pada tanggal ' + formattedDate, 300, 260, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text('Jakarta, ' + formattedDate, 420, 300, { align: 'center' });
+    doc.text('Kepala Pusat Inovasi Administrasi Negara', 420, 340, { align: 'center' });
     doc.save(`Sertifikat-Lab Inovasi-${userName}.pdf`);
   };
 };
