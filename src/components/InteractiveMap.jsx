@@ -192,8 +192,8 @@ function InteractiveMap() {
       </h1>
       <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
       
-        <div style={{ display: 'flex', width: '100%', marginTop: '20px' }}>
-          <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="50%" height="auto" preserveAspectRatio="xMidYMid meet">
+        <div style={{ display: 'flex', width: '90vw', marginTop: '20px' }}>
+          <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="42vw" height="auto" preserveAspectRatio="xMidYMid meet">
             {kabupaten.map((kab) => (
               kab.svg_path ? (
                 <path 
@@ -208,7 +208,7 @@ function InteractiveMap() {
                 ))}
                 </svg>
 
-                <div style={{ marginLeft: '20px', width: '50%' }}>
+                <div style={{ marginLeft: '20px', width: '42vw' }}>
                   {selectedProvinsi && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                       <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
