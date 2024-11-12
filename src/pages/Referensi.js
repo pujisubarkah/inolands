@@ -2,6 +2,7 @@ import React from 'react';
 import Infografis from '../components/Carousel';
 import Berita from '../components/Berita';
 import Tuxedovation from '../components/Tuxedovation';
+import Jippnas from '../components/Jippnas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faChartPie, faNewspaper, faVideo } from '@fortawesome/free-solid-svg-icons';
 
@@ -20,6 +21,10 @@ const Referensi = () => {
 
   const handleTuxedoClick = () => {
     setActiveComponent('Tuxedovation');
+  };
+
+  const handleJippnasClick = () => {
+    setActiveComponent('Jippnas');
   };
 
   const toggleSidebar = () => {
@@ -115,12 +120,33 @@ const Referensi = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Tuxedovation</span>}
             </button>
           </li>
+          <li style={{ marginBottom: '10px' }}>
+            <button 
+              onClick={handleJippnasClick} 
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faVideo} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Etalase Jippnas</span>}
+            </button>
+          </li>
         </ul>
       </div>
       <div style={{ flex: 1, padding: '10px' }}>
         {activeComponent === 'Berita' && <Berita />}
         {activeComponent === 'Infografis' && <Infografis />}
         {activeComponent === 'Tuxedovation' && <Tuxedovation />}
+        {activeComponent === 'Jippnas' && <Jippnas />}
       </div>
     </div>
   );
