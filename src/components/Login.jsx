@@ -65,27 +65,24 @@ const Login = ({ isOpen, onClose }) => {
 
   const handleGoogleLogin = async () => {
     try {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            redirectTo: window.location.hostname === 'localhost' 
-                ? 'http://localhost:3000/' 
-                : 'https://inolands.vercel.app/',
-        });
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        redirectTo: window.location.hostname === 'localhost' 
+          ? '/' 
+          : '/',
+      });
 
-        if (error) {
-            throw error;
-        }
+      if (error) {
+        throw error;
+      }
 
-        // Redirect manual jika perlu
-        if (window.location.hostname === 'localhost') {
-            window.location.href = 'http://localhost:3000/Dashboard';
-        } else {
-            window.location.href = 'https://inolands.vercel.app/';
-        }
+      // Redirect manual jika perlu
+      navigate('/Dashboard', { replace: true });
 
     } catch (error) {
-        console.error('Error during Google login:', error.message);
-        alert('Terjadi kesalahan saat login dengan Google.');
+      console.error('Error during Google login:', error.message);
+      alert('Terjadi kesalahan saat login dengan Google.');
+      navigate('/', { replace: true });
     }
 };
 
