@@ -198,13 +198,13 @@ const VideoSection = () => {
     // Add text over the image
     doc.setFontSize(24);
     doc.setTextColor('#000');
-    doc.text(`Sertifikat Kelulusan`, 400, 100, { align: 'center' });
+    doc.text(`Sertifikat Pembelajaran Mandiri`, 400, 100, { align: 'center' });
     doc.setFontSize(18);
     doc.text(`Diberikan Kepada`, 400, 140, { align: 'center' });
     doc.text(`${userName}`, 400, 180, { align: 'center' });
-    doc.text(`Telah Menyelesaikan Pembelajaran Laboratorium Inovasi 20JP`, 400, 200, { align: 'center' });
+    doc.text(`Telah Mengikuti Pembelajaran Mandiri Laboratorium Inovasi`, 400, 200, { align: 'center' });
     doc.text('Tanggal: ' + new Date().toLocaleDateString(), 400, 260, { align: 'center' });
-    doc.save(`Sertifikat-Kelulusan.pdf`);
+    doc.save(`Sertifikat-Lab Inovasi-${userName}.pdf`);
   };
 };
 
