@@ -9,6 +9,7 @@ import CariInovasi from './pages/Cariinovasi';
 import Referensi from './pages/Referensi';
 import Berita from './components/Berita';
 import NewsDetail from './components/NewsDetail';
+import InovasiDetail from './components/InovasiDetail';
 import Dashboard from './pages/Dashboard';
 import LoadingSpinner from './components/LoadingSpinner';
 import Register from './components/Register'; // Import Register component
@@ -88,6 +89,7 @@ const App = () => {
             <Route path="/referensi" element={<Referensi />} />
             <Route path="/berita" element={<Berita />} />
             <Route path="/news/:id" element={<NewsDetail />} />
+            <Route path="/inovasi/:id" element={<InovasiDetail />} />
             
             {/* Conditional Route Redirection based on user role */}
             <Route 
