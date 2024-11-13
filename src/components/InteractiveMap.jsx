@@ -203,6 +203,9 @@ function InteractiveMap() {
                   stroke="black"
                   strokeWidth="1"
                   onClick={() => loadInovasi(kab.id_kabkot)}
+                  transform={(kab.id_provinsi === 31 && ("scale(3) translate(-350, -400)")) ||
+                  (kab.id_provinsi === 95 && ("scale(3) translate(-350, -200)"))
+                  }
                   ><title>{kab.nama}</title></path>
                   ) : null
                 ))}
