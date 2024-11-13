@@ -57,8 +57,8 @@ function InteractiveMap() {
   const loadKabupaten = async (id_provinsi) => {
     try {
       const { data: kabupatenData, error: kabupatenError } = await supabase
-        .from('kabupatens')
-        .select('*')
+        .from('kabupaten_maps')
+        .select(`id_kabkot, id_provinsi, nama, svg_path`)
         .eq('id_provinsi', id_provinsi);
 
       if (kabupatenError) throw kabupatenError;
@@ -197,7 +197,7 @@ function InteractiveMap() {
             {kabupaten.map((kab) => (
               kab.svg_path ? (
                 <path 
-                  key={kab.id}
+                  key={kab.id_kabkot}
                   d={kab.svg_path.replace(/"/g, '')}
                   fill={getChoroplethColor(kab.jumlah_inovasi || 0)}
                   stroke="black"
