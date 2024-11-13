@@ -1,23 +1,33 @@
 import React from 'react';
 import Infografis from '../components/Carousel';
+import Berita from '../components/Berita';
 import InovatifMap from '../components/InovatifMap';
 import Tuxedovation from '../components/Tuxedovation';
 import Jippnas from '../components/Jippnas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronLeft, faChartPie, faNewspaper, faVideo } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faChevronLeft, faChartPie, faNewspaper, faVideo, faGlobeAsia, faTableCells } from '@fortawesome/free-solid-svg-icons';
 import InovasiLAN from '../components/InovasiLAN';
 
 const Referensi = () => {
 
-  const [activeComponent, setActiveComponent] = React.useState('Berita');
+  const [activeComponent, setActiveComponent] = React.useState('Indeks Inovasi');
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
+
+  const handleIndeksInovasiClick = () => {
+    setActiveComponent('Indeks Inovasi');
+  };
+
+  const handleListInovasiClick = () => {
+    setActiveComponent('List Inovasi');
+  };
+
   const handleBeritaClick = () => {
-    setActiveComponent('Inovatif Map');
+    setActiveComponent('Berita');
   };
 
   const handleInfografisClick = () => {
-    setActiveComponent('List Inovasi');
+    setActiveComponent('Infografis');
   };
 
   const handleTuxedoClick = () => {
@@ -63,6 +73,46 @@ const Referensi = () => {
         <ul style={{ listStyleType: 'none', padding: '0' }}>
           <li style={{ marginBottom: '10px' }}>
             <button 
+              onClick={handleIndeksInovasiClick} 
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faGlobeAsia} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Indeks Inovasi Daerah</span>}
+            </button>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            <button 
+              onClick={handleListInovasiClick} 
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faTableCells} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>List Inovasi</span>}
+            </button>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            <button 
               onClick={handleBeritaClick} 
               style={{
                 backgroundColor: '#444',
@@ -78,7 +128,7 @@ const Referensi = () => {
               }}
             >
               <FontAwesomeIcon icon={faNewspaper} />
-              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Peta Indeks Inovasi Daerah</span>}
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Berita Inovasi</span>}
             </button>
           </li>
           <li style={{ marginBottom: '10px' }}>
@@ -98,7 +148,7 @@ const Referensi = () => {
               }}
             >
               <FontAwesomeIcon icon={faChartPie} />
-              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>List Inovasi</span>}
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Infografis Inovasi</span>}
             </button>
           </li>
           <li style={{ marginBottom: '10px' }}>
@@ -144,8 +194,10 @@ const Referensi = () => {
         </ul>
       </div>
       <div style={{ flex: 1, padding: '10px' }}>
-        {activeComponent === 'Inovatif Map' && <InovatifMap />}
+        {activeComponent === 'Indeks Inovasi' && <InovatifMap />}
         {activeComponent === 'List Inovasi' && <InovasiLAN />}
+        {activeComponent === 'Berita' && <Berita />}
+        {activeComponent === 'Infografis' && <Infografis />}
         {activeComponent === 'Tuxedovation' && <Tuxedovation />}
         {activeComponent === 'Jippnas' && <Jippnas />}
       </div>
