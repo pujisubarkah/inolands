@@ -6,7 +6,7 @@ function InovatifMap() {
   const [provinces, setProvinces] = useState([]);
   const [selectedProvinsi, setSelectedProvinsi] = useState(null);
   const [hoveredArea, setHoveredArea] = useState({ visible: false, text: '', x: 0, y: 0 });
-  const [selectedYear, setSelectedYear] = useState('Tahun_2019'); // Default to 2019
+  const [selectedYear, setSelectedYear] = useState('Tahun_2023'); // Default to 2023
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -29,11 +29,11 @@ function InovatifMap() {
 
   // Function to return choropleth color based on the selected year and its value
   const getChoroplethColor = (innovationValue) => {
-    if (innovationValue === 'Belum Mengisi Data') return '#800026'; // Red for "No Data"
-    if (innovationValue === 'Sangat Inovatif') return '#006400'; // Dark Green
-    if (innovationValue === 'Kurang Inovatif') return '#FFCC00'; // Yellow
-    if (innovationValue === 'Inovatif') return '#32CD32'; // Light Green
-    if (innovationValue === 'Tidak Dapat Dinilai') return '#8B0000'; // Dark Red
+    if (innovationValue === 'Belum Mengisi Data') return '#708090'; // Red for "No Data"
+    if (innovationValue === 'Sangat Inovatif') return 'teal'; // Dark Green
+    if (innovationValue === 'Kurang Inovatif') return '#DC143C'; // Red
+    if (innovationValue === 'Inovatif') return '#FFD700'; // Light Green
+    if (innovationValue === 'Tidak Dapat Dinilai') return '#708090'; // Dark Red
     return '#FFEDA0'; // Lightest color for undefined values
   };
 
@@ -73,7 +73,7 @@ function InovatifMap() {
       style={{
         padding: '10px',
         margin: '0 5px',
-        backgroundColor: selectedYear === year ? '#8B0000' : '#8B0000',
+        backgroundColor: selectedYear === year ? '#8B0000' : '#333',
         color: '#fff',
         border: 'none',
         borderRadius: '5px',
@@ -108,24 +108,20 @@ function InovatifMap() {
 {/* Legend */}
 <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: '#006400', marginRight: '10px' }}></div>
+            <div style={{ width: '20px', height: '20px', backgroundColor: 'teal', marginRight: '10px' }}></div>
             <span>Sangat Inovatif</span>
           </div>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: '#66CDAA', marginRight: '10px' }}></div>
+            <div style={{ width: '20px', height: '20px', backgroundColor: '#FFD700', marginRight: '10px' }}></div>
             <span>Inovatif</span>
           </div>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: '#FFD700', marginRight: '10px' }}></div>
+            <div style={{ width: '20px', height: '20px', backgroundColor: '#DC143C', marginRight: '10px' }}></div>
             <span>Kurang Inovatif</span>
           </div>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: '#FF6347', marginRight: '10px' }}></div>
-            <span>Belum Mengisi Data</span>
-          </div>
-          <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: '#8B0000', marginRight: '10px' }}></div>
-            <span>Tidak Dapat Dinilai</span>
+            <div style={{ width: '20px', height: '20px', backgroundColor: '#708090', marginRight: '10px' }}></div>
+            <span>Tidak Ada Data</span>
           </div>
         </div>
       </div>
