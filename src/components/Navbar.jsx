@@ -7,6 +7,8 @@ import { supabase } from '../supabaseClient'; // Make sure you import Supabase c
 function Navbar() {
   const [isModalOpen, setModalOpen] = useState(false); // State for modal
   const [user, setUser] = useState(null); // State to store user information
+  const [isMenuOpen, setMenuOpen] = useState(false); // State for mobile menu
+  const [isProfileOpen, setProfileOpen] = useState(false); // State for mobile menu
   const { t, i18n } = useTranslation();
 
   const menu = [
@@ -23,6 +25,10 @@ function Navbar() {
   const openModal = () => setModalOpen(true);
 
   const closeModal = () => setModalOpen(false);
+
+  const toggleMenu = () => setMenuOpen(!isMenuOpen);
+
+  const toggleProfile = () => setProfileOpen(!isProfileOpen);
 
   // Function for Logout
   const handleLogout = async () => {
@@ -80,28 +86,63 @@ function Navbar() {
         <span className="text-white font-bold text-2xl">INOLAND</span>
       </div>
 
-      <ul className="flex gap-6 list-none font-poppins font-bold text-lg text-white">
-        {menu.map((item) => (
-          <li key={item.name}>
-            <NavLink
-              to={item.path}
-              activeClassName="font-bold text-white"
-              className="no-underline text-white hover:text-[darkred] hover:bg-white transition p-2 rounded"
-            >
-              {item.name}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
+      <div className="hidden md:flex md:items-center md:gap-6">
+        <ul className="flex gap-6 list-none font-poppins font-bold text-lg text-white">
+          {menu.map((item) => (
+            <li key={item.name} className="my-2 md:my-0">
+              <NavLink
+                to={item.path}
+                activeClassName="font-bold text-white"
+                className="no-underline text-white hover:text-[darkred] hover:bg-white transition p-2 rounded"
+              >
+                {item.name}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <div className="flex items-center gap-4">
+        <button className="md:hidden text-white" onClick={toggleMenu}>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+
+        <ul className={`absolute top-16 right-0 bg-white shadow-lg rounded-lg p-4 md:hidden list-none font-poppins font-bold text-lg text-[darkred] ${isMenuOpen ? 'block' : 'hidden'}`}>
+          {menu.map((item) => (
+            <li key={item.name} className="my-2 md:my-0">
+              <NavLink
+                to={item.path}
+                activeClassName="font-bold text-[darkred]"
+                className="no-underline text-[darkred] hover:text-white hover:bg-[darkred] transition p-2 rounded"
+              >
+                {item.name}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+
         {user ? (
-          <button
-            onClick={handleLogout}
-            className="text-white text-lg cursor-pointer border-none bg-transparent hover:text-gray-300 transition"
-          >
-            Selamat Datang, {user.email || user.username}! (Logout)
-          </button>
+          <div className="relative">
+            <button className="text-white text-lg cursor-pointer border-none bg-transparent hover:text-gray-300 transition" onClick={toggleProfile}>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.121 17.804A7.5 7.5 0 1118.879 6.196M12 12v.01"></path>
+              </svg>
+            </button>
+            {isProfileOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
+                <p className="px-4 py-2 text-sm text-gray-700">Selamat Datang, {user.email || user.username}!</p>
+                <NavLink to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</NavLink>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <button
             onClick={openModal}
