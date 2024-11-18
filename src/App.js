@@ -7,10 +7,12 @@ import Beranda from './pages/Beranda';
 import LayananInovasi from './pages/Layananinovasi';
 import CariInovasi from './pages/Cariinovasi';
 import Referensi from './pages/Referensi';
+import Pengetahuan from './pages/Pengetahuan';
 import Berita from './components/Berita';
 import NewsDetail from './components/NewsDetail';
 import InovasiDetail from './components/InovasiDetail';
 import Dashboard from './pages/Dashboard';
+import Admin from './pages/Admin'; // Import Admin page
 import LoadingSpinner from './components/LoadingSpinner';
 import Register from './components/Register'; // Import Register component
 import Login from './components/Login'; // Import LoginModal component
@@ -87,17 +89,23 @@ const App = () => {
             <Route path="/layanan" element={<LayananInovasi />} />
             <Route path="/cari" element={<CariInovasi />} />
             <Route path="/referensi" element={<Referensi />} />
+            <Route path="/pengetahuan" element={<Pengetahuan />} />
             <Route path="/berita" element={<Berita />} />
             <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/inovasi/:id" element={<InovasiDetail />} />
-            
+
             {/* Conditional Route Redirection based on user role */}
             <Route 
               path="/dashboard" 
               element={userRole === 1 ? <Dashboard /> : <Navigate to="/" replace />} 
             />
+            {/* Admin page route */}
             <Route 
-              path="/" 
+              path="/admin" 
+              element={userRole === 1 ? <Admin /> : <Navigate to="/" replace />}
+            />
+            <Route 
+              path="/beranda" 
               element={userRole === 2 ? <Beranda /> : <Navigate to="/" replace />} 
             />
           </Routes>

@@ -1,48 +1,58 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 const Register = ({ closeModal }) => {
+  console.log("closeModal prop:", closeModal); // Log untuk memeriksa apakah closeModal diterima sebagai prop
+  
+  
+
+
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
+    confirmPassword: '',
     password: '',
     username: '',
+    phoneNumber: '',
     instansi: '',
   });
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Bersihkan pesan error sebelumnya
+    setErrorMessage('');
+    console.log("Attempting to register user with formData:", formData); // Log data pendaftaran
 
-    // Mendaftar pengguna ke Supabase Auth
     const { user, error: authError } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
     });
 
     if (authError || !user) {
+      console.error("Auth error:", authError); // Log jika ada error pada auth
       setErrorMessage(authError ? authError.message : 'Sign-up failed');
       return;
     }
 
-    // Setelah pengguna berhasil mendaftar, masukkan data ke tabel 'users'
     const { data, error: dbError } = await supabase
-      .from('users') // Pastikan 'users' adalah nama tabel yang benar
+      .from('users')
       .insert([
         {
-          auth_id: user.id, // Menggunakan auth_id sebagai foreign key
-          username: formData.username, // Username dari form
-          email: formData.email, // Email yang terdaftar di Auth
-          instansi: formData.instansi, // Data instansi dari form
+          auth_id: user.id,
+          username: formData.username,
+          email: formData.email,
+          instansi: formData.instansi,
         },
       ]);
 
     if (dbError) {
+      console.error("Database error:", dbError); // Log jika ada error pada database
       setErrorMessage(dbError.message);
       return;
     }
 
-    // Jika sukses, tutup modal dan beri tahu pengguna
+    console.log("User registered successfully, closing modal");
     closeModal();
     alert('Registrasi berhasil!');
   };
@@ -55,20 +65,18 @@ const Register = ({ closeModal }) => {
     }));
   };
 
+  const handleClose = () => {
+    console.log("Closing modal and navigating to login"); // Log pada close
+    closeModal();
+    navigate('/login');
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black opacity-50"
-        onClick={closeModal}
-      ></div>
+      <div className="fixed inset-0 bg-black opacity-50" onClick={handleClose}></div>
 
-      {/* Modal Content */}
       <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 z-10 max-w-lg w-full mx-4">
-        <button
-          onClick={closeModal}
-          className="absolute top-0 right-0 m-4 text-gray-600 text-2xl hover:text-gray-800"
-        >
+        <button onClick={handleClose} className="absolute top-0 right-0 m-4 text-gray-600 text-2xl hover:text-gray-800">
           &times;
         </button>
 

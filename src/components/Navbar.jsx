@@ -3,10 +3,13 @@ import { NavLink } from 'react-router-dom';
 import Login from './Login';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../supabaseClient'; // Make sure you import Supabase client
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
   const [isModalOpen, setModalOpen] = useState(false); // State for modal
   const [user, setUser] = useState(null); // State to store user information
+  const [userProfile, setUserProfile] = useState(null); // State to store user information
   const [isMenuOpen, setMenuOpen] = useState(false); // State for mobile menu
   const [isProfileOpen, setProfileOpen] = useState(false); // State for mobile menu
   const { t, i18n } = useTranslation();
@@ -15,7 +18,8 @@ function Navbar() {
     { name: t('Beranda'), path: '/' },
     { name: t('Layanan Inovasi'), path: '/layanan' },
     { name: t('Cari Inovasi'), path: '/cari' },
-    { name: t('Referensi'), path: '/referensi' }
+    { name: t('Referensi'), path: '/referensi' },
+    { name: t('Pengetahuan'), path: '/pengetahuan' }
   ];
 
   const changeLanguage = (lng) => {
@@ -37,6 +41,7 @@ function Navbar() {
         console.error('Error during logout:', error.message);
     } else {
         setUser(null); // Reset user state to null after logout
+        setUserProfile(null); // Reset user profile state to null after logout
     }
   };
 
@@ -48,7 +53,7 @@ function Navbar() {
 
       // Check if currentUser exists before making any queries
       if (currentUser) {
-        const { error: profileError } = await supabase
+        const { data:userProfile, error: profileError } = await supabase
           .from('users')
           .select('*')
           .eq('id', currentUser.id)
@@ -58,6 +63,7 @@ function Navbar() {
           console.error('Error fetching user profile:', profileError.message);
         } else {
           setUser(currentUser);
+          setUserProfile(userProfile);
         }
       }
     }
@@ -67,9 +73,10 @@ function Navbar() {
   // Listen for auth state changes
   const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN') {
-      setUser(session.user);
+      getSession();
     } else if (event === 'SIGNED_OUT') {
       setUser(null);
+      setUserProfile(null);
     }
   });
 
@@ -80,7 +87,7 @@ function Navbar() {
 }, []);
 
   return (
-    <nav className="flex justify-between items-center p-4 bg-[darkred] shadow-md">
+    <nav className="flex justify-between items-center p-4 bg-red-800 shadow-md">
       <div className="flex items-center">
         <img src="/lanri.png" alt="Logo" className="h-12 mr-3 p-2" />
         <span className="text-white font-bold text-2xl">INOLAND</span>
@@ -93,7 +100,7 @@ function Navbar() {
               <NavLink
                 to={item.path}
                 activeClassName="font-bold text-white"
-                className="no-underline text-white hover:text-[darkred] hover:bg-white transition p-2 rounded"
+                className="no-underline text-white hover:text-red-800 hover:bg-white transition p-2 rounded"
               >
                 {item.name}
               </NavLink>
@@ -109,13 +116,13 @@ function Navbar() {
           </svg>
         </button>
 
-        <ul className={`absolute top-16 right-0 bg-white shadow-lg rounded-lg p-4 md:hidden list-none font-poppins font-bold text-lg text-[darkred] ${isMenuOpen ? 'block' : 'hidden'}`}>
+        <ul className={`absolute top-16 right-0 bg-white shadow-lg rounded-lg p-4 md:hidden list-none font-poppins font-bold text-lg text-red-800 ${isMenuOpen ? 'block' : 'hidden'}`}>
           {menu.map((item) => (
             <li key={item.name} className="my-2 md:my-0">
               <NavLink
                 to={item.path}
-                activeClassName="font-bold text-[darkred]"
-                className="no-underline text-[darkred] hover:text-white hover:bg-[darkred] transition p-2 rounded"
+                activeClassName="font-bold text-red-800"
+                className="no-underline text-red-800 hover:text-white hover:bg-red-800 transition p-2 rounded"
               >
                 {item.name}
               </NavLink>
@@ -123,16 +130,14 @@ function Navbar() {
           ))}
         </ul>
 
-        {user ? (
+        {userProfile ? (
           <div className="relative">
             <button className="text-white text-lg cursor-pointer border-none bg-transparent hover:text-gray-300 transition" onClick={toggleProfile}>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.121 17.804A7.5 7.5 0 1118.879 6.196M12 12v.01"></path>
-              </svg>
+              <FontAwesomeIcon icon={faUser} />
             </button>
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
-                <p className="px-4 py-2 text-sm text-gray-700">Selamat Datang, {user.email || user.username}!</p>
+                <p className="px-4 py-2 text-sm text-gray-700">Selamat Datang, {userProfile.nama_lengkap} dari {userProfile.instansi}!</p>
                 <NavLink to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</NavLink>
                 <button
                   onClick={handleLogout}
@@ -146,7 +151,7 @@ function Navbar() {
         ) : (
           <button
             onClick={openModal}
-            className="border-2 border-white bg-[darkred] text-white py-2 px-4 rounded-lg cursor-pointer text-lg hover:bg-white hover:text-[darkred] transition"
+            className="border-2 border-white bg-red-800 text-white py-2 px-4 rounded-lg cursor-pointer text-lg hover:bg-white hover:text-red-800 transition"
           >
             Masuk
           </button>
