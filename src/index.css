@@ -1,0 +1,9 @@
+@import 'flowbite'; /* Place all @import statements at the top */
+
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your custom styles, if any */
+
