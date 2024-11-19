@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import Header from './components/Header'; // Import the Header component
+import Header from './components/header'; // Import the Header component
 import Login from './components/login';  // Import the Login component
 import Sidebar from './pages/sidebar';   // Import the Sidebar component
 import Dashboard from './components/dashboard'; // Assuming Dashboard component for main page
