@@ -4,22 +4,27 @@ import Header from './components/header'; // Import the Header component
 import Login from './components/login';  // Import the Login component
 import Sidebar from './pages/sidebar';   // Import the Sidebar component
 import Dashboard from './components/dashboard'; // Assuming Dashboard component for main page
-import ListUnit from './components/list-unit';
+import ListUnit from './components/list-unit'; // ListUnit page
+import Navbar from './components/navbar'; // Import the Navbar component
 
 function App() {
   // Custom hook to get the current route
   const location = useLocation();
   
-  // Define routes where the Sidebar should not appear
+  // Define routes where the Sidebar or Navbar should not appear
   const noSidebarRoutes = ['/'];
+  const noNavbarRoutes = ['/'];
 
   return (
     <div>
-      <Header />  {/* Header component visible across all pages */}
+      <Header /> {/* Header component visible across all pages */}
+      {/* Conditionally render Navbar */}
+      {!noNavbarRoutes.includes(location.pathname) && <Navbar />}
+      
       <div className="flex">
         {/* Conditionally render Sidebar */}
         {!noSidebarRoutes.includes(location.pathname) && <Sidebar />}
-
+        
         {/* Content section */}
         <div className="flex-grow p-4">
           <Routes>
