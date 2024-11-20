@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/header'; // Import the Header component
 import Login from './components/login';  // Import the Login component
 import Sidebar from './pages/sidebar';   // Import the Sidebar component
@@ -7,7 +7,8 @@ import Dashboard from './components/dashboard'; // Assuming Dashboard component 
 import ListUnit from './components/list-unit'; // ListUnit page
 import Navbar from './components/navbar'; // Import the Navbar component
 
-function App() {
+// Main app component
+function AppContent() {
   // Custom hook to get the current route
   const location = useLocation();
   
@@ -43,12 +44,13 @@ function App() {
   );
 }
 
-function AppWrapper() {
+// Wrapper component for BrowserRouter
+function App() {
   return (
-    <BrowserRouter basename="/">
-      <App />
-    </BrowserRouter>
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 
-export default AppWrapper;
+export default App;
