@@ -281,7 +281,14 @@ const CustomSidebar = () => {
             Ubah Password
           </Sidebar.Item>
 
-
+          {/* komparasi SIASN */}
+          <Sidebar.Item
+            href="#"
+            icon={FaTable}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
+          >
+            Ubah Password
+          </Sidebar.Item>
 
 
 
