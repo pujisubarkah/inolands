@@ -4,18 +4,22 @@ import {
   FaTachometerAlt,
   FaSearch,
   FaUser,
-  FaShoppingBag,
-  FaArrowRight,
+  FaBell,
+  FaHdd,
   FaTable,
-  FaPowerOff
+  FaChartPie,
+  FaHandPointUp,
+  FaUsers,
+  FaCog,
+  FaPowerOff,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const CustomSidebar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null); // Untuk mengelola dropdown terbuka
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = (menu) => {
+    setOpenDropdown((prev) => (prev === menu ? null : menu));
   };
 
   return (
@@ -27,7 +31,7 @@ const CustomSidebar = () => {
             as={Link}
             to="/dashboard"
             icon={FaTachometerAlt}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             Dashboard
           </Sidebar.Item>
@@ -37,7 +41,7 @@ const CustomSidebar = () => {
             as={Link}
             to="/list-unit"
             icon={FaUser}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             List Pegawai
           </Sidebar.Item>
@@ -46,34 +50,53 @@ const CustomSidebar = () => {
           <Sidebar.Item
             href="#"
             icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             Cari Pegawai
           </Sidebar.Item>
 
-          {/* Dropdown for Pegawai Inaktif */}
+          {/* Dropdown: Pegawai Inaktif */}
           <Sidebar.Item
-            onClick={toggleDropdown}
-            className="cursor-pointer hover:bg-white hover:border-teal-500 border border-transparent flex items-center justify-between"
+            onClick={() => toggleDropdown("pegawaiInaktif")}
+            className="cursor-pointer hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent flex items-center justify-between"
             icon={FaUser}
           >
             List Pegawai Inaktif
-            <span className="ml-2">{isDropdownOpen ? "▲" : "▼"}</span>
+            <span className="ml-2">{openDropdown === "pegawaiInaktif" ? "▲" : "▼"}</span>
           </Sidebar.Item>
-
-          {isDropdownOpen && (
+          {openDropdown === "pegawaiInaktif" && (
             <div className="ml-6 mt-2 space-y-2">
-              <Sidebar.Item href="#" className="hover:bg-gray-100">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
                 Pensiun
               </Sidebar.Item>
-              <Sidebar.Item href="#" className="hover:bg-gray-100">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
                 Meninggal Dunia
               </Sidebar.Item>
-              <Sidebar.Item href="#" className="hover:bg-gray-100">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
                 Pindah ke Luar
               </Sidebar.Item>
-              <Sidebar.Item href="#" className="hover:bg-gray-100">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
                 CLTN/Tugas Belajar
+              </Sidebar.Item>
+            </div>
+          )}
+
+          {/* Dropdown: Jabatan Kosong */}
+          <Sidebar.Item
+            onClick={() => toggleDropdown("jabatanKosong")}
+            className="cursor-pointer hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent flex items-center justify-between"
+            icon={FaHandPointUp}
+          >
+            Jabatan Kosong
+            <span className="ml-2">{openDropdown === "jabatanKosong" ? "▲" : "▼"}</span>
+          </Sidebar.Item>
+          {openDropdown === "jabatanKosong" && (
+            <div className="ml-6 mt-2 space-y-2">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Eselon
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Noneselon
               </Sidebar.Item>
             </div>
           )}
@@ -81,8 +104,8 @@ const CustomSidebar = () => {
           {/* Pegawai Struktural */}
           <Sidebar.Item
             href="#"
-            icon={FaShoppingBag}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            icon={FaUser}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             Pegawai Struktural
           </Sidebar.Item>
@@ -90,8 +113,8 @@ const CustomSidebar = () => {
           {/* Notifikasi */}
           <Sidebar.Item
             href="#"
-            icon={FaArrowRight}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            icon={FaBell}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             Notifikasi
           </Sidebar.Item>
@@ -99,8 +122,8 @@ const CustomSidebar = () => {
           {/* Data Master */}
           <Sidebar.Item
             href="#"
-            icon={FaTable}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            icon={FaHdd}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             Data Master
           </Sidebar.Item>
@@ -109,140 +132,167 @@ const CustomSidebar = () => {
           <Sidebar.Item
             href="#"
             icon={FaTable}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             Semua Pegawai
           </Sidebar.Item>
 
+          {/* Dropdown: Rekap */}
+          <Sidebar.Item
+            onClick={() => toggleDropdown("rekap")}
+            className="cursor-pointer hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent flex items-center justify-between"
+            icon={FaTable}
+          >
+            Rekap
+            <span className="ml-2">{openDropdown === "rekap" ? "▲" : "▼"}</span>
+          </Sidebar.Item>
+          {openDropdown === "rekap" && (
+            <div className="ml-6 mt-2 space-y-2">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Daftar Urut Kepangkatan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Unit Kerja
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Jabatan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Golongan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Jenis Kelamin
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Tingkat Pendidikan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Kelompok Usia
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Eselon Jenis Kelamin
+              </Sidebar.Item>
+            </div>
+          )}
 
-        {/* Data Master */}
+
+          {/* Dropdown: Formasi */}
+          <Sidebar.Item
+            onClick={() => toggleDropdown("formasi")}
+            className="cursor-pointer hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent flex items-center justify-between"
+            icon={FaTable}
+          >
+            Formasi
+            <span className="ml-2">{openDropdown === "formasi" ? "▲" : "▼"}</span>
+          </Sidebar.Item>
+          {openDropdown === "formasi" && (
+            <div className="ml-6 mt-2 space-y-2">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                PNS Akan Naik Pangkat
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                PNS Akan Pensiun
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                PNS Akan Pensiun Jabatan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                PNS Pindah Keluar
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                PNS Meninggal
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                PNS Sudah Pensiun
+              </Sidebar.Item>
+            </div>
+          )}
+
+        {/* Dropdown: Grafik */}
         <Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            onClick={() => toggleDropdown("grafik")}
+            className="cursor-pointer hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent flex items-center justify-between"
+            icon={FaChartPie}
           >
-            Pencarian Dinamis
+            Grafik
+            <span className="ml-2">{openDropdown === "grafik" ? "▲" : "▼"}</span>
           </Sidebar.Item>
+          {openDropdown === "formasi" && (
+            <div className="ml-6 mt-2 space-y-2">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Jabatan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Golongan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Jenis Kelamin
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Eselon Jenis Kelamin
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Tingkat Pendidikan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Kelompok Usia
+              </Sidebar.Item>
+            </div>
+          )}
 
-
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-
-
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-
-
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-{/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
- {/* Data Master */}
-<Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-          {/* Data Master */}
+          {/* Absen Presensi */}
           <Sidebar.Item
             href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            icon={FaTable}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
-            Pencarian Dinamis
+            Absen / Presensi
           </Sidebar.Item>
-          {/* Data Master */}
+
+          {/* Dropdown: Users */}
+          <Sidebar.Item
+            onClick={() => toggleDropdown("Users")}
+            className="cursor-pointer hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent flex items-center justify-between"
+            icon={FaUsers}
+          >
+            Users
+            <span className="ml-2">{openDropdown === "Users" ? "▲" : "▼"}</span>
+          </Sidebar.Item>
+          {openDropdown === "Users" && (
+            <div className="ml-6 mt-2 space-y-2">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Data Users
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Daftar Role
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Hak Akses User
+              </Sidebar.Item>
+            </div>
+          )}
+
+          {/* ubah password */}
           <Sidebar.Item
             href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            icon={FaCog}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
-            Pencarian Dinamis
+            Ubah Password
           </Sidebar.Item>
-          {/* Data Master */}
-          <Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-          {/* Data Master */}
-          <Sidebar.Item
-            href="#"
-            icon={FaSearch}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
-          >
-            Pencarian Dinamis
-          </Sidebar.Item>
-          
-                   
+
+
+
+
+
+
+
+
           {/* Logout */}
           <Sidebar.Item
             href="#"
             icon={FaPowerOff}
-            className="hover:bg-white hover:border-teal-500 border border-transparent"
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
             Logout
           </Sidebar.Item>
