@@ -20,6 +20,8 @@ const Login = () => {
   };
   
  
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="flex h-screen m-0 p-0">
       <div className="w-1/4 flex flex-col justify-center items-center bg-white p-8">
@@ -35,30 +37,30 @@ const Login = () => {
               <p className="text-red-500 text-sm">{errorMessage}</p>
             )}
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                <i className="fas fa-user"></i> Username
-              </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                id="username" 
-                type="text" 
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required />
+              <div className="relative">
+                <i className="fas fa-user absolute left-3 top-3 text-gray-500"></i>
+                <input className="shadow appearance-none border rounded w-full py-2 pl-10 pr-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                  id="username" 
+                  type="text" 
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required />
+              </div>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                <i className="fas fa-lock"></i> Password
-              </label>
               <div className="relative">
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                <i className="fas fa-lock absolute left-3 top-3 text-gray-500"></i>
+                <input className="shadow appearance-none border rounded w-full py-2 pl-10 pr-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                   id="password" 
-                  type="password" 
+                  type={showPassword ? "text" : "password"} 
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required />
-                <i className="fas fa-eye absolute right-3 top-3 text-gray-500"></i>
+                <i 
+                  className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"} absolute right-3 top-3 text-gray-500 cursor-pointer`}
+                  onClick={() => setShowPassword(!showPassword)}></i>
               </div>
             </div>
             <div className="mb-6">
@@ -72,9 +74,9 @@ const Login = () => {
             </div>
             <div className="flex items-center justify-between">
               <button 
-                className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+                className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 w-full rounded focus:outline-none focus:shadow-outline" 
                 type="submit">
-                Login
+                Next
               </button>
             </div>
           </form>
