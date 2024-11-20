@@ -11,6 +11,10 @@ import {
   FaHandPointUp,
   FaUsers,
   FaCog,
+  FaUpload,
+  FaMobile,
+  FaFileExcel,
+  FaExchangeAlt,
   FaPowerOff,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -48,7 +52,8 @@ const CustomSidebar = () => {
 
           {/* Cari Pegawai */}
           <Sidebar.Item
-            href="#"
+             as={Link}
+            to="/list-all-pegawai"
             icon={FaSearch}
             className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
@@ -290,10 +295,67 @@ const CustomSidebar = () => {
             Komparasi SIASN
           </Sidebar.Item>
 
+          {/* Dropdown: Users */}
+          <Sidebar.Item
+            onClick={() => toggleDropdown("Kenaikan_pangkat")}
+            className="cursor-pointer hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent flex items-center justify-between"
+            icon={FaBell}
+          >
+            Kenaikan Pangkat
+            <span className="ml-2">{openDropdown === "kenaikan_pangkat" ? "▲" : "▼"}</span>
+          </Sidebar.Item>
+          {openDropdown === "Users" && (
+            <div className="ml-6 mt-2 space-y-2">
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                List
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Statistik
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Usulan
+              </Sidebar.Item>
+              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+                Draft
+              </Sidebar.Item>
+            </div>
+          )}
 
+          {/* import data */}
+          <Sidebar.Item
+            href="#"
+            icon={FaUpload}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
+          >
+            Import Data
+          </Sidebar.Item>
 
+          {/* kontak */}
+          <Sidebar.Item
+            href="#"
+            icon={FaMobile}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
+          >
+            Kontak
+          </Sidebar.Item>
 
+          {/* ekspor data */}
+          <Sidebar.Item
+            href="#"
+            icon={FaFileExcel}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
+          >
+            Ekspor Data
+          </Sidebar.Item>
 
+          {/* ekspor data */}
+          <Sidebar.Item
+            href="#"
+            icon={FaExchangeAlt}
+            className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
+          >
+            Migrasi SIASN
+          </Sidebar.Item>
 
           {/* Logout */}
           <Sidebar.Item
