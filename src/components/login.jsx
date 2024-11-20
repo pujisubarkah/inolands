@@ -21,88 +21,72 @@ const Login = () => {
   
  
   return (
-    <section className="h-screen bg-gray-100">
-      <div className="container mx-auto h-full px-6 py-12">
-        <div className="flex flex-wrap h-full items-center justify-center lg:justify-between">
-          {/* Left column with an image */}
-          <div className="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
-  <img 
-    src="/photo.png" 
-    alt="Illustration" 
-    className="w-full max-w-[800px] mx-auto" 
-  />
-</div>
-
-          {/* Right column with the login form */}
-          <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-            <div className="text-center mb-6">
-              <h1 className="text-3xl font-bold text-teal-600">IDAMAN LAN</h1>
-              <p className="text-sm text-gray-600">
-                Sistem Informasi Sumber Daya Manusia
-                <br />
-                Lembaga Administrasi Negara
-              </p>
-            </div>
-
-            <h2 className="text-xl font-semibold text-gray-700 text-center mb-4">
-              Selamat Datang
-            </h2>
-            <p className="text-sm text-gray-600 text-center mb-6">
-              Silakan masukkan username & password untuk login ke IDAMAN LAN
-            </p>
-
-            {/* Login Form */}
-            <form onSubmit={handleLogin} className="space-y-4">
-              {errorMessage && (
-                <p className="text-red-500 text-sm">{errorMessage}</p>
-              )}
-
-              <input
-                type="text"
+    <div className="flex h-screen m-0 p-0">
+      <div className="w-1/4 flex flex-col justify-center items-center bg-white p-8">
+        <div className="flex flex-col items-center mb-6">
+          <img src="/lanri.png" alt="Logo LANRI" className="w-20 mb-4" />
+          <h1 className="text-4xl font-bold mb-2 text-teal-600">IDAMAN LAN</h1>
+          <p className="text-gray-600 text-center">Sistem Informasi Sumber Daya Manusia Lembaga Administrasi Negara</p>
+        </div>
+        <div className="w-full max-w-md">
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            {errorMessage && (
+              <p className="text-red-500 text-sm">{errorMessage}</p>
+            )}
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                <i className="fas fa-user"></i> Username
+              </label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                id="username" 
+                type="text" 
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-teal-300 focus:outline-none"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-teal-300 focus:outline-none"
-              />
-              <div className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring focus:ring-teal-300"
-                />
-                <label className="ml-2 text-sm text-gray-600">Remember me</label>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 focus:ring focus:ring-teal-300 focus:outline-none"
-              >
-                LOGIN
-              </button>
-            </form>
-
-            {/* Footer Section */}
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">Digital Signature By:</p>
-              <img
-                src="/path-to-digital-signature.png"
-                alt="Digital Signature"
-                className="mx-auto w-32 mt-2"
-              />
+                required />
             </div>
-          </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                <i className="fas fa-lock"></i> Password
+              </label>
+              <div className="relative">
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                  id="password" 
+                  type="password" 
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required />
+                <i className="fas fa-eye absolute right-3 top-3 text-gray-500"></i>
+              </div>
+            </div>
+            <div className="mb-6">
+              <label className="inline-flex items-center">
+                <input type="checkbox" 
+                  className="form-checkbox text-teal-600"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)} />
+                <span className="ml-2 text-gray-700">Ingat saya?</span>
+              </label>
+            </div>
+            <div className="flex items-center justify-between">
+              <button 
+                className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+                type="submit">
+                Login
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </section>
+      <div className="w-3/4 bg-gray-100 flex items-center justify-center m-0 p-0">
+        <img 
+          src="/lan-ilustrasi.jpeg" 
+          alt="Illustration of Lembaga Administrasi Negara building with cartoon characters" 
+          className="h-full object-cover" />
+      </div>
+    </div>
   );
 };
 export default Login;
