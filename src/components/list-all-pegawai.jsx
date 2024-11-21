@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { supabase } from '../supabaseClient'; // Import Supabase client
 
-const ListAllPegawai = () => {
+
+
+const Dashboard = () => {
   const [pegawai, setPegawai] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -57,4 +59,4 @@ const ListAllPegawai = () => {
   );
 };
 
-export default ListAllPegawai;
+export default Dashboard;

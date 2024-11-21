@@ -1,48 +1,101 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { supabase } from "../supabaseClient"; // Import Supabase client
 
 const Dashboard = () => {
+  const [statuses, setStatuses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fungsi untuk fetch data dari Supabase
+  useEffect(() => {
+    fetchStatuses();
+  }, []);
+
+  const fetchStatuses = async () => {
+    setLoading(true);
+    try {
+      // Mengambil data dari tabel m_status
+      const { data, error } = await supabase
+        .schema('siap_skpd')
+        .from("m_status") // Menyebutkan nama tabel m_status
+        .select("id, status"); // Ambil kolom id dan status saja
+
+      if (error) throw error;
+
+      // Mengambil jumlah status_id yang ada di log_edit_pegawai untuk setiap status
+      const statusesWithCount = await Promise.all(
+        data.map(async (status) => {
+          const { count, error: countError } = await supabase
+          .schema('siap_skpd')
+            .from("status_edit_pegawai")
+            .select("*", { count: "exact", head: true }) // Hitung jumlah status_id
+            .eq("status_id", status.id); // Hubungkan dengan m_status.id
+
+            if (countError) {
+              console.error("Error menghitung status_id:", countError);
+              throw countError;
+            }
+  
+             // Debug log untuk melihat count yang diperoleh
+          console.log(`Jumlah untuk status ${status.id} (${status.status}):`, count);
+
+          return {
+            ...status,
+            jumlah: count || 0, // Menambahkan jumlah hasil hitung
+          };
+        })
+      );
+
+      // Menampilkan data dengan jumlah yang sudah dihitung
+      console.log("Statuses with counts:", statusesWithCount);
+
+      setStatuses(statusesWithCount); // Set data yang sudah ditambahkan jumlahnya
+    } catch (error) {
+      // Menangani error jika ada masalah dalam fetch data atau query count
+      console.error("Error fetching statuses:", error.message);
+    } finally {
+      setLoading(false); // Set loading menjadi false setelah proses selesai
+    }
+  };
+
   return (
     <div className="w-full px-4">
       {/* Section: Daftar Status */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-10">
         <h3 className="text-lg font-bold font-poppins">DAFTAR STATUS</h3>
       </div>
       <hr className="my-4 border-gray-300" />
-      <table className="w-full border-collapse border border-gray-300 mb-10">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Jumlah</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            { status: "Draft", jumlah: 244, link: "1" },
-            { status: "Usul Perubahan", jumlah: 8, link: "2" },
-            { status: "Revisi", jumlah: 1, link: "3" },
-            { status: "Sudah Verifikasi SDM", jumlah: 757, link: "4" },
-            { status: "Usul Perubahan (Pegawai Unit Kerja)", jumlah: 0, link: "5" },
-            { status: "Revisi Perubahan (Pegawai Unit Kerja)", jumlah: 0, link: "6" },
-          ].map(({ status, jumlah, link }, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{status}</td>
-              <td className="border border-gray-300 px-4 py-2">{jumlah}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <a
-                  href={`http://idaman.lan.go.id/list-permohonan/${link}`}
-                  className="text-teal-600 hover:underline"
-                >
-                  Lihat Detail
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
 
-      {/* Section: Statistik Operator */}
-      <div className="text-center">
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <table className="w-full border-collapse border border-gray-300 mb-10">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Jumlah</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {statuses.map(({ status, jumlah, id }, index) => (
+              <tr key={index} className="hover:bg-gray-50">
+                <td className="border border-gray-300 px-4 py-2">{status}</td>
+                <td className="border border-gray-300 px-4 py-2">{jumlah}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <a
+                    href={`http://idaman.lan.go.id/list-permohonan/${id}`}
+                    className="text-teal-600 hover:underline"
+                  >
+                    Lihat Detail
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+{/* Section: Statistik Operator */}
+<div className="text-center">
         <h3 className="text-2xl font-semibold text-gray-800 mb-4">
           STATISTIK OPERATOR
         </h3>
@@ -86,24 +139,22 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {[
-              { name: "Lina Indarwati", jumlah: 315, link: "5" },
-              { name: "Iwan Prasetyo", jumlah: 2, link: "6" },
-              { name: "Achmad Fauzi", jumlah: 5, link: "7" },
-            ].map(({ name, jumlah, link }, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="py-3 px-4 border-b">{name}</td>
-                <td className="py-3 px-4 border-b">{jumlah}</td>
-                <td className="py-3 px-4 border-b">
-                  <a
-                    href={`http://idaman.lan.go.id/list-log-edit/${link}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Lihat Detail
-                  </a>
-                </td>
-              </tr>
-            ))}
+            {[{ name: "Lina Indarwati", jumlah: 315, link: "5" }].map(
+              ({ name, jumlah, link }, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="py-3 px-4 border-b">{name}</td>
+                  <td className="py-3 px-4 border-b">{jumlah}</td>
+                  <td className="py-3 px-4 border-b">
+                    <a
+                      href={`http://idaman.lan.go.id/list-log-edit/${link}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Lihat Detail
+                    </a>
+                  </td>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>
