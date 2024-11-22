@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBell, FaPowerOff } from "react-icons/fa";
 
 const Navbar = () => {
+    const [userName, setUserName] = useState("");
+
+useEffect(() => {
+// Ambil data user dari localStorage (atau sessionStorage)
+const user = JSON.parse(localStorage.getItem("user"));
+if (user) {
+    setUserName(user.nama); // Mengambil nama pengguna yang disimpan di localStorage
+    }
+    }, []);
+
 return (
     <div className="flex justify-between items-center p-4 bg-[#333] text-white">
         {/* Left Section */}
@@ -17,10 +27,10 @@ return (
                 <FaBell className="mr-2" />
             </button>
 
-            {/* Greeting */}
-            <span className="font-medium">
-                Selamat Datang, Administrator
-            </span>
+           {/* Greeting */}
+        {userName && (
+          <span className="font-medium">Selamat Datang, {userName}</span>
+        )}
 
             {/* Logout Button */}
             <a

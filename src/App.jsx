@@ -11,46 +11,60 @@ import Navbar from './components/navbar'; // Import the Navbar component
 
 // Main app component
 function AppContent() {
-  // Custom hook to get the current route
   const location = useLocation();
 
-  // Define routes where the Sidebar should appear
-  const routesWithSidebar = ['/dashboard', '/list-unit', '/list-all-pegawai', '/home','/pegawai_inaktif/pensiun'];
+  // Definisikan rute yang memerlukan Sidebar, Header, dan Navbar
+  const routesWithSidebar = [
+    '/dashboard', 
+    '/list-unit', 
+    '/list-all-pegawai', 
+    '/home', 
+    '/pegawai_inaktif/pensiun'
+  ];
+
+  // Definisikan rute yang memerlukan Header dan Navbar
+  const routesWithHeaderNavbar = routesWithSidebar;
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      {/* Always render Header and Navbar above everything */}
-      <Header />
-      <Navbar />
+      {/* Header dan Navbar hanya muncul di halaman tertentu */}
+      {routesWithHeaderNavbar.includes(location.pathname) && (
+        <>
+          <Header />
+          <Navbar />
+        </>
+      )}
       
       <div className="flex flex-1 overflow-hidden">
-        {/* Conditionally render Sidebar */}
+        {/* Sidebar hanya muncul di halaman tertentu */}
         {routesWithSidebar.includes(location.pathname) && (
           <div className="w-64 bg-blue-800 text-white">
             <Sidebar />
           </div>
         )}
 
-        {/* Main content section that adjusts based on Sidebar presence */}
+        {/* Main content section */}
         <div className="flex-1 p-4 overflow-auto bg-white">
           <Routes>
-            {/* Route for Login (homepage) */}
+            {/* Route untuk Login */}
             <Route path="/" element={<Login />} />
-            
-            {/* Route for Dashboard */}
+
+            {/* Route untuk Dashboard */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/list-unit" element={<ListUnit />} />
             <Route path="/list-all-pegawai" element={<ListAll />} />
             <Route path="/home" element={<Dashboard />} />
             <Route path="/pegawai_inaktif/pensiun" element={<Pensiun />} />
-            
-            {/* Add other routes as needed */}
+
+            {/* Tambahkan rute lainnya */}
           </Routes>
         </div>
       </div>
     </div>
   );
 }
+
+
 
 // Wrapper component for BrowserRouter
 function App() {
