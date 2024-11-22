@@ -69,7 +69,7 @@ const Dashboard = () => {
         <p>Loading...</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse border border-gray-300 text-left">
+          <table className="min-w-full table-auto border-collapse border border-gray-600 text-left">
             <thead className="bg-gray-200 text-gray-700">
               <tr>
                 <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
