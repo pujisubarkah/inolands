@@ -58,7 +58,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="w-full px-4">
+    <div className="flex-4 h-full px-4 overflow-auto">
       {/* Section: Daftar Status */}
       <div className="text-center mb-10">
         <h3 className="text-lg font-bold font-poppins">DAFTAR STATUS</h3>
@@ -68,34 +68,36 @@ const Dashboard = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table className="w-full border-collapse border border-gray-300 mb-10">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Jumlah</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {statuses.map(({ status, jumlah, id }, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4 py-2">{status}</td>
-                <td className="border border-gray-300 px-4 py-2">{jumlah}</td>
-                <td className="border border-gray-300 px-4 py-2">
-                  <a
-                    href={`http://idaman.lan.go.id/list-permohonan/${id}`}
-                    className="text-teal-600 hover:underline"
-                  >
-                    Lihat Detail
-                  </a>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 text-left">
+            <thead className="bg-gray-200 text-gray-700">
+              <tr>
+                <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Jumlah</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {statuses.map(({ status, jumlah, id }, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2">{status}</td>
+                  <td className="border border-gray-300 px-4 py-2">{jumlah}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <a
+                      href={`http://idaman.lan.go.id/list-permohonan/${id}`}
+                      className="text-teal-600 hover:underline"
+                    >
+                      Lihat Detail
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-{/* Section: Statistik Operator */}
-<div className="text-center">
+      {/* Section: Statistik Operator */}
+      <div className="text-center">
         <h3 className="text-2xl font-semibold text-gray-800 mb-4">
           STATISTIK OPERATOR
         </h3>
