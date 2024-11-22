@@ -71,7 +71,8 @@ const CustomSidebar = () => {
           </Sidebar.Item>
           {openDropdown === "pegawaiInaktif" && (
             <div className="ml-6 mt-2 space-y-2">
-              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+              <Sidebar.Item as={Link}
+            to="/pegawai_inaktif/pensiun" className="hover:bg-gray-100 hover:text-teal-500">
                 Pensiun
               </Sidebar.Item>
               <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">

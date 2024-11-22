@@ -6,6 +6,7 @@ import Sidebar from './pages/sidebar';   // Import the Sidebar component
 import Dashboard from './components/dashboard'; // Assuming Dashboard component for main page
 import ListUnit from './components/list-unit'; // ListUnit page
 import ListAll from './components/list-all-pegawai'; // ListAll page
+import Pensiun from './pegawai_inaktif/pensiun'; // Pensiun page
 import Navbar from './components/navbar'; // Import the Navbar component
 
 // Main app component
@@ -14,7 +15,7 @@ function AppContent() {
   const location = useLocation();
 
   // Define routes where the Sidebar should appear
-  const routesWithSidebar = ['/dashboard', '/list-unit', '/list-all-pegawai', '/home'];
+  const routesWithSidebar = ['/dashboard', '/list-unit', '/list-all-pegawai', '/home','/pegawai_inaktif/pensiun'];
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
@@ -41,6 +42,7 @@ function AppContent() {
             <Route path="/list-unit" element={<ListUnit />} />
             <Route path="/list-all-pegawai" element={<ListAll />} />
             <Route path="/home" element={<Dashboard />} />
+            <Route path="/pegawai_inaktif/pensiun" element={<Pensiun />} />
             
             {/* Add other routes as needed */}
           </Routes>
