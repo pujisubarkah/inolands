@@ -43,7 +43,7 @@ const CustomSidebar = () => {
           {/* List Pegawai */}
           <Sidebar.Item
             as={Link}
-            to="/list-unit"
+            to="/list_unit"
             icon={FaUser}
             className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >
@@ -53,7 +53,7 @@ const CustomSidebar = () => {
           {/* Cari Pegawai */}
           <Sidebar.Item
              as={Link}
-            to="/list-all-pegawai"
+            to="/list_all_pegawai"
             icon={FaSearch}
             className="hover:bg-white hover:text-teal-500 hover:border-teal-500 border border-transparent"
           >

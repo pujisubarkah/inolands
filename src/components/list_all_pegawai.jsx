@@ -18,8 +18,9 @@ const ListAllPegawai = () => {
   const { unit_kerja_id } = useParams(); // Ambil parameter unit_kerja_id dari URL
 
   useEffect(() => {
-    // Fetch data pegawai dari Supabase
     const fetchData = async () => {
+      console.log("Fetching data for unit_kerja_id:", unit_kerja_id);
+
       let query = supabase
         .schema('siap')
         .from('v_pegawai_data') // Ganti dengan nama table atau view yang sesuai
@@ -69,7 +70,7 @@ const ListAllPegawai = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="flex-4 h-full px-4 overflow-auto">
       {/* Tombol Tambah Pegawai dan Download Data Pegawai */}
       <div className="flex justify-between mb-4">
         <button
@@ -148,7 +149,7 @@ const ListAllPegawai = () => {
   </div>
 </div>
 
-        <table className="min-w-full table-auto border-collapse text-center">
+         <table className="min-w-full table-auto border-collapse border border-gray-600 text-left">
           <thead className="bg-gray-300">
             <tr>
               <th rowSpan="2" className="border px-4 py-2">Nama</th>

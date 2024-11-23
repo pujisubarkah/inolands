@@ -4,8 +4,8 @@ import Header from './components/header'; // Import the Header component
 import Login from './components/login';  // Import the Login component
 import Sidebar from './pages/sidebar';   // Import the Sidebar component
 import Dashboard from './components/dashboard'; // Assuming Dashboard component for main page
-import ListUnit from './components/list-unit'; // ListUnit page
-import ListAll from './components/list-all-pegawai'; // ListAll page
+import ListUnit from './components/list_unit'; // ListUnit page
+import ListAll from './components/list_all_pegawai'; // ListAll page
 import Pensiun from './pegawai_inaktif/pensiun'; // Pensiun page
 import Navbar from './components/navbar'; // Import the Navbar component
 
@@ -16,8 +16,8 @@ function AppContent() {
   // Definisikan rute yang memerlukan Sidebar, Header, dan Navbar
   const routesWithSidebar = [
     '/dashboard', 
-    '/list-unit', 
-    '/list-all-pegawai', 
+    '/list_unit', 
+    '/list_all_pegawai', 
     '/home', 
     '/pegawai_inaktif/pensiun'
   ];
@@ -51,8 +51,9 @@ function AppContent() {
 
             {/* Route untuk Dashboard */}
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/list-unit" element={<ListUnit />} />
-            <Route path="/list-all-pegawai" element={<ListAll />} />
+            <Route path="/list_unit" element={<ListUnit />} />
+            <Route path="/list_all_pegawai" element={<ListAll />} />
+            <Route path="/list_all_pegawai/:unit_kerja_id" element={<ListAll />} />
             <Route path="/home" element={<Dashboard />} />
             <Route path="/pegawai_inaktif/pensiun" element={<Pensiun />} />
 
