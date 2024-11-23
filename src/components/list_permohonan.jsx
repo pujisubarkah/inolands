@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { supabase } from "../supabaseClient"; // Import Supabase client
+
 
 const ListPermohonan = () => {
     const [searchTerm, setSearchTerm] = useState('');

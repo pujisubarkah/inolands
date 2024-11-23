@@ -1,48 +1,87 @@
 import React, { useEffect, useState } from "react";
 import { FaBell, FaPowerOff } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Import useNavigate untuk navigasi
+import { supabase } from "../supabaseClient"; // Import supabase client
 
 const Navbar = () => {
     const [userName, setUserName] = useState("");
+    const navigate = useNavigate(); // Initialize navigate
 
-useEffect(() => {
-// Ambil data user dari localStorage (atau sessionStorage)
-const user = JSON.parse(localStorage.getItem("user"));
-if (user) {
-    setUserName(user.nama); // Mengambil nama pengguna yang disimpan di localStorage
-    }
+    useEffect(() => {
+        // Ambil data user dari localStorage
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            setUserName(user.nama); // Mengambil nama pengguna yang disimpan di localStorage
+        }
     }, []);
 
-return (
-    <div className="flex justify-between items-center p-4 bg-[#333] text-white">
-        {/* Left Section */}
-        <div></div> {/* Empty to maintain spacing */}
+    const handleLogout = async () => {
+        try {
+            // Ambil user_id dari localStorage
+            const userData = JSON.parse(localStorage.getItem("user"));
+            if (userData) {
+                const { id: user_id, nama } = userData;
 
-        {/* Right Section */}
-        <div className="flex items-center space-x-4">
-            {/* Notification Bell */}
-            <button
-                className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                title="Notifications"
-            >
-                <FaBell className="mr-2" />
-            </button>
+                // Ambil session_id dari localStorage (atau buat mekanisme lain untuk mendapatkan session_id)
+                const sessionId = localStorage.getItem("session_id"); // Misalnya simpan session_id di localStorage saat login
+                
+                // Update log_session dengan deleted_at saat logout (menandakan sesi berakhir)
+                const { error } = await supabase
+                    .schema('siap_skpd')
+                    .from('log_session')
+                    .update({ deleted_at: new Date() }) // Waktu logout
+                    .eq('session_id', sessionId) // Mencocokkan session_id
+                    .eq('first_username', nama) // Mencocokkan username pertama
+                    .isNull('deleted_at'); // Hanya update sesi yang belum memiliki deleted_at
 
-           {/* Greeting */}
-        {userName && (
-          <span className="font-medium">Selamat Datang, {userName}</span>
-        )}
+                if (error) {
+                    console.error("Error updating session:", error);
+                }
+            }
 
-            {/* Logout Button */}
-            <a
-                href="http://idaman.lan.go.id/auth/logout"
-                className="flex items-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                title="Logout"
-            >
-                <FaPowerOff className="mr-2" />
-            </a>
+            // Hapus data user dan session_id dari localStorage
+            localStorage.removeItem("user");
+            localStorage.removeItem("session_id");
+
+            // Redirect ke halaman login setelah logout
+            navigate("/login"); // Navigasi ke halaman login
+        } catch (err) {
+            console.error("Logout failed:", err);
+        }
+    };
+
+    return (
+        <div className="flex justify-between items-center p-4 bg-[#333] text-white">
+            {/* Left Section */}
+            <div></div> {/* Empty to maintain spacing */}
+
+            {/* Right Section */}
+            <div className="flex items-center space-x-4">
+                {/* Notification Bell */}
+                <button
+                    className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    title="Notifications"
+                >
+                    <FaBell className="mr-2" />
+                </button>
+
+                {/* Greeting */}
+                {userName && (
+                    <span className="font-medium">Selamat Datang, {userName}</span>
+                )}
+
+                {/* Logout Button */}
+                <button
+                    onClick={handleLogout} // Panggil handleLogout saat tombol diklik
+                    className="flex items-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    title="Logout"
+                >
+                    <FaPowerOff className="mr-2" />
+                    
+                </button>
+            </div>
         </div>
-    </div>
-);
+    );
 };
 
 export default Navbar;

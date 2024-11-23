@@ -13,30 +13,69 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
+
     try {
       // Query ke tabel user
       const { data: user, error } = await supabase
         .schema('siap_skpd')
-        .from("users")  // Tidak perlu memanggil .schema, cukup .from('user')
+        .from("users")
         .select("*")
         .eq("username", username)
-        .single();  // Mengambil data user tunggal sesuai username
-  
+        .single(); // Mengambil data user tunggal sesuai username
+
       if (error || !user) {
         setErrorMessage("Username tidak ditemukan");
         return;
       }
-  
-     // Validasi password menggunakan bcrypt
-     const isPasswordValid = await bcrypt.compare(password, user.password);
-     if (isPasswordValid) {
-       // Simpan nama user di localStorage
-       const userData = { id: user.id, nama: user.nama }; // Mengambil nama dari field 'nama'
-       if (rememberMe) {
-         localStorage.setItem("user", JSON.stringify(userData));
-       }
-        navigate("/dashboard");  // Navigasi ke halaman dashboard setelah login berhasil
+
+      // Validasi password menggunakan bcrypt
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
+        // Simpan nama user di localStorage
+        const userData = { id: user.id, nama: user.nama };
+        if (rememberMe) {
+          localStorage.setItem("user", JSON.stringify(userData));
+        }
+
+         // Menambahkan log login ke tabel log_login
+      const sessionId = `${user.id}-${new Date().getTime()}`; // Session ID unik
+      const { error: logError } = await supabase
+        .schema('siap_skpd')
+        .from('log_login')
+        .insert([
+          {
+            username: user.username,  // Menyimpan username yang login
+            user_id: user.id,  // ID user
+            time: new Date().toISOString(),  // Menyimpan waktu login
+            ip: window.location.hostname,  // Atau IP yang lebih tepat
+            session_id: sessionId,  // ID sesi yang unik
+            token: "token_example",  // Token jika diperlukan
+            user_agent: navigator.userAgent,  // Informasi user agent
+          }
+        ]);
+
+        if (logError) {
+          console.error("Error logging login:", logError);
+        }
+
+        // Membuat sesi dan mencatatnya ke tabel log_session
+        const { error: sessionError } = await supabase
+          .schema('siap_skpd')
+          .from('log_session')
+          .insert([{
+            session_id: sessionId,
+            user_agent: navigator.userAgent,
+            first_ip: window.location.hostname,  // IP saat pertama login
+            first_username: user.username,  // Username yang login pertama kali
+            label: "login successful"  // Label untuk sesi login
+          }]);
+
+        if (sessionError) {
+          console.error("Error logging session:", sessionError);
+        }
+
+        // Navigasi ke halaman dashboard setelah login berhasil
+        navigate("/dashboard");
       } else {
         setErrorMessage("Password salah");
       }

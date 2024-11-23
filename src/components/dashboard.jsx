@@ -78,8 +78,12 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
+              
               {statuses.map(({ status, jumlah, id }, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+                <tr
+                key={index}
+                className={index % 2 === 0 ? "bg-teal-300" : "bg-yellow-200"} // Memeriksa apakah baris ganjil atau genap
+              >
                   <td className="border border-gray-300 px-4 py-2">{status}</td>
                   <td className="border border-gray-300 px-4 py-2">{jumlah}</td>
                   <td className="border border-gray-300 px-4 py-2">
