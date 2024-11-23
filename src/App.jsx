@@ -7,6 +7,8 @@ import Dashboard from './components/dashboard'; // Assuming Dashboard component 
 import ListUnit from './components/list_unit'; // ListUnit page
 import ListAll from './components/list_all_pegawai'; // ListAll page
 import Pensiun from './pegawai_inaktif/pensiun'; // Pensiun page
+import MENINGGAL from './pegawai_inaktif/meninggal';
+import PINDAH from './pegawai_inaktif/pindah';
 import Navbar from './components/navbar'; // Import the Navbar component
 
 // Main app component
@@ -19,8 +21,10 @@ function AppContent() {
     '/list_unit', 
     '/list_all_pegawai', 
     '/home', 
-    '/pegawai_inaktif/pensiun'
-  ];
+    '/pegawai_inaktif/pensiun',
+    '/pegawai_inaktif/meninggal',
+    '/pegawai_inaktif/pindah'
+    ];
 
   // Definisikan rute yang memerlukan Header dan Navbar
   const routesWithHeaderNavbar = routesWithSidebar;
@@ -56,6 +60,8 @@ function AppContent() {
             <Route path="/list_all_pegawai/:unit_kerja_id" element={<ListAll />} />
             <Route path="/home" element={<Dashboard />} />
             <Route path="/pegawai_inaktif/pensiun" element={<Pensiun />} />
+            <Route path="/pegawai_inaktif/meninggal" element={<MENINGGAL />} />
+            <Route path="/pegawai_inaktif/pindah" element={<PINDAH />} />
 
             {/* Tambahkan rute lainnya */}
           </Routes>

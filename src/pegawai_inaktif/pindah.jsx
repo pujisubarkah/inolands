@@ -67,7 +67,7 @@ const PINDAH = () => {
     <>
       <div className="p-4">
       <div className="overflow-x-auto">
-        <h3 className="text-center text-xl font-semibold my-8">DAFTAR PEGAWAI PENSIUN</h3>
+        <h3 className="text-center text-xl font-semibold my-8">DAFTAR PEGAWAI PINDAH</h3>
         <div className="flex justify-between items-center mb-4">
   {/* Show Rows Dropdown dan Input untuk Pencarian */}
   <div className="flex items-center space-x-4">
@@ -118,7 +118,7 @@ const PINDAH = () => {
               <th colSpan="2" className="border px-4 py-2">Jabatan</th>
               <th colSpan="2" className="border px-4 py-2">Pegawai</th>
               <th colSpan="2" className="border px-4 py-2">Masa Kerja</th>
-              <th rowSpan="2" className="border px-4 py-2">TMT PENSIUN</th>
+              <th rowSpan="2" className="border px-4 py-2">Pindah Instansi</th>
               <th rowSpan="2" className="border px-4 py-2">PILIHAN</th>
             </tr>
             <tr>

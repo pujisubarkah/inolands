@@ -75,10 +75,12 @@ const CustomSidebar = () => {
             to="/pegawai_inaktif/pensiun" className="hover:bg-gray-100 hover:text-teal-500">
                 Pensiun
               </Sidebar.Item>
-              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+              <Sidebar.Item as={Link}
+            to="/pegawai_inaktif/meninggal" className="hover:bg-gray-100 hover:text-teal-500">
                 Meninggal Dunia
               </Sidebar.Item>
-              <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">
+              <Sidebar.Item as={Link}
+            to="/pegawai_inaktif/pindah" className="hover:bg-gray-100 hover:text-teal-500">
                 Pindah ke Luar
               </Sidebar.Item>
               <Sidebar.Item href="#" className="hover:bg-gray-100 hover:text-teal-500">

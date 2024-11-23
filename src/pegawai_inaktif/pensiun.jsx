@@ -16,30 +16,14 @@ const PENSIUN = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Mengambil data dari spg_pensiun yang terhubung dengan spg_pegawai melalui peg_id
+      // Mengambil data dari v_pegawai_data dengan filter kedudukan_pns = "Pensiun"
       const { data, error } = await supabase
-        .from('spg_pensiun')
-        .select(`
-          *,
-          spg_pegawai (
-            peg_id,
-            peg_nama,
-            peg_lahir_tempat,
-            peg_lahir_tanggal,
-            peg_nip,
-            gol_id_akhir,
-            peg_gol_akhir_tmt,
-            jabatan_nama,
-            unit_nama,
-            peg_jabatan_tmt,
-            status_pegawai,
-            tmt_status_pegawai,
-            masa_kerja_thn,
-            masa_kerja_bln
-          )
-        `)
-        .eq('spg_pensiun.peg_id', 'spg_pegawai.peg_id') // Menambahkan kondisi untuk menyambungkan peg_id
-
+        .schema('siap')
+        .from('v_pegawai_data')
+        .select('*') // Pilih semua kolom, sesuaikan jika hanya butuh beberapa
+        .eq('kedudukan_pns', 'Pensiun') // Filter untuk kedudukan_pns = "Pensiun"
+        .order('peg_id', { ascending: true }); // Mengurutkan berdasarkan peg_nama_lengkap secara ascending
+  
       if (error) {
         console.error('Error fetching data:', error);
       } else {
@@ -48,9 +32,10 @@ const PENSIUN = () => {
         setTotalPages(Math.ceil(data.length / itemsPerPage));
       }
     };
-
+  
     fetchData();
   }, [itemsPerPage, searchQuery]);
+  
 
   const handlePageChange = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -144,35 +129,35 @@ const PENSIUN = () => {
             <tbody>
               {pegawai.map((data, index) => (
                 <tr key={index}>
+                  
                   <td className="border px-4 py-2 text-left">
-                    {data.spg_pegawai?.peg_nama_lengkap} {data.spg_pegawai?.peg_lahir_tempat} , 
+                    {data.peg_nama_lengkap} {data.peg_lahir_tempat} , 
                     {(() => {
-                      const date = new Date(data.spg_pegawai?.peg_lahir_tanggal);
+                      const date = new Date(data.peg_lahir_tanggal);
                       const day = String(date.getDate()).padStart(2, "0");
                       const month = String(date.getMonth() + 1).padStart(2, "0");
                       const year = date.getFullYear();
                       return `${day}-${month}-${year}`;
                     })()}
                   </td>
-                  <td className="border px-4 py-2">{data.spg_pegawai?.peg_nip}</td>
-                  <td className="border px-4 py-2">{data.spg_pegawai?.nm_gol_akhir}</td>
+                  <td className="border px-4 py-2">{data.peg_nip}</td>
+                  <td className="border px-4 py-2">{data.nm_gol_akhir}</td>
                   <td className="border px-4 py-2">
-                    {new Date(data.spg_pegawai?.peg_gol_akhir_tmt).toLocaleDateString("en-GB")}
+                    {new Date(data.peg_gol_akhir_tmt).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="border px-4 py-2 text-left">{data.spg_pegawai?.jabatan_nama}</td>
-                  <td className="border px-4 py-2 text-left">{data.spg_pegawai?.unit_nama}</td>
-                  <td className="border px-4 py-2">{data.spg_pegawai?.jabatan_nama}</td>
+                  <td className="border px-4 py-2 text-left">{data.unit_kerja_nama}</td>
+                  <td className="border px-4 py-2 text-left">{data.jabatan_nama}</td>
                   <td className="border px-4 py-2">
-                    {new Date(data.spg_pegawai?.peg_jabatan_tmt).toLocaleDateString("en-GB")}
+                    {new Date(data.peg_jabatan_tmt).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="border px-4 py-2">{data.spg_pegawai?.status_pegawai}</td>
+                  <td className="border px-4 py-2">{data.status_pegawai}</td>
                   <td className="border px-4 py-2">
-                    {new Date(data.spg_pegawai?.tmt_status_pegawai).toLocaleDateString("en-GB")}
+                    {new Date(data.tmt_status_pegawai).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="border px-4 py-2">{data.spg_pegawai?.masa_kerja_thn}</td>
-                  <td className="border px-4 py-2">{data.spg_pegawai?.masa_kerja_bln}</td>
+                  <td className="border px-4 py-2">{data.masa_kerja_thn}</td>
+                  <td className="border px-4 py-2">{data.masa_kerja_bln}</td>
                   <td className="border px-4 py-2">
-                    {new Date(data.spg_pensiun?.tmt_pensiun).toLocaleDateString("en-GB")}
+                    {new Date(data.tmt_pensiun).toLocaleDateString("en-GB")}
                   </td>
                   <td className="border px-4 py-2">
                     <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
