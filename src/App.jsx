@@ -1,77 +1,38 @@
+// App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Header from './components/header'; // Import the Header component
-import Login from './components/login';  // Import the Login component
-import Sidebar from './pages/sidebar';   // Import the Sidebar component
-import Dashboard from './components/dashboard'; // Assuming Dashboard component for main page
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AdminLayout from './layouts/AdminLayout';  // Import AdminLayout
+import Login from './pages/login';  // Import the Login component
+import Dashboard from './pages/dashboard'; // Assuming Dashboard component for main page
 import ListUnit from './components/list_unit'; // ListUnit page
 import ListAll from './components/list_all_pegawai'; // ListAll page
 import Pensiun from './pegawai_inaktif/pensiun'; // Pensiun page
 import MENINGGAL from './pegawai_inaktif/meninggal';
 import PINDAH from './pegawai_inaktif/pindah';
-import Navbar from './components/navbar'; // Import the Navbar component
 
 // Main app component
 function AppContent() {
-  const location = useLocation();
-
-  // Definisikan rute yang memerlukan Sidebar, Header, dan Navbar
-  const routesWithSidebar = [
-    '/dashboard', 
-    '/list_unit', 
-    '/list_all_pegawai', 
-    '/home', 
-    '/pegawai_inaktif/pensiun',
-    '/pegawai_inaktif/meninggal',
-    '/pegawai_inaktif/pindah'
-    ];
-
-  // Definisikan rute yang memerlukan Header dan Navbar
-  const routesWithHeaderNavbar = routesWithSidebar;
-
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      {/* Header dan Navbar hanya muncul di halaman tertentu */}
-      {routesWithHeaderNavbar.includes(location.pathname) && (
-        <>
-          <Header />
-          <Navbar />
-        </>
-      )}
-      
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar hanya muncul di halaman tertentu */}
-        {routesWithSidebar.includes(location.pathname) && (
-          <div className="w-64 bg-blue-800 text-white">
-            <Sidebar />
-          </div>
-        )}
+      <Routes>
+        {/* Route untuk Login tanpa layout */}
+        <Route path="/" element={<Login />} />
 
-        {/* Main content section */}
-        <div className="flex-1 p-4 overflow-auto bg-white">
-          <Routes>
-            {/* Route untuk Login */}
-            <Route path="/" element={<Login />} />
+        {/* Semua route yang memerlukan Sidebar, Header, dan Navbar dibungkus dalam AdminLayout */}
+        <Route path="/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />
+        <Route path="/list_unit" element={<AdminLayout><ListUnit /></AdminLayout>} />
+        <Route path="/list_all_pegawai" element={<AdminLayout><ListAll /></AdminLayout>} />
+        <Route path="/list_all_pegawai/:unit_kerja_id" element={<AdminLayout><ListAll /></AdminLayout>} />
+        <Route path="/home" element={<AdminLayout><Dashboard /></AdminLayout>} />
+        <Route path="/pegawai_inaktif/pensiun" element={<AdminLayout><Pensiun /></AdminLayout>} />
+        <Route path="/pegawai_inaktif/meninggal" element={<AdminLayout><MENINGGAL /></AdminLayout>} />
+        <Route path="/pegawai_inaktif/pindah" element={<AdminLayout><PINDAH /></AdminLayout>} />
 
-            {/* Route untuk Dashboard */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/list_unit" element={<ListUnit />} />
-            <Route path="/list_all_pegawai" element={<ListAll />} />
-            <Route path="/list_all_pegawai/:unit_kerja_id" element={<ListAll />} />
-            <Route path="/home" element={<Dashboard />} />
-            <Route path="/pegawai_inaktif/pensiun" element={<Pensiun />} />
-            <Route path="/pegawai_inaktif/meninggal" element={<MENINGGAL />} />
-            <Route path="/pegawai_inaktif/pindah" element={<PINDAH />} />
-
-            {/* Tambahkan rute lainnya */}
-          </Routes>
-        </div>
-      </div>
+        {/* Rute lainnya bisa ditambahkan */}
+      </Routes>
     </div>
   );
 }
-
-
 
 // Wrapper component for BrowserRouter
 function App() {

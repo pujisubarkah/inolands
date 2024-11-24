@@ -128,7 +128,10 @@ const PENSIUN = () => {
             </thead>
             <tbody>
               {pegawai.map((data, index) => (
-                <tr key={index}>
+               <tr
+               key={index}
+               className={index % 2 === 0 ? "bg-teal-300" : "bg-yellow-200"} // Memeriksa apakah baris ganjil atau genap
+             >
                   
                   <td className="border px-4 py-2 text-left">
                     {data.peg_nama_lengkap} {data.peg_lahir_tempat} , 
@@ -157,7 +160,7 @@ const PENSIUN = () => {
                   <td className="border px-4 py-2">{data.masa_kerja_thn}</td>
                   <td className="border px-4 py-2">{data.masa_kerja_bln}</td>
                   <td className="border px-4 py-2">
-                    {new Date(data.tmt_pensiun).toLocaleDateString("en-GB")}
+                    {new Date(data.peg_tmt_pensiun).toLocaleDateString("en-GB")}
                   </td>
                   <td className="border px-4 py-2">
                     <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
