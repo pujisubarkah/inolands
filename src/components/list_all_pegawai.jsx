@@ -13,6 +13,7 @@ const ListAllPegawai = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [showModal, setShowModal] = useState(false); // Modal state
   const [showRows, setShowRows] = useState(itemsPerPage);
+ 
   const [searchQuery, setSearchQuery] = useState(''); // State untuk pencarian
 
   const { unit_kerja_id } = useParams(); // Ambil parameter unit_kerja_id dari URL
@@ -27,7 +28,14 @@ const ListAllPegawai = () => {
         .select('*', { count: 'exact' })
         .eq('peg_status', true) // Filter data hanya yang peg_status = true
         .order('peg_nama', { ascending: true }) // Mengurutkan berdasarkan peg_nama_lengkap secara ascending
+        .ilike('peg_nama_lengkap', `%${searchQuery}%`)
         .range((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage - 1);
+
+      // Tambahkan filter pencarian
+      if (searchQuery) {
+      query = query.ilike('peg_nama_lengkap', `%${searchQuery}%`);
+      }
+
 
       // Jika ada unit_kerja_id di URL, filter berdasarkan unit_kerja_id
       if (unit_kerja_id) {
@@ -64,11 +72,15 @@ const ListAllPegawai = () => {
   };
 
   // Fungsi untuk mengupdate pencarian
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian baru
+  const handleSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+  
+    const filtered = pegawai.filter((item) =>
+      item.nama.toLowerCase().includes(query.toLowerCase()) // Sesuaikan dengan field di data Anda
+    );
+    setFilteredPegawai(filtered);
   };
-
   return (
     <div className="flex-4 h-full px-4 overflow-auto">
       {/* Tombol Tambah Pegawai dan Download Data Pegawai */}
@@ -229,15 +241,23 @@ const ListAllPegawai = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-600"
+            className={`mx-2 px-3 py-1 ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white'} rounded`}
           >
             Prev
           </button>
-          <span className="mx-4">{`Page ${currentPage} of ${totalPages}`}</span>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePageChange(index + 1)}
+              className={`mx-1 px-3 py-1 ${currentPage === index + 1 ? 'bg-blue-700 text-white' : 'bg-gray-200'}`}
+            >
+              {index + 1}
+            </button>
+          ))}
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-600"
+            className={`mx-2 px-3 py-1 ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white'} rounded`}
           >
             Next
           </button>

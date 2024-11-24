@@ -10,20 +10,19 @@ const Navbar = () => {
     useEffect(() => {
         // Ambil data user dari localStorage
         const user = JSON.parse(localStorage.getItem("user"));
-        if (user) {
-            setUserName(user.nama); // Mengambil nama pengguna yang disimpan di localStorage
+        if (user && user.nama) {
+            setUserName(user.nama); // Pastikan nama ada di dalam data user
         }
     }, []);
 
     const handleLogout = async () => {
         try {
-            // Ambil user_id dari localStorage
+            // Ambil user_id dan session_id dari localStorage
             const userData = JSON.parse(localStorage.getItem("user"));
-            if (userData) {
-                const { id: user_id, nama } = userData;
+            const sessionId = localStorage.getItem("session_id"); // Ambil session_id
 
-                // Ambil session_id dari localStorage (atau buat mekanisme lain untuk mendapatkan session_id)
-                const sessionId = localStorage.getItem("session_id"); // Misalnya simpan session_id di localStorage saat login
+            if (userData && sessionId) {
+                const { nama } = userData;
                 
                 // Update log_session dengan deleted_at saat logout (menandakan sesi berakhir)
                 const { error } = await supabase

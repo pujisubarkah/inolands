@@ -34,7 +34,9 @@ const Login = () => {
         // Simpan nama user di localStorage
         const userData = { id: user.id, nama: user.nama };
         if (rememberMe) {
-          localStorage.setItem("user", JSON.stringify(userData));
+          localStorage.setItem("user", JSON.stringify(userData)); // Menyimpan user ke localStorage
+          const sessionId = `${user.id}-${new Date().getTime()}`; // Session ID unik
+          localStorage.setItem("session_id", sessionId); // Menyimpan session ID ke localStorage
         }
 
          // Menambahkan log login ke tabel log_login
@@ -49,13 +51,19 @@ const Login = () => {
             time: new Date().toISOString(),  // Menyimpan waktu login
             ip: window.location.hostname,  // Atau IP yang lebih tepat
             session_id: sessionId,  // ID sesi yang unik
-            token: "token_example",  // Token jika diperlukan
+           
             user_agent: navigator.userAgent,  // Informasi user agent
           }
         ]);
 
         if (logError) {
-          console.error("Error logging login:", logError);
+          console.log("Error logging login:", JSON.stringify(error));  // Mencetak error dalam format JSON
+        } else {
+          console.log("Login log inserted successfully:", {
+            username: user.username,
+            session_id: sessionId,
+            time: new Date().toISOString(),
+          });
         }
 
         // Membuat sesi dan mencatatnya ke tabel log_session

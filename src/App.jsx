@@ -17,6 +17,7 @@ function AppContent() {
       <Routes>
         {/* Route untuk Login tanpa layout */}
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Semua route yang memerlukan Sidebar, Header, dan Navbar dibungkus dalam AdminLayout */}
         <Route path="/dashboard" element={<AdminLayout><Dashboard /></AdminLayout>} />
