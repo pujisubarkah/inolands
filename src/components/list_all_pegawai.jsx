@@ -9,10 +9,7 @@ const ListAllPegawai = () => {
   const [pegawai, setPegawai] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   const [showModal, setShowModal] = useState(false); // Modal state
-  const [showRows, setShowRows] = useState(itemsPerPage);
  
   const [searchQuery, setSearchQuery] = useState(''); // State untuk pencarian
 
@@ -28,8 +25,7 @@ const ListAllPegawai = () => {
         .select('*', { count: 'exact' })
         .eq('peg_status', true) // Filter data hanya yang peg_status = true
         .order('peg_nama', { ascending: true }) // Mengurutkan berdasarkan peg_nama_lengkap secara ascending
-        .ilike('peg_nama_lengkap', `%${searchQuery}%`)
-        .range((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage - 1);
+        .ilike('peg_nama_lengkap', `%${searchQuery}%`);
 
       // Tambahkan filter pencarian
       if (searchQuery) {
@@ -42,30 +38,27 @@ const ListAllPegawai = () => {
         query = query.eq('unit_kerja_id', unit_kerja_id);
       }
 
-      const { data, error, count } = await query;
+      const { data, error } = await query;
 
       if (error) {
         console.error(error);
       } else {
         setPegawai(data);
-        setTotalItems(count);
-        setTotalPages(Math.ceil(count / itemsPerPage));
       }
     };
 
     fetchData();
   }, [currentPage, itemsPerPage, unit_kerja_id, searchQuery]); // Tambahkan unit_kerja_id dan searchQuery ke dependensi useEffect
 
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber > 0 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
+    
+    const handleItemsPerPageChange = (event) => {
+      setItemsPerPage(Number(event.target.value));
+      setCurrentPage(1); // Reset ke halaman pertama ketika jumlah items berubah
+    };
 
-  const handleItemsPerPageChange = (event) => {
-    setItemsPerPage(Number(event.target.value));
-    setCurrentPage(1); // Reset ke halaman pertama ketika jumlah items berubah
-  };
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
 
   const handleModal = () => {
     setShowModal(!showModal);
@@ -81,6 +74,10 @@ const ListAllPegawai = () => {
     );
     setFilteredPegawai(filtered);
   };
+
+  const totalPages = Math.ceil(pegawai.length / itemsPerPage);
+  const currentPegawai = pegawai.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div className="flex-4 h-full px-4 overflow-auto">
       {/* Tombol Tambah Pegawai dan Download Data Pegawai */}
@@ -137,7 +134,7 @@ const ListAllPegawai = () => {
   <div className="flex items-center">
     <label className="mr-2">Show:</label>
     <select
-      value={showRows}
+      value={itemsPerPage}
       onChange={handleItemsPerPageChange}
       className="p-2 border border-gray-300 rounded"
     >
@@ -161,107 +158,336 @@ const ListAllPegawai = () => {
   </div>
 </div>
 
-         <table className="min-w-full table-auto border-collapse border border-gray-600 text-left">
-          <thead className="bg-gray-300">
-            <tr>
-              <th rowSpan="2" className="border px-4 py-2">Nama</th>
-              <th rowSpan="2" className="border px-4 py-2">Tempat, Tgl Lahir</th>
-              <th rowSpan="2" className="border px-4 py-2">NIP</th>
-              <th colSpan="2" className="border px-4 py-2">Pangkat</th>
-              <th colSpan="2" className="border px-4 py-2">Jabatan</th>
-              <th colSpan="2" className="border px-4 py-2">Pegawai</th>
-              <th colSpan="2" className="border px-4 py-2">Masa Kerja</th>
-              <th rowSpan="2" className="border px-4 py-2">PILIHAN</th>
-            </tr>
-            <tr>
-              <th className="border px-4 py-2">Gol</th>
-              <th className="border px-4 py-2">TMT Gol</th>
-              <th className="border px-4 py-2">Nama</th>
-              <th className="border px-4 py-2">TMT Jabatan</th>
-              <th className="border px-4 py-2">Status</th>
-              <th className="border px-4 py-2">TMT Status</th>
-              <th className="border px-4 py-2">Thn</th>
-              <th className="border px-4 py-2">Bln</th>
-            </tr>
-          </thead>
-          <tbody>
-  {pegawai.map((pegdata, index) => (
-    <tr
-      key={index}
-      className={index % 2 === 0 ? "bg-teal-300" : "bg-yellow-200"} // Memeriksa apakah baris ganjil atau genap
+    <div style={{ margin: "20px", padding: "10px" }}>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "separate",
+          borderSpacing: "0",
+          border: "1px solid #4cafaf",
+          borderRadius: "10px",
+          overflow: "hidden",
+          margin: "20px 0",
+        }}
+      >
+        <thead>
+  <tr style={{ backgroundColor: "#004d40" }}>
+    <th
+      rowSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "left",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
     >
-      <td className="border px-4 py-2 text-left">{pegdata.peg_nama_lengkap}</td>
-      <td className="border px-4 py-2 text-left">
-        {pegdata.peg_lahir_tempat} ,{" "}
-        {(() => {
-          const date = new Date(pegdata.peg_lahir_tanggal);
-          const day = String(date.getDate()).padStart(2, "0");
-          const month = String(date.getMonth() + 1).padStart(2, "0"); // Bulan mulai dari 0
-          const year = date.getFullYear();
-          return `${day}-${month}-${year}`;
-        })()}
-      </td>
-      <td className="border px-4 py-2">{pegdata.peg_nip}</td>
-      <td className="border px-4 py-2">{pegdata.nm_gol_akhir}</td>
-      <td className="border px-4 py-2">
-        {new Date(pegdata.peg_gol_akhir_tmt).toLocaleDateString()}
-      </td>
-      <td className="border px-4 py-2 text-left">{pegdata.jabatan_nama}</td>
-      <td className="border px-4 py-2">
-        {new Date(pegdata.peg_jabatan_tmt).toLocaleDateString()}
-      </td>
-      <td className="border px-4 py-2">{pegdata.peg_status ? "Aktif" : "Tidak Aktif"}</td>
-      <td className="border px-4 py-2">
-        {new Date(pegdata.peg_pns_tmt).toLocaleDateString()}
-      </td>
-      <td className="border px-4 py-2">{pegdata.masa_kerja_tahun}</td>
-      <td className="border px-4 py-2">{pegdata.masa_kerja_bulan}</td>
-      <td className="border px-4 py-2">
-      <FontAwesomeIcon
-          icon={faSearch}
-          className="text-white-500 cursor-pointer mr-2"
-        />
-        <FontAwesomeIcon
-          icon={faEdit}
-          className="text-blue-500 cursor-pointer mr-2"
-        />
-        <FontAwesomeIcon
-          icon={faTrash}
-          className="text-red-500 cursor-pointer"
-        />
-      </td>
-    </tr>
-  ))}
-</tbody>
+      Nama
+    </th>
+    <th
+      rowSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "left",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
+    >
+      Tempat, Tgl Lahir
+    </th>
+    <th
+      rowSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "left",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
+    >
+      NIP
+    </th>
+    <th
+      colSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "center",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
+    >
+      Pangkat
+    </th>
+    <th
+      colSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "center",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
+    >
+      Jabatan
+    </th>
+    <th
+      colSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "center",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
+    >
+      Pegawai
+    </th>
+    <th
+      colSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "center",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
+    >
+      Masa Kerja
+    </th>
+    <th
+      rowSpan="2"
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        textAlign: "left",
+        fontWeight: "bold",
+        textTransform: "uppercase",
+        fontSize: "14px",
+        color: "#ffffff",
+      }}
+    >
+      Pilihan
+    </th>
+  </tr>
+  <tr style={{ backgroundColor: "#004d40" }}>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      Gol
+    </th>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      TMT Gol
+    </th>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      Nama
+    </th>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      TMT Jabatan
+    </th>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      Status
+    </th>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      TMT Status
+    </th>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      Thn
+    </th>
+    <th
+      style={{
+        padding: "10px 15px",
+        border: "1px solid #00695c",
+        color: "#ffffff",
+      }}
+    >
+      Bln
+    </th>
+  </tr>
+</thead>
 
-        </table>
+        <tbody>
+          {currentPegawai.map((pegdata, index) => (
+            <tr
+              key={index}
+              style={{
+                backgroundColor: index % 2 === 0 ? "#e0f2f1" : "#ffffff",
+              }}
+            >
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.peg_nama_lengkap}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.peg_lahir_tempat},{" "}
+                {new Date(pegdata.peg_lahir_tanggal).toLocaleDateString("id-ID")}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.peg_nip}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.nm_gol_akhir}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {new Date(
+                  pegdata.peg_gol_akhir_tmt
+                ).toLocaleDateString("id-ID")}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.jabatan_nama}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {new Date(
+                  pegdata.peg_jabatan_tmt
+                ).toLocaleDateString("id-ID")}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.peg_status ? "Aktif" : "Tidak Aktif"}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {new Date(pegdata.peg_pns_tmt).toLocaleDateString("id-ID")}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.masa_kerja_tahun}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                {pegdata.masa_kerja_bulan}
+              </td>
+              <td style={{ padding: "10px 15px", border: "1px solid #80cbc4" }}>
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  style={{ cursor: "pointer", marginRight: "5px", color: "#00695c" }}
+                />
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  style={{ cursor: "pointer", marginRight: "5px", color: "#00695c" }}
+                />
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  style={{ cursor: "pointer", color: "#d32f2f" }}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
         {/* Pagination */}
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className={`mx-2 px-3 py-1 ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white'} rounded`}
-          >
-            Prev
-          </button>
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageChange(index + 1)}
-              className={`mx-1 px-3 py-1 ${currentPage === index + 1 ? 'bg-blue-700 text-white' : 'bg-gray-200'}`}
-            >
-              {index + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className={`mx-2 px-3 py-1 ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white'} rounded`}
-          >
-            Next
-          </button>
-        </div>
+        {totalPages > 1 && (
+                        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                            {currentPage > 1 && (
+                                <button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    style={{
+                                        padding: '5px 10px',
+                                        margin: '0 5px',
+                                        border: 'none',
+                                        borderRadius: '3px',
+                                        backgroundColor: '#f9f9f9',
+                                        color: '#000',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                    }}
+                                >
+                                    Prev
+                                </button>
+                            )}
+                            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                                const pageNumber = currentPage > 3 ? currentPage - 2 + i : i + 1;
+                                return (
+                                    <button
+                                        key={pageNumber}
+                                        onClick={() => handlePageChange(pageNumber)}
+                                        style={{
+                                            padding: '5px 10px',
+                                            margin: '0 5px',
+                                            border: 'none',
+                                            borderRadius: '3px',
+                                            backgroundColor: currentPage === pageNumber ? '#004d40' : '#f9f9f9',
+                                            color: currentPage === pageNumber ? '#fff' : '#000',
+                                            cursor: 'pointer',
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        {pageNumber}
+                                    </button>
+                                );
+                            })}
+                            {currentPage < totalPages && (
+                                <button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    style={{
+                                        padding: '5px 10px',
+                                        margin: '0 5px',
+                                        border: 'none',
+                                        borderRadius: '3px',
+                                        backgroundColor: '#f9f9f9',
+                                        color: '#000',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                    }}
+                                >
+                                    Next
+                                </button>
+                            )}
+                        </div>
+                    )}
+      <br />
       </div>
     </div>
   );
