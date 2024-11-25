@@ -1,10 +1,20 @@
 import React from 'react';
+import Profile from '../pegawai/profile';
+import Lengkap from '../pegawai/profilelengkap';
+
+
+const styles = {
+  spacer: {
+    marginBottom: '1cm',
+  },
+};
 
 function UserDashboard() {
   return (
     <div>
-      <h1 className="text-xl font-bold">Welcome to User Dashboard</h1>
-      <p>Ini adalah halaman dashboard user. Sesuaikan kontennya sesuai kebutuhan Anda!</p>
+      <Profile />
+      <div style={styles.spacer}></div>
+      <Lengkap />
     </div>
   );
 }

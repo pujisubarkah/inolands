@@ -69,24 +69,27 @@ const Dashboard = () => {
         <p>Loading...</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse border border-gray-600 text-left">
-            <thead className="bg-gray-200 text-gray-700">
-              <tr>
-                <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Jumlah</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
+        <table className="w-full border border-teal-600 rounded-lg overflow-hidden my-5">
+  <thead>
+    <tr className="bg-teal-900 text-white">
+      <th rowSpan="2" className="p-3 border border-teal-700 text-left font-bold uppercase text-sm">
+        Status </th>
+      <th rowSpan="2" className="p-3 border border-teal-700 text-left font-bold uppercase text-sm">
+        Jumlah </th>
+      <th rowSpan="2" className="p-3 border border-teal-700 text-left font-bold uppercase text-sm">
+        Aksi </th>
+    </tr>
+      </thead>
+      <tbody>
               
               {statuses.map(({ status, jumlah, id }, index) => (
                 <tr
                 key={index}
-                className={index % 2 === 0 ? "bg-teal-300" : "bg-yellow-200"} // Memeriksa apakah baris ganjil atau genap
+                className={index % 2 === 0 ? "bg-teal-50" : "bg-white"} // Memeriksa apakah baris ganjil atau genap
               >
-                  <td className="border border-gray-300 px-4 py-2">{status}</td>
-                  <td className="border border-gray-300 px-4 py-2">{jumlah}</td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-4 py-2 border border-teal-300">{status}</td>
+                  <td className="px-4 py-2 border border-teal-300">{jumlah}</td>
+                  <td className="px-4 py-2 border border-teal-300">
                     <a
                       href={`http://idaman.lan.go.id/list-permohonan/${id}`}
                       className="text-teal-600 hover:underline"
