@@ -1,6 +1,6 @@
 // layouts/AdminLayout.jsx
 import React from 'react';
-import SidebarAdmin from '../components/sidebar';
+import SidebarAdmin from '../components/customSidebar';
 import Navbar from '../components/navbar';
 import Header from '../components/header';
 

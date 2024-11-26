@@ -1,199 +1,202 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { supabase } from "../supabaseClient"; // Import Supabase client
-import { faSearch, faShare, faFileExcel } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faRotateRight, faFileExcel } from '@fortawesome/free-solid-svg-icons';
 
 const PENSIUN = () => {
-  // State untuk menyimpan data pegawai, pagination, dan show per page
   const [pegawai, setPegawai] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [searchQuery, setSearchQuery] = useState(""); // State untuk search query
-  const [showModal, setShowModal] = useState(false); // Modal state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const [showRows, setShowRows] = useState(itemsPerPage);
+
+  // Helper function to format dates
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      // Mengambil data dari v_pegawai_data dengan filter kedudukan_pns = "Pensiun"
-      const { data, error } = await supabase
+      let query = supabase
         .schema('siap')
-        .from('v_pegawai_data')
-        .select('*') // Pilih semua kolom, sesuaikan jika hanya butuh beberapa
-        .eq('kedudukan_pns', 'Pensiun') // Filter untuk kedudukan_pns = "Pensiun"
-        .order('peg_id', { ascending: true }); // Mengurutkan berdasarkan peg_nama_lengkap secara ascending
-  
+        .from('view_data_pegawai')
+        .select('*')
+        .in('pensiun_id', ['1', '4'])
+        .order('tmt_pensiun', { ascending: false });
+
+      if (searchQuery) {
+        query = query.ilike('peg_nama_lengkap', `%${searchQuery}%`);
+      }
+
+      const { data, error, count } = await query
+        .range((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage - 1);
+
       if (error) {
         console.error('Error fetching data:', error);
       } else {
         setPegawai(data);
-        setTotalItems(data.length);
-        setTotalPages(Math.ceil(data.length / itemsPerPage));
+        setTotalItems(count || 0);
+        setTotalPages(Math.ceil((count || 0) / itemsPerPage));
       }
     };
-  
-    fetchData();
-  }, [itemsPerPage, searchQuery]);
-  
 
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber > 0 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
+    fetchData();
+  }, [currentPage, itemsPerPage, searchQuery]);
 
   const handleItemsPerPageChange = (event) => {
     setItemsPerPage(Number(event.target.value));
-    setCurrentPage(1); // Reset ke halaman pertama ketika jumlah items berubah
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian baru
+    setCurrentPage(1);
   };
 
   const handleModal = () => {
     setShowModal(!showModal);
   };
 
-  return (
-    <>
-      <div className="p-4">
-        <div className="overflow-x-auto">
-          <h3 className="text-center text-xl font-semibold my-8">DAFTAR PEGAWAI PENSIUN</h3>
-          <div className="flex justify-between items-center mb-4">
-            {/* Show Rows Dropdown dan Input untuk Pencarian */}
-            <div className="flex items-center space-x-4">
-              {/* Show Rows Dropdown */}
-              <div>
-                <label className="mr-2">Show:</label>
-                <select
-                  value={showRows}
-                  onChange={handleItemsPerPageChange}
-                  className="p-2 border border-gray-300 rounded"
-                >
-                  <option value={10}>10</option>
-                  <option value={25}>25</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </select>
-              </div>
+  const handleExport = () => {
+    alert("Exporting to Excel...");
+    // You can use a library like `xlsx` here to generate an Excel file
+  };
 
-              {/* Input untuk Pencarian */}
-              <div>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  placeholder="Cari Pegawai..."
-                  className="p-2 border border-gray-300 rounded"
-                />
-              </div>
+  return (
+    <div className="p-4">
+      <div className="overflow-x-auto">
+        <h3 className="text-center text-xl font-semibold my-8">DAFTAR PEGAWAI PENSIUN</h3>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center space-x-4">
+            <div>
+              <label className="mr-2">Show:</label>
+              <select
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+                className="p-2 border border-gray-300 rounded"
+              >
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
             </div>
 
-            {/* Tombol Download Data Pegawai */}
-            <button
-              onClick={() => alert("Download data pegawai")} // Fungsionalitas download
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-            > 
-              <FontAwesomeIcon icon={faFileExcel} />
-              Export to Excel 
-            </button>
+            <div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Cari Pegawai..."
+                className="p-2 border border-gray-300 rounded"
+              />
+            </div>
           </div>
 
-          <table className="min-w-full table-auto border-collapse text-center">
-            <thead className="bg-gray-300">
-              <tr>
-                <th rowSpan="2" className="border px-4 py-2">Nama/Tempat Tgl Lahir</th>
-                <th rowSpan="2" className="border px-4 py-2">NIP</th>
-                <th colSpan="2" className="border px-4 py-2">Pangkat</th>
-                <th rowSpan="2" className="border px-4 py-2">Unit Kerja</th>
-                <th colSpan="2" className="border px-4 py-2">Jabatan</th>
-                <th colSpan="2" className="border px-4 py-2">Pegawai</th>
-                <th colSpan="2" className="border px-4 py-2">Masa Kerja</th>
-                <th rowSpan="2" className="border px-4 py-2">TMT PENSIUN</th>
-                <th rowSpan="2" className="border px-4 py-2">PILIHAN</th>
+          <button
+            onClick={handleExport}
+            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+            aria-label="Export data to Excel"
+          >
+            <FontAwesomeIcon icon={faFileExcel} />
+            Export to Excel
+          </button>
+        </div>
+
+        <table className="w-full border border-teal-600 rounded-lg overflow-hidden my-5">
+          <thead className="bg-teal-600">
+          <tr className="bg-teal-900 text-white">
+              <th rowSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Nama/Tempat Tgl Lahir</th>
+              <th rowSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">NIP</th>
+              <th colSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Pangkat</th>
+              <th rowSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Unit Kerja</th>
+              <th colSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Jabatan</th>
+              <th colSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Pegawai</th>
+              <th colSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Masa Kerja</th>
+              <th rowSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">TMT PENSIUN</th>
+              <th rowSpan="2" className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">PILIHAN</th>
+            </tr>
+            <tr className="bg-teal-900 text-white">
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Gol</th>
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">TMT Gol</th>
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Nama</th>
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">TMT Jabatan</th>
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Status</th>
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">TMT Status</th>
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Thn</th>
+              <th className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">Bln</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            {pegawai.map((data, index) => (
+              <tr key={index}  className={index % 2 === 0 ? "bg-teal-50" : "bg-white"} // Memeriksa apakah baris ganjil atau genap
+              >
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">
+                  {data.peg_nama_lengkap} {data.peg_lahir_tempat} , 
+                  {formatDate(data.peg_lahir_tanggal)}
+                </td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{data.peg_nip}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{data.nm_gol_akhir}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{formatDate(data.peg_gol_akhir_tmt)}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{data.unit_kerja_nama}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{data.jabatan_nama}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{formatDate(data.peg_jabatan_tmt)}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{data.status_pegawai}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{formatDate(data.tmt_status_pegawai)}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{data.masa_kerja_tahun}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{data.masa_kerja_bulan}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">{formatDate(data.tmt_pensiun)}</td>
+                <td className="p-3 border border-teal-500 text-left font-bold uppercase text-sm">
+  {/* Icon View */}
+  <div className="flex items-center cursor-pointer hover:text-teal-500 mb-2">
+    <FontAwesomeIcon icon={faSearch} className="text-teal-700 mr-2" />
+    <span className="text-teal-700 text-sm">View</span>
+  </div>
+
+  {/* Icon Kembalikan */}
+  <div className="flex items-center cursor-pointer hover:text-teal-500">
+    <FontAwesomeIcon icon={faRotateRight} className="text-teal-700 mr-2" />
+    <span className="text-teal-700 text-sm">Kembalikan</span>
+  </div>
+</td>
+
               </tr>
-              <tr>
-                <th className="border px-4 py-2">Gol</th>
-                <th className="border px-4 py-2">TMT Gol</th>
-                <th className="border px-4 py-2">Nama</th>
-                <th className="border px-4 py-2">TMT Jabatan</th>
-                <th className="border px-4 py-2">Status</th>
-                <th className="border px-4 py-2">TMT Status</th>
-                <th className="border px-4 py-2">Thn</th>
-                <th className="border px-4 py-2">Bln</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pegawai.map((data, index) => (
-               <tr
-               key={index}
-               className={index % 2 === 0 ? "bg-teal-300" : "bg-yellow-200"} // Memeriksa apakah baris ganjil atau genap
-             >
-                  
-                  <td className="border px-4 py-2 text-left">
-                    {data.peg_nama_lengkap} {data.peg_lahir_tempat} , 
-                    {(() => {
-                      const date = new Date(data.peg_lahir_tanggal);
-                      const day = String(date.getDate()).padStart(2, "0");
-                      const month = String(date.getMonth() + 1).padStart(2, "0");
-                      const year = date.getFullYear();
-                      return `${day}-${month}-${year}`;
-                    })()}
-                  </td>
-                  <td className="border px-4 py-2">{data.peg_nip}</td>
-                  <td className="border px-4 py-2">{data.nm_gol_akhir}</td>
-                  <td className="border px-4 py-2">
-                    {new Date(data.peg_gol_akhir_tmt).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="border px-4 py-2 text-left">{data.unit_kerja_nama}</td>
-                  <td className="border px-4 py-2 text-left">{data.jabatan_nama}</td>
-                  <td className="border px-4 py-2">
-                    {new Date(data.peg_jabatan_tmt).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="border px-4 py-2">{data.status_pegawai}</td>
-                  <td className="border px-4 py-2">
-                    {new Date(data.tmt_status_pegawai).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="border px-4 py-2">{data.masa_kerja_thn}</td>
-                  <td className="border px-4 py-2">{data.masa_kerja_bln}</td>
-                  <td className="border px-4 py-2">
-                    {new Date(data.peg_tmt_pensiun).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="border px-4 py-2">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                      <FontAwesomeIcon icon={faSearch} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* Pagination */}
-          <div className="flex justify-between mt-4">
+            ))}
+          </tbody>
+        </table>
+
+        <div className="flex justify-between items-center mt-4">
+          <div className="flex items-center space-x-4">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-teal-500 text-white py-1 px-3 rounded hover:bg-blue-600"
             >
-              Prev
+              Previous
             </button>
-            <div className="flex items-center space-x-2">
-              <span>Page {currentPage} of {totalPages}</span>
-            </div>
+            <span>{`Page ${currentPage} of ${totalPages}`}</span>
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="bg-blue-500 text-white py-2 px-4 rounded"
+              className="bg-teal-500 text-white py-1 px-3 rounded hover:bg-blue-600"
             >
               Next
             </button>
           </div>
+
+         
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
