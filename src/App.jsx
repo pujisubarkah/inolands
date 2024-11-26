@@ -9,7 +9,7 @@ import ListAll from "./components/list_all_pegawai";
 import Pensiun from "./pegawai_inaktif/pensiun";
 import MENINGGAL from "./pegawai_inaktif/meninggal";
 import PINDAH from "./pegawai_inaktif/pindah";
-import UserDashboard from "./pages/user_dashboard"; // Import placeholder
+import UserDashboard from "./pages/User_dashboard"; // Import placeholder
 import LoadingSpinner from "./components/loadingSpinner"; // Import Spinner
 
 function AppContent() {
