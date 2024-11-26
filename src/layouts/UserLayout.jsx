@@ -1,5 +1,5 @@
 import React from 'react';
-import NavbarUser from '../pegawai/NavbarUser'; // Pastikan path-nya benar
+import NavbarUser from '../pegawai/navbaruser'; // Pastikan path-nya benar
 import Navbar from '../components/navbar';
 import Header from '../components/header';
 
