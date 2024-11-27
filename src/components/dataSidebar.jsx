@@ -53,8 +53,14 @@ export const sidebarData = [
   },
   {
     label: "Notifikasi",
-    to: "#",
+    dropdown: true,
     icon: FaBell,
+    children: [
+      { label: "Prediksi Pensiun", to: "notifikasi/prediksi" },
+      { label: "Melebihi Umur Pensiun", to: "notifikasi/lebih" },
+      { label: "Prediksi Kenaikan Pangkat", to: "notifikasi/prediksipangkat" },
+      { label: "Masa Kerja", to: "notifikasi/masa_kerja" },
+    ],
   },
   {
     label: "Data Master",

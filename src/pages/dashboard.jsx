@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { supabase } from "../supabaseClient"; // Import Supabase client
+import axios from "axios"; // Import axios
 
 const Dashboard = () => {
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fungsi untuk fetch data dari Supabase
+  // Fungsi untuk fetch data dari API menggunakan axios
   useEffect(() => {
     fetchStatuses();
   }, []);
@@ -13,49 +13,20 @@ const Dashboard = () => {
   const fetchStatuses = async () => {
     setLoading(true);
     try {
-      // Mengambil data dari tabel m_status
-      const { data, error } = await supabase
-        .schema('siap_skpd')
-        .from("m_status") // Menyebutkan nama tabel m_status
-        .select("id, status"); // Ambil kolom id dan status saja
+      // Memanggil API untuk mengambil data status dari server
+      const response = await axios.get("http://localhost:5000/api/statuses");
 
-      if (error) throw error;
+      // Menampilkan data yang diperoleh di console untuk debugging
+      console.log("Data yang diperoleh dari API:", response.data);
 
-      // Mengambil jumlah status_id yang ada di log_edit_pegawai untuk setiap status
-      const statusesWithCount = await Promise.all(
-        data.map(async (status) => {
-          const { count, error: countError } = await supabase
-          .schema('siap_skpd')
-            .from("status_edit_pegawai")
-            .select("*", { count: "exact", head: true }) // Hitung jumlah status_id
-            .eq("status_id", status.id); // Hubungkan dengan m_status.id
-
-            if (countError) {
-              console.error("Error menghitung status_id:", countError);
-              throw countError;
-            }
-  
-             // Debug log untuk melihat count yang diperoleh
-          console.log(`Jumlah untuk status ${status.id} (${status.status}):`, count);
-
-          return {
-            ...status,
-            jumlah: count || 0, // Menambahkan jumlah hasil hitung
-          };
-        })
-      );
-
-      // Menampilkan data dengan jumlah yang sudah dihitung
-      console.log("Statuses with counts:", statusesWithCount);
-
-      setStatuses(statusesWithCount); // Set data yang sudah ditambahkan jumlahnya
+      setStatuses(response.data); // Set data dari response API ke state
     } catch (error) {
-      // Menangani error jika ada masalah dalam fetch data atau query count
       console.error("Error fetching statuses:", error.message);
     } finally {
       setLoading(false); // Set loading menjadi false setelah proses selesai
     }
   };
+
 
   return (
     <div className="flex-4 h-full px-4 overflow-auto">
@@ -103,6 +74,13 @@ const Dashboard = () => {
           </table>
         </div>
       )}
+
+
+
+
+
+
+
       {/* Section: Statistik Operator */}
       <div className="text-center">
         <h3 className="text-2xl font-semibold text-gray-800 mb-4">

@@ -75,21 +75,21 @@ const ListUnit = () => {
         {loading ? (
           <p>Loading data...</p>
         ) : (
-          <table className="min-w-full table-auto border-collapse border border-gray-500">
+          <table className="w-full border border-teal-600 rounded-lg overflow-hidden my-5">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-4 py-2 text-left">Satker</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Unit Kerja</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Jumlah Pegawai</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Pilihan</th>
+            <tr className="bg-teal-900 text-white">
+                <th className="p-3 border border-teal-700 text-left font-bold uppercase text-sm">Satker</th>
+                <th className="p-3 border border-teal-700 text-left font-bold uppercase text-sm">Unit Kerja</th>
+                <th className="p-3 border border-teal-700 text-left font-bold uppercase text-sm">Jumlah Pegawai</th>
+                <th className="p-3 border border-teal-700 text-left font-bold uppercase text-sm">Pilihan</th>
               </tr>
             </thead>
             <tbody>
               {units.map((unit, index) => (
                 <tr
                   key={unit.unit_kerja_id}
-                  className={index % 2 === 0 ? "bg-teal-300" : "bg-yellow-200"}
-                >
+                  className={index % 2 === 0 ? "bg-teal-50" : "bg-white"} // Memeriksa apakah baris ganjil atau genap
+                  >
                   <td className="border border-gray-300 px-2 py-2">{unit.satuanKerjaNama}</td>
                   <td className="border border-gray-300 px-4 py-2">{unit.unit_kerja_nama}</td>
                   <td className="border border-gray-300 px-4 py-2">{unit.jumlahPegawai}</td>
