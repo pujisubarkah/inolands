@@ -30,9 +30,9 @@ function InovatifMap() {
   // Function to return choropleth color based on the selected year and its value
   const getChoroplethColor = (innovationValue) => {
     if (innovationValue === 'Belum Mengisi Data') return '#708090'; // Red for "No Data"
-    if (innovationValue === 'Sangat Inovatif') return 'teal'; // Dark Green
-    if (innovationValue === 'Kurang Inovatif') return '#DC143C'; // Red
-    if (innovationValue === 'Inovatif') return '#FFD700'; // Light Green
+    if (innovationValue === 'Sangat Inovatif') return '#009688'; // Dark Green
+    if (innovationValue === 'Kurang Inovatif') return '#FF9800'; // Red
+    if (innovationValue === 'Inovatif') return '#FFEB3B'; // Light Green
     if (innovationValue === 'Tidak Dapat Dinilai') return '#708090'; // Dark Red
     return '#FFEDA0'; // Lightest color for undefined values
   };
@@ -108,15 +108,15 @@ function InovatifMap() {
 {/* Legend */}
 <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: 'teal', marginRight: '10px' }}></div>
+            <div style={{ width: '20px', height: '20px', backgroundColor: '#009688', marginRight: '10px' }}></div>
             <span>Sangat Inovatif</span>
           </div>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: '#FFD700', marginRight: '10px' }}></div>
+            <div style={{ width: '20px', height: '20px', backgroundColor: '#FFEB3B', marginRight: '10px' }}></div>
             <span>Inovatif</span>
           </div>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ width: '20px', height: '20px', backgroundColor: '#DC143C', marginRight: '10px' }}></div>
+            <div style={{ width: '20px', height: '20px', backgroundColor: '#FF9800', marginRight: '10px' }}></div>
             <span>Kurang Inovatif</span>
           </div>
           <div style={{ margin: '0 15px', display: 'flex', alignItems: 'center' }}>
