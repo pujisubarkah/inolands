@@ -185,37 +185,110 @@ function InteractiveMap() {
           )}
         </svg>
       </div>
-      {selectedProvinsi !== null && (
-        <div>
-        <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
-        DAFTAR INOVASI
-      </h1>
-      <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
       
-        <div style={{ display: 'flex', width: '90vw', marginTop: '20px' }}>
-          <svg className="map-kabupaten" baseProfile="tiny" viewBox="0 0 800 600" width="42vw" height="auto" preserveAspectRatio="xMidYMid meet">
-            {kabupaten.map((kab) => (
-              kab.svg_path ? (
-                <path 
-                  key={kab.id_kabkot}
-                  d={kab.svg_path.replace(/"/g, '')}
-                  fill={getChoroplethColor(kab.jumlah_inovasi || 0)}
-                  stroke="black"
-                  strokeWidth="1"
-                  onClick={() => loadInovasi(kab.id_kabkot)}
-                  transform={(kab.id_provinsi === 31 && ("scale(3) translate(-350, -400)")) ||
-                  (kab.id_provinsi === 95 && ("scale(2.5) translate(-350, -200)")) ||
-                  (kab.id_provinsi === 91 && ("scale(1.5) translate(-200, -75)")) ||
-                  (kab.id_provinsi === 94 && ("scale(2.5) translate(-200, -150)")) ||
-                  (kab.id_provinsi === 92 && ("scale(1) translate(-200, -50)"))
-                  }
-                  ><title>{kab.nama}</title></path>
-                  ) : null
-                ))}
-                </svg>
+      {selectedProvinsi !== null && (
+  <div
+    style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 999,
+    }}
+  >
+    {/* Popup Box */}
+    <div
+      style={{
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        width: '80vw',
+        maxWidth: '1000px',
+        padding: '20px',
+        position: 'relative',
+        animation: 'fadeIn 0.3s ease-in-out',
+      }}
+    >
+      {/* Close Button */}
+      <button
+        onClick={() => setSelectedProvinsi(null)} // Menutup popup
+        style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          background: 'transparent',
+          border: 'none',
+          fontSize: '20px',
+          cursor: 'pointer',
+        }}
+      >
+        ✖
+      </button>
 
-                <div style={{ marginLeft: '20px', width: '42vw' }}>
-                  {selectedProvinsi && (
+      {/* Judul */}
+      <h1
+        style={{
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: 'bold',
+          fontSize: '2rem',
+          textAlign: 'center',
+          marginBottom: '20px',
+        }}
+      >
+        Daftar Inovasi di {provinces.find((prov) => prov.id_provinsi === selectedProvinsi)?.nama}
+      </h1>
+      <hr
+        style={{
+          width: '100px',
+          border: 'none',
+          height: '2px',
+          background: 'linear-gradient(to right, red, black, red)',
+          margin: '0 auto 20px auto',
+        }}
+      />
+
+      {/* Konten Popup */}
+      <div style={{ display: 'flex', gap: '20px' }}>
+        
+        {/* Peta Kabupaten */}
+        <svg
+          className="map-kabupaten"
+          baseProfile="tiny"
+          viewBox="0 0 800 600"
+          width="42%"
+          height="auto"
+          preserveAspectRatio="xMidYMid meet"
+          style={{
+            border: '1px solid #ccc',
+            borderRadius: '10px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          {kabupaten.map((kab) =>
+            kab.svg_path ? (
+              <path
+                key={kab.id_kabkot}
+                d={kab.svg_path.replace(/"/g, '')}
+                fill={getChoroplethColor(kab.jumlah_inovasi || 0)}
+                stroke="black"
+                strokeWidth="1"
+                onClick={() => loadInovasi(kab.id_kabkot)}
+              >
+                <title>{kab.nama}</title>
+              </path>
+            ) : null
+          )}
+        </svg>
+        
+
+        {/* Tabel Daftar Inovasi */}
+        <div style={{ flexGrow: 1 }}>
+        {selectedProvinsi && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                       <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
                         <strong>{provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama}</strong>
@@ -235,30 +308,58 @@ function InteractiveMap() {
                     </div>)}
                     </div>
                   )}
-                {currentInovasi.length > 0 ? (
-                  <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', margin: '20px 0' }}>
-                  <thead>
-                      <tr style={{ backgroundColor: '#444', color: 'white', textAlign: 'left' }}>
-                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Judul Inovasi</th>
-                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Tahun</th>
-                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Inovator</th>
-                          <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Deskripsi</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {currentInovasi.map((inovasi) => (
-                    <tr key={inovasi.id} style={{ backgroundColor: '#fff', borderBottom: '1px solid #ddd' }}>
-                      <td style={{ padding: '15px' }}>{inovasi.judul_inovasi}</td>
-                      <td style={{ padding: '15px' }}>{inovasi.tahun}</td>
-                      <td style={{ padding: '15px' }}>{inovasi.inovator}</td>
-                      <td style={{ padding: '15px' }}>{inovasi.deskripsi}</td>
-                    </tr>
-                    ))}
-                  </tbody>
-                  </table>
-                ) : (
-                  <p>{kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.nama || 'Kabupaten ini'} tidak memiliki inovasi.</p>
-                )}
+          {currentInovasi.length > 0 ? (
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                margin: '20px 0',
+                fontSize: '0.8rem',
+              }}
+            >
+              <thead>
+                <tr
+                  style={{
+                    backgroundColor: '#444',
+                    color: 'white',
+                    textAlign: 'left',
+                  }}
+                >
+                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
+                    Judul Inovasi
+                  </th>
+                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
+                    Tahun
+                  </th>
+                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
+                    Inovator
+                  </th>
+                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
+                    Deskripsi
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentInovasi.map((inovasi) => (
+                  <tr
+                    key={inovasi.id}
+                    style={{
+                      backgroundColor: '#fff',
+                      borderBottom: '1px solid #ddd',
+                    }}
+                  >
+                    <td style={{ padding: '15px' }}>{inovasi.judul_inovasi}</td>
+                    <td style={{ padding: '15px' }}>{inovasi.tahun}</td>
+                    <td style={{ padding: '15px' }}>{inovasi.inovator}</td>
+                    <td style={{ padding: '15px' }}>{inovasi.deskripsi}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>Kabupaten ini tidak memiliki inovasi.</p>
+          )}
 
 {totalPages > 1 && (
                         <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
@@ -319,10 +420,11 @@ function InteractiveMap() {
                             )}
                         </div>
                     )}
-                </div>
-              </div>
+        </div>
+      </div>
+    </div>
   </div>
-              )}
+)}
       <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '50%', justifyContent: 'center' }}>
         <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
         <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
