@@ -40,7 +40,9 @@ const VideoSection = () => {
       id: 3,
       title: "DIAGNOSE",
       views: 169,
-      src: "https://youtube.com/embed/QExvuVbnMwM",
+      src: ["https://youtube.com/embed/QExvuVbnMwM",
+        "https://youtube.com/embed/2LNeEwhr0tQ",
+        "https://youtube.com/embed/lqAaNZ2oMFw"],
       description: "Tahap Diagnose adalah tahap proses mengidentifikasi kesenjangan antara kondisi saat ini dan kondisi yang seharusnya/diharapkan terjadi, yang hal tersebut dapat dijadikan sebagai pijakan untuk adanya inovasi. Tahap Diagnose ini bertujuan untuk memfasilitasi peserta untuk menemukan ide inovasi, yaitu gagasan-gagasan yang mengandung unsur kebaruan, serta diharapkan akan dapat meningkatkan kinerja organisasinya.",
       quiz: {
         question: "Apa yang menjadi fokus utama dalam Tahap Diagnose?",
@@ -70,7 +72,7 @@ const VideoSection = () => {
       id: 5,
       title: "DELIVER",
       views: 169,
-      src: "https://youtube.com/embed/1EA5t8j4YhY",
+      src: ["https://youtube.com/embed/1EA5t8j4YhY","https://youtube.com/embed/_wMeuWXedLI"],
       description: "Tahap Deliver atau tahap pelaksanaan inovasi merupakan tahap dimana peserta Labinov mulai melaksanakan ide inovasi yang dihasilkan pada tahap Diagnose berdasarkan jadwal atau agenda Rencana Aksi Inovasi yang telah disusun pada tahap Design. Pada Tahap Deliver terdapat 2 (dua) kegiatan utama, yaitu Launching Inovasi dan Monitoring Inovasi.",
       quiz: {
         question: "Apa saja kegiatan utama yang dilakukan pada Tahap Deliver?",
@@ -226,6 +228,26 @@ const toggleSidebar = () => {
   setIsSidebarOpen(!isSidebarOpen);
 };
 
+const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
+
+const handleNextVideo = () => {
+  if (Array.isArray(selectedVideo.src)) {
+    setCurrentSrcIndex((prevIndex) => (prevIndex + 1) % selectedVideo.src.length);
+  }
+};
+
+const handlePreviousVideo = () => {
+  if (Array.isArray(selectedVideo.src)) {
+    setCurrentSrcIndex((prevIndex) => (prevIndex - 1 + selectedVideo.src.length) % selectedVideo.src.length);
+  }
+};
+
+const handleVideoSelect = (video) => {
+  setSelectedVideo(video);
+  setCurrentSrcIndex(0); // Reset ke video pertama
+};
+
+
   return (
     <div style={{ display: 'flex'}}>
       <div style={{ 
@@ -291,26 +313,37 @@ const toggleSidebar = () => {
           <p className="text-lg text-gray-700 mb-4">{selectedVideo.description}</p>
          
           <div className="video-wrapper mb-4">
-            <div className="video-item">
-               <iframe
-                width="100%"
-                height="500"
-                src={selectedVideo.src}
-                title={selectedVideo.title}
-                frameBorder={0}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="mb-4 rounded-lg"
-              ></iframe>
-              <div className="video-info mb-4">
-                <p className="video-views text-gray-600">{selectedVideo.views} views</p>
-              </div>
-              <Quiz 
-                quiz={selectedVideo.quiz} 
-                onQuizComplete={() => handleQuizComplete(selectedVideo.id - 1)} 
-              />
-            </div>
-          </div>
+          {Array.isArray(selectedVideo.src) && (
+    <div className="video-carousel">
+      <div className="carousel-buttons">
+  <button onClick={handlePreviousVideo} className="carousel-button">
+    <FontAwesomeIcon icon={faChevronLeft} />
+  </button>
+  <button onClick={handleNextVideo} className="carousel-button">
+    <FontAwesomeIcon icon={faChevronRight} />
+  </button>
+</div>
+
+
+    </div>
+  )}
+  <iframe
+    width="100%"
+    height="500"
+    src={
+      Array.isArray(selectedVideo.src)
+        ? selectedVideo.src[currentSrcIndex]
+        : selectedVideo.src
+    }
+    title={selectedVideo.title}
+    frameBorder={0}
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+    className="mb-4 rounded-lg"
+  ></iframe>
+  
+</div>
+
 
           {allQuizzesCompleted && (
             <div className="certificate-section mt-6">
