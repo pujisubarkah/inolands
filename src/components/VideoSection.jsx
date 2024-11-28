@@ -341,8 +341,14 @@ const handleVideoSelect = (video) => {
     allowFullScreen
     className="mb-4 rounded-lg"
   ></iframe>
-  
-</div>
+<div className="video-info mb-4">
+                <p className="video-views text-gray-600">{selectedVideo.views} views</p>
+              </div>
+              <Quiz 
+                quiz={selectedVideo.quiz} 
+                onQuizComplete={() => handleQuizComplete(selectedVideo.id - 1)} 
+              />
+            </div>
 
 
           {allQuizzesCompleted && (
