@@ -56,4 +56,45 @@ body {
   .certificate-section button:hover {
     background-color: #45a049;
   }
+
+  .carousel-buttons {
+    display: flex;
+    justify-content: center; /* Posisikan tombol di tengah secara horizontal */
+    align-items: center; /* Posisikan tombol secara vertikal */
+    gap: 20px; /* Jarak antar tombol */
+    margin-top: 20px; /* Tambahkan margin atas agar tidak terlalu dekat dengan komponen lainnya */
+  }
+  
+
+  .carousel-button {
+    background-color: #8B0000; /* Warna dasar */
+    color: #fff; /* Warna teks */
+    border: none;
+    border-radius: 50%; /* Membuat tombol berbentuk lingkaran */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Efek bayangan */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Animasi untuk efek hover */
+    margin: 10px; /* Jarak antar tombol dengan elemen lainnya */
+    padding: 0; /* Tidak perlu padding tambahan karena ukuran tombol sudah diatur */
+  }
+  
+  .carousel-button:hover {
+    background-color: #A52A2A; /* Warna sedikit lebih terang saat dihover */
+    transform: scale(1.1); /* Membesarkan tombol sedikit saat dihover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Bayangan lebih tebal saat dihover */
+  }
+  
+  .carousel-button:active {
+    transform: scale(0.95); /* Sedikit mengecilkan tombol saat ditekan */
+  }
+  
+  .carousel-button svg {
+    font-size: 1.2rem; /* Mengatur ukuran ikon di dalam tombol */
+  }
+  
   
