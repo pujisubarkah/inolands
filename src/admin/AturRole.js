@@ -120,6 +120,11 @@ const AturRole = () => {
 
     return (
         <div className="w-full mt-24">
+            <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
+      User List
+    </h1>
+    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+    
             {/* Table */}
             <div className="w-full flex justify-center mt-16">
                 {isLoading ? (
