@@ -113,35 +113,37 @@ const App = () => {
         <Footer />
 
         {/* Chatbot Button */}
+      <div
+        className="fixed bottom-6 right-6 flex items-center justify-center w-16 h-16 bg-[#8B0000] rounded-full shadow-lg cursor-pointer transition-transform hover:scale-105 hover:shadow-xl"
+        onClick={toggleChatbot}
+        title="Halo, saya inobot, silakan klik untuk melanjutkan percakapan."
+      >
         <img
           src="/ino.png"
           alt="Chatbot Icon"
-          onClick={toggleChatbot}
-          className="fixed bottom-4 right-4 w-20 h-20 cursor-pointer"
+          className="w-10 h-10"
         />
+      </div>
 
-        {/* Chatbot */}
-        {isChatbotOpen && (
-          <div className="fixed bottom-20 right-4 bg-white shadow-lg rounded-lg overflow-hidden">
-            <button
-              onClick={toggleChatbot}
-              className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-            >
-              &times;
-            </button>
+      {/* Chatbot */}
+      {isChatbotOpen && (
+        <div className="fixed bottom-24 right-6 bg-white shadow-lg rounded-lg overflow-hidden w-80 max-h-[80vh]">
+          <button
+            onClick={toggleChatbot}
+            className="absolute top-2 right-2 bg-[#8B0000] text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md hover:bg-red-700 transition"
+          >
+            &times;
+          </button>
+          <div className="flex-grow p-4 overflow-y-auto">
             <Chatbot
               config={config}
               messageParser={MessageParser}
               actionProvider={ActionProvider}
             />
-            <button 
-              onClick={toggleChatbot} 
-              className="absolute top-0 right-0 p-2 text-white bg-red-800 rounded"
-            >
-              ▼
-            </button>
           </div>
-        )}
+        </div>
+      )}
+
 
         {/* Login or Register Form - Only render modal if it's toggled */}
         {isRegister !== null && (
