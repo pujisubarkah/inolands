@@ -60,6 +60,12 @@ const TambahInovasi = () => {
 
     return (
         <div className="w-full mt-24">
+<h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
+      Tambah Inovasi
+    </h1>
+    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+    
+
     <div className="flex justify-end w-11/12 mx-auto">
         <div className="w-auto">
             <button
