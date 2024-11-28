@@ -8,11 +8,12 @@ import {
   faChevronLeft,
   faNewspaper,
   faLightbulb,
-  faTerminal
+  faTerminal,
+  faUser
 } from '@fortawesome/free-solid-svg-icons';
 
 const Admin = () => {
-  const [activeComponent, setActiveComponent] = React.useState('Forum');
+  const [activeComponent, setActiveComponent] = React.useState('Berita');
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
  
 
@@ -123,8 +124,8 @@ const Admin = () => {
                 justifyContent: isSidebarOpen ? 'flex-start' : 'center',
               }}
             >
-              <FontAwesomeIcon icon={faTerminal} />
-              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>PDF List</span>}
+              <FontAwesomeIcon icon={faUser} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>User List</span>}
             </button>
           </li>
         </ul>
