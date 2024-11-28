@@ -85,14 +85,34 @@ const Ide = () => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label, index) => (
-          <Step key={index}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+    <Box sx={{ width: '100%', padding: '0 20px' }} >
+      <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
+        Ide Inovasi
+      </h1>
+      <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+      
+      <Stepper
+  activeStep={activeStep}
+  alternativeLabel
+  sx={{
+    '& .MuiStepIcon-root': {
+      color: '#D3D3D3', // Warna default untuk Step yang belum aktif
+    },
+    '& .MuiStepIcon-root.Mui-active': {
+      color: '#8B0000', // Warna untuk Step yang aktif
+    },
+    '& .MuiStepIcon-root.Mui-completed': {
+      color: '#8B0000', // Warna untuk Step yang telah selesai
+    },
+  }}
+>
+  {steps.map((label, index) => (
+    <Step key={index}>
+      <StepLabel>{label}</StepLabel>
+    </Step>
+  ))}
+</Stepper>
+
 
       <form onSubmit={handleSubmit}>
         {activeStep === 0 && (
@@ -103,27 +123,31 @@ const Ide = () => {
               name="namaOPD"
               value={formData.namaOPD}
               onChange={handleChange}
+              style={{ marginTop: '16px' }}
             />
             <TextField
-              label="Contact Person"
+              label="Nama Penanggungjawab"
               fullWidth
               name="contactPerson"
               value={formData.contactPerson}
               onChange={handleChange}
+              style={{ marginTop: '16px' }}
             />
             <TextField
-              label="Telp/HP"
+              label="Nomor Telp/HP"
               fullWidth
               name="telp"
               value={formData.telp}
               onChange={handleChange}
+              style={{ marginTop: '16px' }}
             />
             <TextField
-              label="Email"
+              label="Alamat Email"
               fullWidth
               name="email"
               value={formData.email}
               onChange={handleChange}
+              style={{ marginTop: '16px' }}
             />
           </>
         )}
@@ -275,23 +299,39 @@ const Ide = () => {
         )}
 
         {/* Buttons for Next and Back */}
-        <Grid container spacing={2}>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleBack}
-              disabled={activeStep === 0}
-            >
-              Back
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
-            </Button>
-          </Grid>
-        </Grid>
+        <Grid container spacing={2} style={{ marginTop: '16px', marginBottom: '16px' }}>
+  <Grid item>
+    <Button
+      variant="contained"
+      sx={{
+        backgroundColor: activeStep === 0 ? '#FFFFFF' : '#8B0000',
+        color: activeStep === 0 ? '#000' : '#FFFFFF',
+        '&:hover': {
+          backgroundColor: activeStep === 0 ? '#F0F0F0' : '#6B0000',
+        },
+      }}
+      onClick={handleBack}
+      disabled={activeStep === 0}
+    >
+      Back
+    </Button>
+  </Grid>
+  <Grid item>
+    <Button
+      variant="contained"
+      sx={{
+        backgroundColor: '#8B0000',
+        color: '#FFFFFF',
+        '&:hover': { backgroundColor: '#6B0000' },
+      }}
+      onClick={handleNext}
+    >
+      {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
+    </Button>
+  </Grid>
+</Grid>
+
+
       </form>
     </Box>
   );
