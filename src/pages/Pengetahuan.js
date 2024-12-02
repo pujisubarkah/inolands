@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const Pengetahuan = () => {
-  const [activeComponent, setActiveComponent] = React.useState('Forum');
+  const [activeComponent, setActiveComponent] = React.useState('Pdflist');
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const toggleSidebar = () => {
