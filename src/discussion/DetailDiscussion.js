@@ -7,7 +7,7 @@ import Comments from './DiscussionCreateComment'; // Import komponen Comments
 const Forum = () => {
   const [posts, setPosts] = useState([]);
   const [selectedPostId, setSelectedPostId] = useState(null); // State untuk menyimpan ID post yang dipilih
-  const [isModalOpen, setIsModalOpen] = useState(false); // State untuk mengatur modal
+  const [isModalOpen, setIsModalOpen] = useState(false); // State mengatur modal
   const [userId, setUserId] = useState('user_1'); // ID pengguna untuk upvote (bisa diganti sesuai kebutuhan)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Forum = () => {
         .from('posts')
         .select(`
           *,
-          replies:replies(post_id, comment, created_at)
+          replies:replies(post_id, id, comment, created_at, upvotes)
         `)
         .order('created_at', { ascending: false });
 
@@ -27,7 +27,7 @@ const Forum = () => {
         // Untuk setiap post, ambil 3 komentar terbaru
         const postsWithTopComments = posts.map((post) => {
           const topComments = (post.replies || [])
-            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Urutkan komentar
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Urutkan komentar berdasarkan waktu
             .slice(0, 3); // Ambil 3 komentar terbaru
           return { ...post, topComments };
         });
@@ -38,7 +38,7 @@ const Forum = () => {
     fetchPostsWithComments();
   }, []);
 
-  // Menambahkan upvote untuk pengguna tertentu
+  // Menambahkan upvote untuk post
   const handleUpvote = async (postId, userId) => {
     const { data: post, error } = await supabase
       .from('posts')
@@ -72,6 +72,40 @@ const Forum = () => {
     }
   };
 
+  // Menambahkan upvote untuk reply
+  const handleReplyUpvote = async (postId, replyId, userId) => {
+    const { data: reply, error } = await supabase
+      .from('replies')
+      .select('upvotes')
+      .eq('id', replyId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching reply:', error);
+      return;
+    }
+
+    // Jika upvotes tidak ada, buat objek baru
+    const updatedUpvotes = reply.upvotes ? { ...reply.upvotes } : {};
+
+    if (!updatedUpvotes[userId]) {
+      updatedUpvotes[userId] = true; // Menambahkan upvote untuk pengguna
+    } else {
+      delete updatedUpvotes[userId]; // Hapus upvote jika sudah ada
+    }
+
+    const { error: updateError } = await supabase
+      .from('replies')
+      .update({ upvotes: updatedUpvotes })
+      .eq('id', replyId);
+
+    if (updateError) {
+      console.error('Error updating reply upvotes:', updateError);
+    } else {
+      console.log('Reply upvote updated successfully!');
+    }
+  };
+
   // Menghitung jumlah upvotes dari JSON
   const getUpvoteCount = (upvotes) => {
     return upvotes ? Object.keys(upvotes).length : 0;
@@ -102,7 +136,7 @@ const Forum = () => {
                 {new Date(post.created_at).toLocaleString()}
               </div>
 
-              {/* Upvotes */}
+              {/* Upvotes for Post */}
               <div className="mt-2 text-gray-600">
                 Like: {getUpvoteCount(post.upvotes)} {/* Menampilkan jumlah upvote */}
                 <button
@@ -113,17 +147,28 @@ const Forum = () => {
                 </button>
               </div>
 
-              {/* Top 3 Comments */}
+              {/* Top 3 Comments (Based on upvotes) */}
               {post.topComments && post.topComments.length > 0 && (
                 <div className="mt-4 border-t border-gray-300 pt-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Komentar Terbaru:</h3>
+                  <h3 className="text-lg font-semibold text-gray-800">Komentar Terpopuler:</h3>
                   <ul className="space-y-2">
                     {post.topComments.map((comment) => (
-                      <li key={comment.created_at} className="text-gray-700 ml-6 pl-4 border-l-2 border-gray-300">
+                      <li key={comment.id} className="text-gray-700 ml-6 pl-4 border-l-2 border-gray-300">
                         <p>{comment.comment}</p>
                         <small className="text-gray-500">
                           {new Date(comment.created_at).toLocaleString()}
                         </small>
+
+                        {/* Upvotes for Reply */}
+                        <div className="mt-2 text-gray-600">
+                          Like: {getUpvoteCount(comment.upvotes)} {/* Menampilkan jumlah upvote */}
+                          <button
+                            onClick={() => handleReplyUpvote(post.id, comment.id, userId)} // Ganti 'user_1' dengan ID pengguna yang sesungguhnya
+                            className="ml-4 text-blue-500 hover:text-blue-700"
+                          >
+                            <FontAwesomeIcon icon={faThumbsUp} />
+                          </button>
+                        </div>
                       </li>
                     ))}
                   </ul>
