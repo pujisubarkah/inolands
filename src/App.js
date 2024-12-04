@@ -26,6 +26,7 @@ import { supabase } from './supabaseClient'; // Import supabase client
 import Pdflist from './pengetahuan/pdflist';
 import PdfDetail from './pengetahuan/pdflistdetail';
 
+
 const App = () => {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -97,6 +98,7 @@ const App = () => {
             <Route path="/inovasi/:id" element={<InovasiDetail />} />
             <Route path="/direktori" element={<Pdflist />} />
             <Route path="/direktori/:id" element={<PdfDetail />} />
+        
 
             {/* Conditional Route Redirection based on user role */}
             <Route 
