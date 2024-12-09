@@ -104,29 +104,41 @@ const Comments = ({ postId }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (!userId) {
+      alert('Anda harus login untuk memberikan upvote.');
+      return;
+    }
 
-    const { error } = await supabase
-      .from('replies')
-      .insert([{ post_id: postId, comment: commentText }]);
+    try {
+      e.preventDefault();
 
-    if (error) {
+      const { error } = await supabase
+        .from('replies')
+        .insert([{ post_id: postId, comment: commentText }]);
+  
+      if (error) {
+        console.error(error);
+        alert('Gagal menambahkan komentar.');
+      } else {
+        setCommentText('');
+        alert('Komentar berhasil ditambahkan!');
+        // Refresh comments
+        const { data } = await supabase
+        .from('posts')
+        .select(`
+          *,
+          replies:replies(id, comment, upvotes, created_at)
+        `)
+        .eq('id', postId)
+        .order('created_at', { ascending: true });
+        setPosts(data);
+      }
+
+    } catch (error) {
       console.error(error);
       alert('Gagal menambahkan komentar.');
-    } else {
-      setCommentText('');
-      alert('Komentar berhasil ditambahkan!');
-      // Refresh comments
-      const { data } = await supabase
-      .from('posts')
-      .select(`
-        *,
-        replies:replies(id, comment, upvotes, created_at)
-      `)
-      .eq('id', postId)
-      .order('created_at', { ascending: true });
-      setPosts(data);
     }
+    
   };
 
   return (
@@ -150,8 +162,14 @@ const Comments = ({ postId }) => {
                   <FontAwesomeIcon icon={faComment} />
                 </button>
               </div>
+              <br/>
         </div>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        {!userId ? (
+        <div className="bg-yellow-200 text-yellow-800 p-4 rounded-lg mb-6 space-y-4">
+          Harus login untuk menambahkan komentar baru.
+        </div>
+      ) : (
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <textarea
             placeholder="Tambahkan komentar..."
             value={commentText}
@@ -166,6 +184,9 @@ const Comments = ({ postId }) => {
             Kirim Komentar
           </button>
         </form>
+
+      )}
+        
       </div>
       <div className="w-full lg:w-3/5 bg-gray-100 p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-bold text-gray-800 mb-4">Komentar</h3>
