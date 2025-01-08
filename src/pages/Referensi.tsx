@@ -3,6 +3,7 @@ import Infografis from '../components/Carousel';
 import Berita from '../components/Berita';
 import InovatifMap from '../components/InovatifMap';
 import Tuxedovation from '../components/Tuxedovation';
+import ProperExpo from '../components/Properexpo';
 import Jippnas from '../components/Jippnas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faChartPie, faNewspaper, faVideo, faGlobeAsia, faTableCells } from '@fortawesome/free-solid-svg-icons';
@@ -32,6 +33,10 @@ const Referensi = () => {
 
   const handleTuxedoClick = () => {
     setActiveComponent('Tuxedovation');
+  };
+
+  const handleProperClick = () => {
+    setActiveComponent('Proyek Perubahan');
   };
 
   const handleJippnasClick = () => {
@@ -151,6 +156,28 @@ const Referensi = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Infografis Inovasi</span>}
             </button>
           </li>
+
+          <li style={{ marginBottom: '10px' }}>
+            <button 
+              onClick={handleProperClick} 
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faVideo} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Proyek Perubahan</span>}
+            </button>
+          </li>
+          
           <li style={{ marginBottom: '10px' }}>
             <button 
               onClick={handleTuxedoClick} 
@@ -171,6 +198,9 @@ const Referensi = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Tuxedovation</span>}
             </button>
           </li>
+
+          
+          
           <li style={{ marginBottom: '10px' }}>
             <button 
               onClick={handleJippnasClick} 
