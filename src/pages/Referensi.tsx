@@ -228,6 +228,7 @@ const Referensi = () => {
         {activeComponent === 'List Inovasi' && <InovasiLAN />}
         {activeComponent === 'Berita' && <Berita />}
         {activeComponent === 'Infografis' && <Infografis />}
+        {activeComponent === 'Proyek Perubahan' && <ProperExpo />}
         {activeComponent === 'Tuxedovation' && <Tuxedovation />}
         {activeComponent === 'Jippnas' && <Jippnas />}
       </div>
