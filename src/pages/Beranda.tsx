@@ -64,6 +64,8 @@ const Beranda = () => {
       <Carousel />
       <hr style={{ border: '1px solid #ccc', margin: '20px 0' }} />
       <ProperExpo />
+      <br>
+      <br>
       
     </div>
   );
