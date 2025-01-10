@@ -20,7 +20,7 @@ const Proper = () => {
       const formattedData = data.map((item) => ({
       id: item.id_proper,
       title: item.judul,
-      image: item.berkas_poster_landscape,
+      image: `https://properexpo.lan.go.id/uploads/properexpo-lan/berkas_poster_landscape/${item.berkas_poster_landscape}`,
       author: item.nama,
       instansi: item.md_instansi?.nama,
       date: item.created_at
@@ -58,7 +58,7 @@ const Proper = () => {
             <img src={item.image} alt={item.title} className="news-image" />
             <div className="news-content">
               <h3><b>{item.title}</b></h3>
-              <p style={{ color: 'darkred' }}>{item.nama}  -  {item.instansi}</p>
+              <p style={{ color: 'darkred' }}>{item.author}  -  {item.instansi}</p>
             </div>
           </div>
         ))}
