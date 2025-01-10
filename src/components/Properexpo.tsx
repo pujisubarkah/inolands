@@ -42,7 +42,7 @@ const Proper = () => {
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage + 1;
   const currentItems = newsItems.slice(indexOfFirstItem, indexOfLastItem);
   const sortedItems = currentItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
