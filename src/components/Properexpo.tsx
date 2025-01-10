@@ -14,7 +14,7 @@ const Proper = () => {
   // Fetch berita from API with Axios
   const fetchBeritaFromAPI = async () => {
     try {
-      const offset = (currentPage - 1) * 20;
+      const offset = currentPage;
       const response = await axios.get(`https://properexpo.lan.go.id/app/api/tx-proper?perPage=20&page=${offset}`);
       const data = response.data.data.data; // Akses array data dari response
       const formattedData = data.map((item) => ({
