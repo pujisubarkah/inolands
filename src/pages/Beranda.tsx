@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Berita from '../components/Berita';
 import Carousel from '../components/Carousel';
+import ProperExpo from '../components/Properexpo';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -61,6 +62,9 @@ const Beranda = () => {
       <Berita />
       <hr style={{ border: '1px solid #ccc', margin: '20px 0' }} />
       <Carousel />
+      <hr style={{ border: '1px solid #ccc', margin: '20px 0' }} />
+      <ProperExpo />
+      
     </div>
   );
 };
