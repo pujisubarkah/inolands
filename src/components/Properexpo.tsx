@@ -4,8 +4,8 @@ import axios from 'axios';
 const Proper = () => {
   const [newsItems, setNewsItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
-  const totalPages = 100;
+  const itemsPerPage = 8;
+  const totalPages = 20;
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -15,7 +15,7 @@ const Proper = () => {
   const fetchBeritaFromAPI = async () => {
     try {
       const offset = currentPage;
-      const response = await axios.get(`https://properexpo.lan.go.id/app/api/tx-proper?perPage=20&page=${offset}`);
+      const response = await axios.get(`https://properexpo.lan.go.id/app/api/tx-proper?perPage=8&page=${offset}`);
       const data = response.data.data.data; // Akses array data dari response
       const formattedData = data.map((item) => ({
       id: item.id_proper,
