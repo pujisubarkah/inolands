@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Tuxe = () => {
+const Proper = () => {
   const [newsItems, setNewsItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
@@ -15,13 +15,14 @@ const Tuxe = () => {
   const fetchBeritaFromAPI = async () => {
     try {
       const offset = (currentPage - 1) * 20;
-      const response = await axios.get(`https://api.indeks.inovasi.litbang.kemendagri.go.id/tuxe/new-release?offset=${offset}`);
-      const formattedData = response.data.inovasi.map((item) => ({
-        id: item.id,
-        title: item.nama,
-        image: item.indikator_video.thumbnail_url,
-        pemda: item.pemda,
-        date: item.waktu,
+      const response = await axios.get(`https://properexpo.lan.go.id/app/api/tx-proper?perPage=20&page=${offset}`);
+      const formattedData = data.map((item) => ({
+      id: item.id_proper,
+      title: item.judul,
+      image: item.berkas_poster_landscape,
+      author: item.nama,
+      instansi: item.md_instansi?.nama,
+      date: item.created_at
       }));
 
       setNewsItems(formattedData);
@@ -36,7 +37,7 @@ const Tuxe = () => {
   }, [currentPage]);
 
   const handleItemClick = (id) => {
-    window.open(`https://tuxedovation.inovasi.litbang.kemendagri.go.id/detail_inovasi/${id}`, '_blank');
+    window.open(`https://properexpo.lan.go.id/web/proper/detail/${id}`, '_blank');
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -47,7 +48,7 @@ const Tuxe = () => {
   return (
     <div className="app">
       <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
-        TUXEDOVATION KEMENDAGRI
+        PROYEK PERUBAHAN
       </h1>
       <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
       <div className="news-grid">
@@ -56,7 +57,7 @@ const Tuxe = () => {
             <img src={item.image} alt={item.title} className="news-image" />
             <div className="news-content">
               <h3><b>{item.title}</b></h3>
-              <p style={{ color: 'darkred' }}>{item.pemda}</p>
+              <p style={{ color: 'darkred' }}>{item.nama}  -  {item.instansi}</p>
             </div>
           </div>
         ))}
@@ -87,4 +88,4 @@ const Tuxe = () => {
   );
 };
 
-export default Tuxe;
+export default Proper;
