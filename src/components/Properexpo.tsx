@@ -16,6 +16,7 @@ const Proper = () => {
     try {
       const offset = (currentPage - 1) * 20;
       const response = await axios.get(`https://properexpo.lan.go.id/app/api/tx-proper?perPage=20&page=${offset}`);
+      const data = response.data.data.data; // Akses array data dari response
       const formattedData = data.map((item) => ({
       id: item.id_proper,
       title: item.judul,
