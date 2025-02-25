@@ -131,6 +131,28 @@ function InteractiveMap() {
     setCurrentPage(newPage);
   };
 
+
+  const [expandedIds, setExpandedIds] = useState([]); // State untuk menyimpan ID yang diperluas
+
+  const maxLength = 50; // Batas karakter untuk teks terpotong
+
+  // Fungsi untuk memotong teks jika lebih panjang dari maxLength
+  const truncateText = (text, id) => {
+    if (text.length > maxLength && !expandedIds.includes(id)) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  };
+
+  // Fungsi untuk toggle tampilan deskripsi
+  const toggleExpand = (id) => {
+    if (expandedIds.includes(id)) {
+      setExpandedIds(expandedIds.filter((itemId) => itemId !== id)); // Hapus ID jika sudah diperluas
+    } else {
+      setExpandedIds([...expandedIds, id]); // Tambahkan ID ke daftar expanded
+    }
+  };
+  
   return (
  <div className="app">
    
@@ -352,7 +374,26 @@ function InteractiveMap() {
                     <td style={{ padding: '15px' }}>{inovasi.judul_inovasi}</td>
                     <td style={{ padding: '15px' }}>{inovasi.tahun}</td>
                     <td style={{ padding: '15px' }}>{inovasi.inovator}</td>
-                    <td style={{ padding: '15px' }}>{inovasi.deskripsi}</td>
+                    <td style={{ padding: '15px' }}>
+              {/* Tampilkan deskripsi dengan logika pemotongan */}
+              <span>{truncateText(inovasi.deskripsi, inovasi.id)}</span>
+              {/* Tombol [More] hanya ditampilkan jika teks lebih panjang dari maxLength */}
+              {inovasi.deskripsi.length > maxLength && (
+                <button
+                  onClick={() => toggleExpand(inovasi.id)} // Toggle state expanded
+                  style={{
+                    marginLeft: '5px',
+                    color: 'blue',
+                    cursor: 'pointer',
+                    border: 'none',
+                    background: 'transparent',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  {expandedIds.includes(inovasi.id) ? '[Less]' : '[More]'}
+                </button>
+              )}
+            </td>
                   </tr>
                 ))}
               </tbody>
