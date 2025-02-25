@@ -138,6 +138,7 @@ function InteractiveMap() {
 
   // Fungsi untuk memotong teks jika lebih panjang dari maxLength
   const truncateText = (text, id) => {
+    if (!text) return 'Tidak ada deskripsi'; // Jika deskripsi null atau undefined
     if (text.length > maxLength && !expandedIds.includes(id)) {
       return text.substring(0, maxLength) + '...';
     }
@@ -152,6 +153,7 @@ function InteractiveMap() {
       setExpandedIds([...expandedIds, id]); // Tambahkan ID ke daftar expanded
     }
   };
+
   
   return (
  <div className="app">
@@ -378,7 +380,7 @@ function InteractiveMap() {
               {/* Tampilkan deskripsi dengan logika pemotongan */}
               <span>{truncateText(inovasi.deskripsi, inovasi.id)}</span>
               {/* Tombol [More] hanya ditampilkan jika teks lebih panjang dari maxLength */}
-              {inovasi.deskripsi.length > maxLength && (
+              {inovasi.deskripsi && inovasi.deskripsi.length > maxLength && (
                 <button
                   onClick={() => toggleExpand(inovasi.id)} // Toggle state expanded
                   style={{
