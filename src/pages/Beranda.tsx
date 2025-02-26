@@ -19,7 +19,7 @@ const Beranda = () => {
 
   return (
     <div className="Beranda">
-      <main className="flex flex-col items-center text-center py-12 px-4" style={{ backgroundColor: '#8B0000' }}>
+      <main className="flex flex-col items-center text-center py-12 px-4" style={{ backgroundColor: '#16578d' }}>
         <div className="flex flex-col md:flex-row items-center justify-center bg-darkred text-white py-12 px-6 rounded-lg" style={{ margin: '20px', padding: '20px' }}>
           <img src="https://lnauvznspseugfqxpwjc.supabase.co/storage/v1/object/public/assets/hero-img.png" alt="Illustration of people interacting with technology" className="w-full md:w-2/5 max-w-md mr-0 md:mr-6 mb-6 md:mb-0"/>
           <div className="text-left w-full md:w-3/5">
@@ -29,7 +29,7 @@ const Beranda = () => {
               untuk penguatan kapasitas berinovasi terdiri dari berbagai program advokasi pembelajaran inovasi
             </p>
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-6">
-              <button className="bg-gray-100 text-red-900 px-4 py-2 rounded font-bold" onClick={handleSelengkapnyaClick}>Selengkapnya</button>
+                <button className="bg-gray-100 text-[#243a55] px-4 py-2 rounded font-bold" onClick={handleSelengkapnyaClick}>Selengkapnya</button>
               <button className="flex items-center space-x-2" onClick={handleTontonVideoClick}>
                 <i className="fas fa-play-circle text-white"></i>
                 <span>Tonton Video</span>
