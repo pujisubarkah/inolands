@@ -26,7 +26,7 @@
   }
   
   .featured-content h2 {
-    color: red;
+    color: #16578d;
     font-size: 20px;
   }
   
@@ -51,7 +51,7 @@
   }
   
   .small-article span {
-    color: red;
+    color: #16578d;
     font-size: 12px;
     align-self: flex-start;
   }
