@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+interface NewsItem {
+  id: number;
+  title: string;
+  image: string;
+  pemda: string;
+  date: string;
+}
+
 const Tuxe = () => {
-  const [newsItems, setNewsItems] = useState([]);
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
   const totalPages = 100;
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
@@ -20,7 +28,7 @@ const Tuxe = () => {
       );
 
       // Format data sesuai kebutuhan
-      const formattedData = response.data.inovasi.map((item) => ({
+      const formattedData = response.data.inovasi.map((item: any) => ({
         id: item.id,
         title: item.nama,
         image: item.indikator_video.thumbnail_url,
@@ -41,7 +49,7 @@ const Tuxe = () => {
     fetchBeritaFromAPI();
   }, [currentPage]);
 
-  const handleItemClick = (id) => {
+  const handleItemClick = (id: number) => {
     window.open(`https://tuxedovation.inovasi.litbang.kemendagri.go.id/detail_inovasi/${id}`, '_blank');
   };
 
@@ -63,7 +71,7 @@ const Tuxe = () => {
           width: '100px',
           border: 'none',
           height: '2px',
-          background: 'linear-gradient(to right, red, black, red)',
+          background: 'linear-gradient(to right, #16578d, black, #16578d)',
           margin: '0 auto 20px auto',
         }}
       />
@@ -75,7 +83,7 @@ const Tuxe = () => {
               <h3>
                 <b>{item.title}</b>
               </h3>
-              <p style={{ color: 'darkred' }}>{item.pemda}</p>
+              <p style={{ color: '#16578d' }}>{item.pemda}</p>
             </div>
           </div>
         ))}
