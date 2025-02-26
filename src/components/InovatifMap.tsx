@@ -119,7 +119,7 @@ function InovatifMap() {
           <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
             PETA INDEKS INOVASI DAERAH
           </h1>
-          <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+          <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
          {/* Year Buttons */}
 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
   {[2019, 2020, 2021, 2022, 2023].map((year) => (
@@ -129,7 +129,7 @@ function InovatifMap() {
       style={{
         padding: '10px',
         margin: '0 5px',
-        backgroundColor: selectedYear === year ? '#8B0000' : '#333',
+        backgroundColor: selectedYear === year ? '#16578d' : '#333',
         color: '#fff',
         border: 'none',
         borderRadius: '5px',
