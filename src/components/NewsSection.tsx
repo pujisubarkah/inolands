@@ -6,7 +6,12 @@ import 'swiper/css';
 import { supabase } from '../supabaseClient'; // Ensure this path is correct
 
 const NewsSection = () => {
-  const [beritas, setBeritas] = useState([]);
+  interface Berita {
+    description: string;
+    headline: string;
+  }
+
+  const [beritas, setBeritas] = useState<Berita[]>([]);
   const [lastHeadline, setLastHeadline] = useState('');
 
   useEffect(() => {
@@ -68,7 +73,7 @@ const NewsSection = () => {
           <SwiperSlide key={index}>
             <div className="flex flex-col justify-center bg-gray-800 text-white p-4 rounded-lg">
               <p className="text-center">{berita.description}</p>
-              <span className="text-red-500 text-xs mt-2 text-center">Kategori</span>
+              <span className="text-[#16578d] text-xs mt-2 text-center">Kategori</span>
             </div>
           </SwiperSlide>
         ))}
