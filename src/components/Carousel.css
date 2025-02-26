@@ -1,7 +1,7 @@
 .corousel-container {
   display: flex;
   flex-direction: column; /* Change to column to stack heading above carousel */
-  background-color: darkred; /* Background color remains dark red */
+  background-color: #16578d; /* Background color remains dark red */
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -19,7 +19,7 @@
 .carousel {
   display: flex;
   justify-content: center;
-  background-color: darkred; /* Background color remains dark red */
+  background-color: #16578d; /* Background color remains dark red */
   align-items: center;
   overflow: hidden;
   padding: 20px; /* Padding remains the same */
