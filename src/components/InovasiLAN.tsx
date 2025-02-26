@@ -6,7 +6,15 @@ import './NewsGrid.css';
 const InovasiLAN = () => {
     const navigate = useNavigate();
 
-    const [newsItems, setNewsItems] = useState([]);
+    interface NewsItem {
+      id: number;
+      title: string;
+      image: string;
+      pemda: string;
+      date: string; // Add date property
+    }
+    
+    const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0); // Track total item count
   
@@ -14,7 +22,7 @@ const InovasiLAN = () => {
   
     const totalPages = Math.ceil(totalItems / itemsPerPage); // Calculate total pages dynamically
   
-    const handlePageChange = (newPage) => {
+    const handlePageChange = (newPage: number) => {
       setCurrentPage(newPage);
     };
   
@@ -23,16 +31,17 @@ const fetchBeritaFromSupabase = async () => {
   try {
     const { data, error, count } = await supabase
       .from('inovasi_LAN')
-      .select('id, nama_inovasi, image_link, nama_instansi', { count: 'exact' })
+      .select('id, nama_inovasi, image_link, nama_instansi, created_at', { count: 'exact' }) // Include created_at field
 
     if (error) throw error;
 
     setTotalItems(count); // Set the total number of items
-    const formattedData = data.map((item) => ({
+    const formattedData = data.map((item: any) => ({
       id: item.id,
       title: item.nama_inovasi,
-      image: item.image_link,
       pemda: item.nama_instansi,
+      image: item.image_link,
+      date: item.created_at, // Map created_at to date
     }));
 
     setNewsItems(formattedData);
@@ -48,7 +57,7 @@ const fetchBeritaFromSupabase = async () => {
     fetchBeritaFromSupabase();
   }, [currentPage]);
 
-  const handleItemClick = (id) => {
+  const handleItemClick = (id: number) => {
     navigate(`/inovasi/${id}`);
   };
 
@@ -57,21 +66,21 @@ const fetchBeritaFromSupabase = async () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = newsItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const sortedItems = currentItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const sortedItems = currentItems.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <div className="app">
       <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
         LIST INOVASI
       </h1>
-      <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+      <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
       <div className="news-grid">
         {sortedItems.map((item) => (
           <div key={item.id} className="news-item" onClick={() => handleItemClick(item.id)}>
             <img src={item.image} alt={item.title} className="news-image" />
             <div className="news-content">
               <h3><b>{item.title}</b></h3>
-              <p style={{ color: 'darkred' }}>{item.pemda}</p>
+              <p style={{ color: '#16578d' }}>{item.pemda}</p>
             </div>
           </div>
         ))}
