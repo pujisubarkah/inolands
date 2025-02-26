@@ -9,7 +9,7 @@ const Berita = () => {
   const itemsPerPage = 8; // Tentukan jumlah item per halaman
   const totalPages = Math.ceil(newsItems.length / itemsPerPage); // Calculate total pages dynamically
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
@@ -24,7 +24,7 @@ const Berita = () => {
       console.error('Error fetching news:', error);
     } else {
       // Format data yang difetch agar sesuai dengan komponen `NewsGrid`
-      const formattedData = data.map((item) => ({
+      const formattedData = data.map((item: { id: number; title: string; image_url: string; deskripsi: string; date: string }) => ({
         id: item.id,
         title: item.title,
         image: item.image_url, // Sesuaikan dengan atribut yang ada di API Supabase
@@ -45,14 +45,14 @@ const Berita = () => {
  const currentItems = newsItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
  // Fungsi untuk mengganti halaman
- const paginate = (pageNumber) => setCurrentPage(pageNumber);
+ const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
  return (
   <div className="app">
     <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
       BERITA INOVASI
     </h1>
-    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
     <NewsGrid items={currentItems} />
     {totalPages > 1 && (
         <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
