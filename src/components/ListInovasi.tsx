@@ -3,7 +3,20 @@ import './InteractiveMap.css';
 import { supabase } from '../supabaseClient';
 
 function InteractiveMap() {
-    const [inovasiData, setInovasiData] = useState([]);
+    interface Inovasi {
+        id: number;
+        judul_inovasi: string;
+        tahun: number;
+        kld: string;
+        inovator: string;
+        deskripsi: string;
+        sdgs: {
+            image: string;
+            sdgs: string;
+        };
+    }
+
+    const [inovasiData, setInovasiData] = useState<Inovasi[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterColumn, setFilterColumn] = useState('');
@@ -52,7 +65,7 @@ function InteractiveMap() {
     const totalPages = Math.ceil(inovasiData.length / itemsPerPage);
     const currentInovasi = filteredInovasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    const handlePageChange = (newPage) => {
+    const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
     };
 
@@ -63,7 +76,7 @@ function InteractiveMap() {
                     <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
                         TEMUKAN INOVASI
                     </h1>
-                    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, red, black, red)', margin: '0 auto 20px auto' }} />
+                    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
 
                     <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                         <div style={{ position: 'relative' }}>
