@@ -2,12 +2,21 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Proper = () => {
-  const [newsItems, setNewsItems] = useState([]);
+  interface NewsItem {
+    id: number;
+    title: string;
+    image: string;
+    author: string;
+    instansi: string;
+    date: string;
+  }
+
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const totalPages = 20;
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
@@ -20,7 +29,7 @@ const Proper = () => {
       const data = response.data.data.data; // Akses array data dari response
 
       // Format data sesuai kebutuhan
-      const formattedData = data.map((item) => ({
+      const formattedData = data.map((item: any) => ({
         id: item.id_proper,
         title: item.judul,
         image: `https://properexpo.lan.go.id/uploads/properexpo-lan/berkas_poster_landscape/${item.berkas_poster_landscape}`,
@@ -42,7 +51,7 @@ const Proper = () => {
     fetchBeritaFromAPI();
   }, [currentPage]);
 
-  const handleItemClick = (id) => {
+  const handleItemClick = (id: number) => {
     window.open(`https://properexpo.lan.go.id/web/proper/detail/${id}`, '_blank');
   };
 
@@ -64,7 +73,7 @@ const Proper = () => {
           width: '100px',
           border: 'none',
           height: '2px',
-          background: 'linear-gradient(to right, red, black, red)',
+          background: 'linear-gradient(to right, #16578d, black, #16578d)',
           margin: '0 auto 20px auto',
         }}
       />
@@ -76,7 +85,7 @@ const Proper = () => {
               <h3>
                 <b>{item.title}</b>
               </h3>
-              <p style={{ color: 'darkred' }}>
+              <p style={{ color: '#16578d' }}>
                 {item.author} - {item.instansi}
               </p>
             </div>
