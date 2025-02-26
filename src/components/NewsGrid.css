@@ -4,7 +4,7 @@
   gap: 20px;
   padding: 20px; /* Add padding to the grid */
   margin: 20px; /* Add margin around the grid */
-  background-color: #f9f9f9; /* Light background for contrast */
+  background-color: #f8f8f9; /* Light background for contrast */
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
