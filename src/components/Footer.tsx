@@ -78,7 +78,7 @@ const Footer = () => {
       </div>
       <br></br>
       {/* Footer Copyright */}
-      <div className="text-center bg-[darkred] text-[#f7f4f4] text-lg border-2 py-0.5 w-full m-0 font-poppins">
+      <div className="text-center bg-[#16578D] text-[#f7f4f4] text-lg border-2 py-0.5 w-full m-0 font-poppins">
         <p>&copy; 2024 - Pusat Inovasi Administrasi Negara LANRI. All rights reserved.</p>
       </div>
     </footer>
