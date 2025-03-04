@@ -3,12 +3,36 @@ import './InteractiveMap.css';
 import { supabase } from '../supabaseClient';
 
 function InteractiveMap() {
-  const [provinces, setProvinces] = useState([]);
-  const [kabupaten, setKabupaten] = useState([]);
-  const [selectedProvinsi, setSelectedProvinsi] = useState(null);
-  const [selectedKabkot, setSelectedKabkot] = useState(null);
+  interface Province {
+    id_provinsi: number;
+    nama: string;
+    svg_path: string;
+    jumlah_inovasi: number;
+  }
+
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  interface Kabupaten {
+    id_kabkot: number;
+    id_provinsi: number;
+    nama: string;
+    svg_path: string;
+    jumlah_inovasi: number;
+  }
+
+  const [kabupaten, setKabupaten] = useState<Kabupaten[]>([]);
+  const [selectedProvinsi, setSelectedProvinsi] = useState<number | null>(null);
+  const [selectedKabkot, setSelectedKabkot] = useState<number | null>(null);
   const [hoveredArea, setHoveredArea] = useState({ visible: false, text: '', x: 0, y: 0 });
-  const [inovasiKabupaten, setInovasiKabupaten] = useState([]);
+  interface Inovasi {
+    id: number;
+    judul_inovasi: string;
+    tahun: number;
+    inovator: string;
+    deskripsi: string;
+    id_kabkot: number;
+  }
+
+  const [inovasiKabupaten, setInovasiKabupaten] = useState<Inovasi[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -21,7 +45,7 @@ function InteractiveMap() {
 
         if (provincesError) throw provincesError;
 
-        const provinceIds = provincesData.map(prov => prov.id_provinsi).filter(id => id);
+        const provinceIds = provincesData.map((prov: Province) => prov.id_provinsi).filter((id: number) => id);
         const { data: provinsiData, error: provinsiError } = await supabase
           .from('provinsi')
           .select('id_provinsi, jumlah_inovasi')
@@ -29,32 +53,39 @@ function InteractiveMap() {
 
         if (provinsiError) throw provinsiError;
 
-        const combinedData = provincesData.map(prov => ({
+        const combinedData = provincesData.map((prov: Province) => ({
           ...prov,
-          jumlah_inovasi: provinsiData.find(p => p.id_provinsi === prov.id_provinsi)?.jumlah_inovasi || 0,
+          jumlah_inovasi: provinsiData.find((p: Province) => p.id_provinsi === prov.id_provinsi)?.jumlah_inovasi || 0,
         }));
 
         setProvinces(combinedData);
       } catch (err) {
-        console.error("Error fetching provinces:", err.message);
-        alert(`Failed to fetch provinces: ${err.message}`);
+        if (err instanceof Error) {
+          console.error("Error fetching provinces:", err.message);
+        } else {
+          console.error("Error fetching provinces:", err);
+        }
+        if (err instanceof Error) {
+          alert(`Failed to fetch provinces: ${err.message}`);
+        } else {
+          alert('Failed to fetch provinces');
+        }
       }
     };
 
     fetchProvinces();
   }, []);
 
-  const getChoroplethColor = (jumlah_inovasi) => {
-    if (jumlah_inovasi > 200) return '#800026'; // dark red
-    if (jumlah_inovasi > 150) return '#BD0026';
-    if (jumlah_inovasi > 100) return '#E31A1C';
-    if (jumlah_inovasi > 50) return '#FC4E2A';
-    if (jumlah_inovasi > 0) return '#FD8D3C';
-    return '#FFEDA0'; // lightest color for no innovation
-  
-  };
+  const getChoroplethColor = (jumlah_inovasi: number) => {
+    if (jumlah_inovasi > 200) return '#08306b'; // dark blue
+    if (jumlah_inovasi > 150) return '#08519c';
+    if (jumlah_inovasi > 100) return '#2171b5';
+    if (jumlah_inovasi > 50) return '#4292c6';
+    if (jumlah_inovasi > 0) return '#6baed6';
+    return '#c6dbef'; // lightest blue for no innovation
+};
 
-  const loadKabupaten = async (id_provinsi) => {
+  const loadKabupaten = async (id_provinsi: number) => {
     try {
       const { data: kabupatenData, error: kabupatenError } = await supabase
         .from('kabupaten_maps')
@@ -65,7 +96,7 @@ function InteractiveMap() {
 
       console.log('kabupatenData:', kabupatenData);
 
-      const kabupatenIds = kabupatenData.map(kab => kab.id_kabkot);
+      const kabupatenIds = kabupatenData.map((kab: Kabupaten) => kab.id_kabkot);
       const { data: kabkotData, error: kabkotError } = await supabase
         .from('kabkot') // Using views table 'kabkot'
         .select('id_kabkot, jumlah_inovasi')
@@ -86,19 +117,23 @@ function InteractiveMap() {
 
       console.log('kabupatenData:', kabupatenData);
 
-      const combinedKabupaten = kabupatenData.map(kab => ({
+      const combinedKabupaten = kabupatenData.map((kab: Kabupaten) => ({
         ...kab,
-        jumlah_inovasi: kabkotData.find(k => k.id_kabkot === kab.id_kabkot)?.jumlah_inovasi || 0,
+        jumlah_inovasi: kabkotData.find((k: Kabupaten) => k.id_kabkot === kab.id_kabkot)?.jumlah_inovasi || 0,
       }));
 
       setKabupaten(combinedKabupaten);
       setSelectedProvinsi(id_provinsi);
     } catch (err) {
-      console.error("Error fetching kabupaten or inovasi:", err.message);
+      if (err instanceof Error) {
+        console.error("Error fetching kabupaten or inovasi:", err.message);
+      } else {
+        console.error("Error fetching kabupaten or inovasi:", err);
+      }
     }
   };
 
-  const loadInovasi = async (id_kabkot) => {
+  const loadInovasi = async (id_kabkot: number) => {
     const { data: inovasiData, error } = await supabase
       .from('inolands')
       .select('*')
@@ -113,7 +148,7 @@ function InteractiveMap() {
     }
   };
 
-  const handleMouseEnter = (event, text) => {
+  const handleMouseEnter = (_: React.MouseEvent<SVGPathElement, MouseEvent>, text: string) => {
     const x = 750; // Adjust this value based on your box width and desired margin
     const y = 20; // Adjust this value based on your desired margin from the top
 
@@ -127,17 +162,17 @@ function InteractiveMap() {
   const totalPages = Math.ceil(inovasiKabupaten.length / itemsPerPage);
   const currentInovasi = inovasiKabupaten.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
 
 
-  const [expandedIds, setExpandedIds] = useState([]); // State untuk menyimpan ID yang diperluas
+  const [expandedIds, setExpandedIds] = useState<number[]>([]); // State untuk menyimpan ID yang diperluas
 
   const maxLength = 50; // Batas karakter untuk teks terpotong
 
   // Fungsi untuk memotong teks jika lebih panjang dari maxLength
-  const truncateText = (text, id) => {
+  const truncateText = (text: string, id: number) => {
     if (!text) return 'Tidak ada deskripsi'; // Jika deskripsi null atau undefined
     if (text.length > maxLength && !expandedIds.includes(id)) {
       return text.substring(0, maxLength) + '...';
@@ -146,7 +181,7 @@ function InteractiveMap() {
   };
 
   // Fungsi untuk toggle tampilan deskripsi
-  const toggleExpand = (id) => {
+  const toggleExpand = (id: number) => {
     if (expandedIds.includes(id)) {
       setExpandedIds(expandedIds.filter((itemId) => itemId !== id)); // Hapus ID jika sudah diperluas
     } else {
@@ -321,7 +356,7 @@ function InteractiveMap() {
                       </div>
                       {(kabupaten.length > 0 && (
                         <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
-                          <strong>{kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.nama}</strong>
+                          <strong>{inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0].id_kabkot)?.nama : 'NA'}</strong>
                           <br />
                           {inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.jumlah_inovasi : 'NA'} inovasi
                         </div>
@@ -468,35 +503,35 @@ function InteractiveMap() {
     </div>
   </div>
 )}
-      <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '50%', justifyContent: 'center' }}>
-        <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
-        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-          <div className="legend-color" style={{ backgroundColor: '#FFEDA0', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
-          <span>0</span>
-        </div>
-        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-          <div className="legend-color" style={{ backgroundColor: '#FD8D3C', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
-          <span>1-50</span>
-        </div>
-        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-          <div className="legend-color" style={{ backgroundColor: '#FC4E2A', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
-          <span>51-100</span>
-        </div>
-        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-          <div className="legend-color" style={{ backgroundColor: '#E31A1C', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
-          <span>101-150</span>
-        </div>
-        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-          <div className="legend-color" style={{ backgroundColor: '#BD0026', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
-          <span>151-200</span>
-        </div>
-        <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-          <div className="legend-color" style={{ backgroundColor: '#800026', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
-          <span>200+</span>
-        </div>
+     <div className="legend" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginTop: '20px', width: '50%', justifyContent: 'center' }}>
+  <h3 style={{ marginRight: '20px' }}>LEGENDA</h3>
+  <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+    <div className="legend-color" style={{ backgroundColor: '#c6dbef', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+    <span>0</span>
+  </div>
+  <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+    <div className="legend-color" style={{ backgroundColor: '#6baed6', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+    <span>1-50</span>
+  </div>
+  <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+    <div className="legend-color" style={{ backgroundColor: '#4191cb', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+    <span>51-100</span>
+  </div>
+  <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+    <div className="legend-color" style={{ backgroundColor: '#2171b5', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+    <span>101-150</span>
+  </div>
+  <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+    <div className="legend-color" style={{ backgroundColor: '#08519c', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+    <span>151-200</span>
+  </div>
+  <div className="legend-item" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+    <div className="legend-color" style={{ backgroundColor: '#08306b', width: '20px', height: '20px', borderRadius: '3px', marginRight: '5px' }}></div>
+    <span>200+</span>
+  </div>
+</div>
       </div>
     </div>
-  </div>
   );
   }
 
