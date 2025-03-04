@@ -1,5 +1,3 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import Berita from '../components/Berita';
 import Carousel from '../components/Carousel';
 import ProperExpo from '../components/Properexpo';
@@ -9,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const Beranda = () => {
   const navigate = useNavigate();
 
-  const { t } = useTranslation(); // Mengambil fungsi t dari useTranslation
   const handleSelengkapnyaClick = () => {
     navigate(`/cari`);
   };
