@@ -27,7 +27,13 @@ function InteractiveMap() {
     }, []);
 
     const loadInovasi = async () => {
-        const { data: inovasiData, error } = await supabase
+        let allData: Inovasi[] = [];
+        let error = null;
+        let from = 0;
+        const step = 1000;
+
+        while (true) {
+            const { data, error: fetchError } = await supabase
             .from('inolands')
             .select(`
             *,
@@ -35,7 +41,23 @@ function InteractiveMap() {
                 image,
                 sdgs
             )
-            `);
+            `)
+            .range(from, from + step - 1);
+
+            if (fetchError) {
+            error = fetchError;
+            break;
+            }
+
+            if (data.length === 0) {
+            break;
+            }
+
+            allData = [...allData, ...data];
+            from += step;
+        }
+
+        const inovasiData = allData;
 
         if (error) {
             console.error("Error fetching inovasi:", error);
@@ -64,6 +86,24 @@ function InteractiveMap() {
 
     const totalPages = Math.ceil(inovasiData.length / itemsPerPage);
     const currentInovasi = filteredInovasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const [sortConfig, setSortConfig] = useState<{ column: keyof Inovasi; direction: 'asc' | 'desc' } | null>(null);
+
+    const handleSort = (column: keyof Inovasi) => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortConfig && sortConfig.column === column && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+
+        const sortedData = [...inovasiData].sort((a, b) => {
+            if (a[column] < b[column]) return direction === 'asc' ? -1 : 1;
+            if (a[column] > b[column]) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        setSortConfig({ column, direction });
+        setInovasiData(sortedData);
+    };
 
     const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
@@ -98,14 +138,27 @@ function InteractiveMap() {
 
                     {currentInovasi.length > 0 ? (
                         <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', margin: '20px 0' }}>
+                            
                             <thead>
                                 <tr style={{ backgroundColor: '#444', color: 'white', textAlign: 'left' }}>
-                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Judul Inovasi</th>
-                                    <th style={{ padding: '15px', width: '175px', borderBottom: '1px solid #ddd' }}>SDGS</th>
-                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Tahun</th>
-                                    <th style={{ padding: '15px', width: '125px', borderBottom: '1px solid #ddd' }}>Pemda</th>
-                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Inovator</th>
-                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>Deskripsi</th>
+                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('judul_inovasi')}>
+                                        Judul Inovasi
+                                    </th>
+                                    <th style={{ padding: '15px', width: '175px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('sdgs')}>
+                                        SDGS
+                                    </th>
+                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('tahun')}>
+                                        Tahun
+                                    </th>
+                                    <th style={{ padding: '15px', width: '125px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('kld')}>
+                                        Pemda
+                                    </th>
+                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('inovator')}>
+                                        Inovator
+                                    </th>
+                                    <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('deskripsi')}>
+                                        Deskripsi
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
