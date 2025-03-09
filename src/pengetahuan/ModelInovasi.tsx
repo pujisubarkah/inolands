@@ -29,7 +29,7 @@ const Direktori = () => {
 
   const fetchBeritaFromApi = async () => {
     try {
-      const response = await fetch('https://thingproxy.freeboard.io/fetch/https://jippnas.menpan.go.id/fetch_model');
+      const response = await fetch('https://crossorigin.me/https://jippnas.menpan.go.id/fetch_model');
       const result = await response.json();
 
       const formattedData = result.model.map((item: any) => ({
