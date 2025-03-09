@@ -6,7 +6,7 @@ const Jippnas = () => {
   // Fetch berita from API
   const fetchBeritaFromAPI = async () => {
     try {
-      const response = await fetch(`https://jippnas.menpan.go.id/unggulan`);
+      const response = await fetch(`https://crossorigin.me/https://jippnas.menpan.go.id/unggulan`);
       const data = await response.json();
 
       // Format data yang difetch agar sesuai dengan komponen `NewsGrid`
