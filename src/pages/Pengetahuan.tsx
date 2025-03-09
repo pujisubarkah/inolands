@@ -1,6 +1,7 @@
 import React from 'react';
 import Forum from '../pengetahuan/forum';
 import Pdflist from '../pengetahuan/pdflist';
+import Modelinovasi from '../pengetahuan/ModelInovasi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronRight,
@@ -23,6 +24,10 @@ const Pengetahuan = () => {
 
   const handleListPdfClick = () => {
     setActiveComponent('Pdflist');
+  };
+
+  const handleModelInovasiClick = () => {
+    setActiveComponent('ModelInovasi');
   };
 
   return (
@@ -99,6 +104,26 @@ const Pengetahuan = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Direktori Inovasi</span>}
             </button>
           </li>
+          <li style={{ marginBottom: '10px' }}>
+            <button
+              onClick={handleModelInovasiClick}
+              style={{
+                backgroundColor: '#444',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                borderRadius: '5px',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center',
+              }}
+            >
+              <FontAwesomeIcon icon={faFilePdf} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Model Inovasi</span>}
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -106,6 +131,7 @@ const Pengetahuan = () => {
       <div style={{ flex: 1, padding: '10px' }}>
         {activeComponent === 'Forum' && <Forum />}
         {activeComponent === 'Pdflist' && <Pdflist />}
+        {activeComponent === 'ModelInovasi' && <Modelinovasi />}
       </div>
     </div>
   );
