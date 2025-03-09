@@ -85,7 +85,14 @@ function InteractiveMap() {
 
 
     const totalPages = Math.ceil(inovasiData.length / itemsPerPage);
-    const currentInovasi = filteredInovasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const currentInovasi = filteredInovasi
+        .sort((a, b) => {
+            if (a.tahun !== b.tahun) {
+                return b.tahun - a.tahun;
+            }
+            return a.kld.localeCompare(b.kld);
+        })
+        .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const [sortConfig, setSortConfig] = useState<{ column: keyof Inovasi; direction: 'asc' | 'desc' } | null>(null);
 
