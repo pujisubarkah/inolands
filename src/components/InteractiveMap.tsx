@@ -82,7 +82,7 @@ function InteractiveMap() {
     if (jumlah_inovasi > 100) return '#2171b5';
     if (jumlah_inovasi > 50) return '#4292c6';
     if (jumlah_inovasi > 0) return '#6baed6';
-    return '#c6dbef'; // lightest blue for no innovation
+    return '#fff'    // '#c6dbef';  lightest blue for no innovation
 };
 
   const loadKabupaten = async (id_provinsi: number) => {
