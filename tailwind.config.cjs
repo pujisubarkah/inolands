@@ -1,20 +1,22 @@
-// tailwind.config.cjs
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',  // Add Flowbite React component paths
-    './index.html',                                       // Include HTML file
-    './src/**/*.{js,jsx,ts,tsx}',                          // Include your source files (e.g. components, pages, etc.)
-  './node_modules/flowbite/**/*.{js,jsx,ts,tsx}',        // Add Flowbite component paths
+    './node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}', // Flowbite React components
+    './node_modules/flowbite/**/*.{js,jsx,ts,tsx}',      // Flowbite core components
+    './index.html',                                      // Include HTML file
+    './src/**/*.{js,jsx,ts,tsx}',                        // Source files (components, pages, etc.)
   ],
   theme: {
-  extend: {},
+    extend: {
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"], // Menambahkan font Poppins
+      },
+    },
   },
   plugins: [
-  require('flowbite/plugin'),  // Add Flowbite Tailwind plugin
+    require('flowbite/plugin'), // Flowbite Tailwind plugin
   ],
 };
-
 
 
 
