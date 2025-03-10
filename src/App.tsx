@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './index.css'; // Ensure TailwindCSS is imported
 import Navbar from './components/Navbar';
@@ -17,15 +17,10 @@ import LoadingSpinner from './components/LoadingSpinner';
 import Register from './components/Register'; // Import Register component
 import Login from './components/Login'; // Import LoginModal component
 import { UserProvider } from './context/UserContext';
-import Chatbot from 'react-chatbot-kit';
-import 'react-chatbot-kit/build/main.css';
-import config from './chatbot/config';
-//import MessageParser from './chatbot/MessageParser';
-//import ActionProvider from './chatbot/ActionProvider';
+import Chatbot from './components/Chatbot';
 import { supabase } from './supabaseClient'; // Import supabase client
 import Pdflist from './pengetahuan/pdflist';
 import PdfDetail from './pengetahuan/pdflistdetail';
-
 
 const App = () => {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -86,6 +81,7 @@ const App = () => {
         <div className="sticky top-0 z-50">
           <Navbar user={user} />
         </div>
+
         <main>
           <Routes>
             <Route path="/" element={<Beranda />} />
@@ -98,7 +94,6 @@ const App = () => {
             <Route path="/inovasi/:id" element={<InovasiDetail />} />
             <Route path="/direktori" element={<Pdflist />} />
             <Route path="/direktori/:id" element={<PdfDetail />} />
-        
 
             {/* Conditional Route Redirection based on user role */}
             <Route 
@@ -116,40 +111,15 @@ const App = () => {
             />
           </Routes>
         </main>
+
         <Footer />
 
-        {/* Chatbot Button */}
-      <div
-        className="fixed bottom-6 right-6 flex items-center justify-center w-16 h-16 bg-[#8B0000] rounded-full shadow-lg cursor-pointer transition-transform hover:scale-105 hover:shadow-xl"
-        onClick={toggleChatbot}
-        title="Halo, saya inobot, silakan klik untuk melanjutkan percakapan."
-      >
-        <img
-          src="/ino.png"
-          alt="Chatbot Icon"
-          className="w-10 h-10"
-        />
-      </div>
-
-      {/* Chatbot */}
-      {isChatbotOpen && (
-        <div className="fixed bottom-24 right-6 bg-white shadow-lg rounded-lg overflow-hidden w-80 max-h-[80vh]">
-          <button
-            onClick={toggleChatbot}
-            className="absolute top-2 right-2 bg-[#8B0000] text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md hover:bg-red-700 transition"
-          >
-            &times;
-          </button>
-          <div className="flex-grow p-4 overflow-y-auto">
-            <Chatbot
-              config={config}
-              messageParser={MessageParser}
-              actionProvider={ActionProvider}
-            />
-          </div>
+        {/* Chatbot tetap muncul di semua halaman */}
+        <div className="fixed bottom-5 right-5 z-50">
+          <Chatbot isOpen={isChatbotOpen} toggleChatbot={toggleChatbot} />
         </div>
-      )}
 
+      
 
         {/* Login or Register Form - Only render modal if it's toggled */}
         {isRegister !== null && (
