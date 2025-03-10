@@ -10,7 +10,7 @@ function InovatifMap() {
   const [hoveredArea, setHoveredArea] = useState({ visible: false, text: '', x: 0, y: 0 });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const [selectedYear, setSelectedYear] = useState(2023); // Default to 2023
+  const [selectedYear, setSelectedYear] = useState(2024); // Default to 2024
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -122,7 +122,7 @@ function InovatifMap() {
           <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
          {/* Year Buttons */}
 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-  {[2019, 2020, 2021, 2022, 2023].map((year) => (
+  {[2019, 2020, 2021, 2022, 2023, 2024].map((year) => (
     <button
       key={year}
       onClick={() => handleYearClick(year)}
