@@ -35,14 +35,14 @@ function InteractiveMap() {
         }
     };
 
-    const filteredInovasi = inovasiData.filter((inovasi) => {
-        return searchTerm === '' ||
-            inovasi.judul_inovasi.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            inovasi.tahun.toString().includes(searchTerm.toLowerCase()) ||
-            inovasi.kld.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            inovasi.inovator.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            inovasi.deskripsi.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+    const filteredInovasi = (inovasiData || []).filter((inovasi) => {
+    return searchTerm === '' ||
+        (inovasi.judul_inovasi?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (inovasi.tahun?.toString() || '').includes(searchTerm.toLowerCase()) ||
+        (inovasi.kld?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (inovasi.inovator?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (inovasi.deskripsi?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+});
 
     const totalPages = Math.ceil(filteredInovasi.length / itemsPerPage);
     const currentInovasi = filteredInovasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
