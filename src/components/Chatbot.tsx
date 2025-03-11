@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Message } from "./types"; // Pastikan path ini benar
+import { Message } from "./types";
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,6 +25,18 @@ const Chatbot: React.FC = () => {
     sender: "inobot",
   });
 
+  const generateResponse = (userInput: string): string => {
+    const responses = {
+      halo: ["Halo! Apa kabar? 😊", "Hai Sobat! 👋", "Halo, ada yang bisa saya bantu?"],
+      berita: ["Cek berita terbaru di halaman utama! 📰", "Ada banyak berita menarik hari ini!"],
+      inovasi: ["Inovasi terkini? Saya punya banyak rekomendasi!", "Lihat inovasi keren di website!"],
+      default: ["Maaf, saya belum mengerti. 🤔", "Bisa ulangi dengan kata lain?", "Saya masih belajar, bantu saya dengan pertanyaan yang lebih spesifik!"],
+    };
+
+    const key = Object.keys(responses).find((word) => userInput.toLowerCase().includes(word));
+    return key ? responses[key][Math.floor(Math.random() * responses[key].length)] : responses.default[Math.floor(Math.random() * responses.default.length)];
+  };
+
   const sendMessage = () => {
     if (!input.trim()) return;
 
@@ -37,10 +49,7 @@ const Chatbot: React.FC = () => {
     setInput("");
 
     setTimeout(() => {
-      const botResponse = data.includes(input)
-        ? `Berikut adalah informasi terkait: ${input}`
-        : "Maaf, saya tidak menemukan jawaban yang sesuai.";
-
+      const botResponse = generateResponse(input);
       setMessages((prev) => [...prev, createChatBotMessage(botResponse)]);
     }, 1000);
   };
@@ -48,7 +57,7 @@ const Chatbot: React.FC = () => {
   const sendGreeting = useCallback(() => {
     setMessages((prev) => [
       ...prev,
-      createChatBotMessage("👋 Hello Sobat Ino! Ada yang bisa saya bantu?"),
+      createChatBotMessage("👋 Hello Sobat Ino! Ada yang bisa saya bantu?")
     ]);
   }, []);
 
@@ -58,7 +67,6 @@ const Chatbot: React.FC = () => {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
-      {/* Tombol untuk membuka/menutup chatbot */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="p-0 border-none bg-transparent focus:outline-none"
@@ -66,10 +74,8 @@ const Chatbot: React.FC = () => {
         <img src="/ino.png" alt="Chatbot Icon" width={48} height={48} />
       </button>
 
-      {/* Chatbot container */}
       {isOpen && (
         <div className="bg-white shadow-lg rounded-lg p-4 w-80 h-96 border border-gray-300 flex flex-col">
-          {/* Header */}
           <div className="flex justify-between items-center border-b pb-2">
             <h2 className="text-lg font-semibold">Inobot</h2>
             <button
@@ -80,7 +86,6 @@ const Chatbot: React.FC = () => {
             </button>
           </div>
 
-          {/* Chat area */}
           <div className="flex-grow overflow-y-auto p-2">
             {messages.map((msg) => (
               <div
@@ -98,14 +103,12 @@ const Chatbot: React.FC = () => {
                   height={12}
                   className="inline-block mr-2"
                 />
-                <strong>{msg.sender === "user" ? "User" : "InoBot"}:</strong>{" "}
-                {msg.text}
+                <strong>{msg.sender === "user" ? "User" : "InoBot"}:</strong> {msg.text}
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input dan tombol kirim */}
           <div className="flex gap-2 mt-2">
             <input
               type="text"
