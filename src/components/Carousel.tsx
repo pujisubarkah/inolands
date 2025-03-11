@@ -3,22 +3,24 @@ import './Carousel.css'; // Menggunakan file CSS terpisah
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faCircleArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { supabase } from '../supabaseClient'; // Import supabase client
+import axios from 'axios'; // Import axios
 
 const Carousel = () => {
-  const [images, setImages] = useState([]);
+  interface Image {
+    link: string;
+    // Add other properties if needed
+  }
+
+  const [images, setImages] = useState<Image[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fetch images from Supabase
+  // Fetch images from API using axios
   const fetchImages = async () => {
-    const { data, error } = await supabase
-      .from('dokumens')
-      .select('*');
-
-    if (error) {
+    try {
+      const response = await axios.get('/api/infografis'); // Ganti dengan endpoint yang sesuai
+      setImages(response.data); // Menyimpan data yang diterima
+    } catch (error) {
       console.error('Error fetching images:', error);
-    } else {
-      setImages(data);
     }
   };
 
@@ -38,9 +40,9 @@ const Carousel = () => {
   return (
     <div className="carousel-container">
       <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
-      INFOGRAFIS INOVASI
-    </h1>
-    <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
+        INFOGRAFIS INOVASI
+      </h1>
+      <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
     
       <div className="carousel">
         <button onClick={prevSlide} className="carousel-button-prev">
@@ -52,7 +54,7 @@ const Carousel = () => {
             return (
               <img 
                 key={index}
-                src={images[index].link}
+                src={images[index].link} // Sesuaikan dengan field data yang ada
                 alt={`Slide ${index}`}
                 className="carousel-image"
               />
