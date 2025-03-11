@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import axios from 'axios';
 import './NewsDetail.css';
 
+interface NewsDetailType {
+  title: string;
+  date: string;
+  deskripsi: string;
+  image_url: string;
+}
 
 const NewsDetail = () => {
   const { id } = useParams(); // Mengambil ID dari URL
-  const [newsDetail, setNewsDetail] = useState(null);
+  const [newsDetail, setNewsDetail] = useState<NewsDetailType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchNewsDetail = async () => {
-      const { data, error } = await supabase
-        .from('beritas')
-        .select('*')
-        .eq('id', id)
-        .single(); // Mengambil satu berita berdasarkan ID
-
-      if (error) {
-        setError(error);
-      } else {
-        setNewsDetail(data);
+      try {
+        const response = await axios.get(`/api/berita/${id}`);
+        setNewsDetail(response.data);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       }
       setLoading(false);
     };
@@ -29,13 +34,8 @@ const NewsDetail = () => {
     fetchNewsDetail();
   }, [id]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error fetching news: {error.message}</p>;
-  }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching news: {error}</p>;
 
   return (
     <div className="news-detail">
