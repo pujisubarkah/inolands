@@ -63,52 +63,29 @@ export const getInovasiByKabkot: RequestHandler = async (req: Request, res: Resp
 
 // Controller untuk mengambil data Inovasi dengan SDGs
 export const getInovasiWithSDGs: RequestHandler = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        let allData: any[] = []; // Array untuk menyimpan semua data
-        let error: any = null;
-        let from = 0; // Offset awal
-        const step = 1000; // Jumlah data yang diambil per iterasi
+try {
+// Query Supabase untuk mendapatkan inovasi dengan relasi ke SDGs
+const { data: inovasiData, error: fetchError } = await supabase
+    .from('inolands')
+    .select(`
+        *,
+        sdgs (
+            image,
+            sdgs
+        )
+    `)
+    .order('tahun', { ascending: false }) // Urutkan tahun secara descending
+    .order('kld', { ascending: true });   // Urutkan kld secara ascending
 
-        while (true) {
-            // Query Supabase dengan range untuk mengambil data bertahap
-            const { data, error: fetchError } = await supabase
-                .from('inolands')
-                .select(`
-                    *,
-                    sdgs (
-                        image,
-                        sdgs
-                    )
-                `)
-                .range(from, from + step - 1);
+// Tangani error dari Supabase
+if (fetchError) {
+next(new Error(fetchError.message));
+return;
+}
 
-            // Tangani error jika ada
-            if (fetchError) {
-                error = fetchError;
-                break;
-            }
-
-            // Jika tidak ada data lagi, keluar dari loop
-            if (data.length === 0) {
-                break;
-            }
-
-            // Gabungkan data yang diambil ke dalam array allData
-            allData = [...allData, ...data];
-            from += step; // Pindah ke offset berikutnya
-        }
-
-        // Jika terjadi error selama proses pengambilan data
-        if (error) {
-            console.error("Error fetching inovasi:", error);
-            next(new Error(error.message));
-            return;
-        }
-
-        // Kirim semua data sebagai respons JSON
-        res.status(200).json(allData);
-    } catch (error) {
-        console.error('Error fetching inovasi with SDGs:', error);
-        next(error instanceof Error ? error : new Error(String(error)));
-    }
+res.status(200).json(inovasiData);
+} catch (error) {
+console.error('Error fetching inovasi with SDGs:', error);
+next(error instanceof Error ? error : new Error(String(error)));
+}
 };
