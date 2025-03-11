@@ -1,5 +1,5 @@
 {
-  "name": "idaman",
+  "name": "inoland",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -32,6 +32,7 @@
     "antd": "^5.22.3",
     "axios": "^1.7.8",
     "bcryptjs": "^2.4.3",
+    "chart.js": "^4.4.8",
     "cors": "^2.8.5",
     "d3": "^7.9.0",
     "d3-dispatch": "^3.0.1",
@@ -47,6 +48,7 @@
     "node-polyfill-webpack-plugin": "^4.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.0",
     "react-chatbot-kit": "^2.2.2",
     "react-chatbotify": "^2.0.0-beta.22",
     "react-dom": "^18.3.1",
