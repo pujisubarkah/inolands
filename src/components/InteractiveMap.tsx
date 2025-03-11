@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import './InteractiveMap.css';
 import { supabase } from '../supabaseClient';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { ChartOptions } from 'chart.js';
 
 function InteractiveMap() {
   interface Province {
@@ -33,6 +36,18 @@ function InteractiveMap() {
   }
 
   const [inovasiKabupaten, setInovasiKabupaten] = useState<Inovasi[]>([]);
+  interface IndeksInovasi {
+    id_provinsi: number;
+    id_kabkot: number;
+    indeks_tahun: number;
+    indeks_skor: number;
+    indeks_predikat: string;
+    nama_kabkot: string;
+    nama_prov: string;
+    level: string;
+    indeks_level: number;
+  }
+  const [indeksInovasi, setIndeksInovasi] = useState<IndeksInovasi[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -109,10 +124,17 @@ function InteractiveMap() {
       .select('*')
       .eq('id_provinsi', id_provinsi);
 
+      const { data: indeksInovasiData } = await supabase
+      .from('indeks_inovasi')
+      .select('*')
+      .eq('id_provinsi', id_provinsi)
+      .eq('level','Provinsi');
+
       if (inovasiError) {
         console.error("Error fetching inovasi:", inovasiError);
       } else {
         setInovasiKabupaten(inovasiData);
+        setIndeksInovasi(indeksInovasiData);
       }
 
       console.log('kabupatenData:', kabupatenData);
@@ -134,15 +156,22 @@ function InteractiveMap() {
   };
 
   const loadInovasi = async (id_kabkot: number) => {
-    const { data: inovasiData, error } = await supabase
+    const { data: inovasiData, error: inovasiDataError } = await supabase
       .from('inolands')
       .select('*')
       .eq('id_kabkot', id_kabkot);
 
-    if (error) {
-      console.error("Error fetching inovasi:", error);
+    const {data: indeksInovasiData, error: indeksInovasiError} = await supabase
+      .from('indeks_inovasi')
+      .select('*')
+      .eq('id_kabkot', id_kabkot);
+
+    if (inovasiDataError || indeksInovasiError) {
+      console.error("Error fetching inovasi:", inovasiDataError);
+      console.error("Error fetching indeks inovasi:", indeksInovasiError);
     } else {
       setInovasiKabupaten(inovasiData);
+      setIndeksInovasi(indeksInovasiData);
       setSelectedKabkot(id_kabkot);
       setCurrentPage(1);
     }
@@ -189,7 +218,82 @@ function InteractiveMap() {
     }
   };
 
+
+  ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+  const sortedIndeksInovasi = indeksInovasi.sort((a, b) => a.indeks_tahun - b.indeks_tahun);
+
+  const lineChartData = {
+    labels: sortedIndeksInovasi.map((data) => data.indeks_tahun),
+    datasets: [
+      {
+        label: 'Indeks Level',
+        data: sortedIndeksInovasi.map((data) => data.indeks_level),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+      },
+    ],
+  };
   
+  const lineChartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    scales: {
+      y: {
+        min: 1,
+        max: 4,
+        ticks: {
+          callback: function (tickValue: string | number) {
+            if (typeof tickValue === 'number' && tickValue % 1 === 0) {
+              switch (tickValue) {
+                case 1:
+                  return 'Belum Dapat Dinilai';
+                case 2:
+                  return 'Kurang Inovatif';
+                case 3:
+                  return 'Inovatif';
+                case 4:
+                  return 'Sangat Inovatif';
+                default:
+                  return tickValue;
+              }
+            } else {
+              return '';
+            }
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: `Indeks Inovasi Daerah - ${
+          kabupaten.find(kab => kab.id_kabkot === selectedKabkot)?.nama ||
+          provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama ||
+          ''
+        }`,
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem: any) {
+            const dataIndex = tooltipItem.dataIndex;
+            const dataPoint = sortedIndeksInovasi[dataIndex];
+  
+            // Format teks yang akan ditampilkan di tooltip
+            return [
+              `Tahun: ${dataPoint.indeks_tahun}`,
+              `Skor: ${dataPoint.indeks_skor}`,
+              `Predikat: ${dataPoint.indeks_predikat}`,
+            ];
+          },
+        },
+      },
+    },
+  };
+
   return (
  <div className="app">
    
@@ -306,200 +410,214 @@ function InteractiveMap() {
           width: '100px',
           border: 'none',
           height: '2px',
-          background: 'linear-gradient(to right, red, black, red)',
+          background: 'linear-gradient(to right, #16578d, black, #16578d)',
           margin: '0 auto 20px auto',
         }}
       />
 
       {/* Konten Popup */}
       <div style={{ display: 'flex', gap: '20px' }}>
-        
-        {/* Peta Kabupaten */}
-        <svg
-          className="map-kabupaten"
-          baseProfile="tiny"
-          viewBox="0 0 800 600"
-          width="42%"
-          height="auto"
-          preserveAspectRatio="xMidYMid meet"
+  {/* Bagian Kiri (Peta Kabupaten + Grafik) */}
+  <div style={{ width: '45%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    {/* Peta Kabupaten */}
+    <svg
+      className="map-kabupaten"
+      baseProfile="tiny"
+      viewBox="-100 0 1000 600"
+      height="250px"
+      preserveAspectRatio="xMidYMid meet"
+      style={{
+      border: '1px solid #ccc',
+      borderRadius: '10px',
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+      }}
+    >
+      {kabupaten.map((kab) =>
+      kab.svg_path ? (
+        <path
+        key={kab.id_kabkot}
+        d={kab.svg_path.replace(/"/g, '')}
+        fill={getChoroplethColor(kab.jumlah_inovasi || 0)}
+        stroke="black"
+        strokeWidth="1"
+        onClick={() => loadInovasi(kab.id_kabkot)}
+        >
+        <title>{kab.nama}</title>
+        </path>
+      ) : null
+      )}
+    </svg>
+
+    {/* Grafik */}
+    <div
+      style={{
+        border: '1px solid #ccc',
+        borderRadius: '10px',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        padding: '10px',
+        height: '250px', // Sesuaikan tinggi grafik
+      }}
+    >
+      {/* Isi grafik di sini */}
+    
+
+    <Line data={lineChartData} options={lineChartOptions} />
+    </div>
+  </div>
+
+  {/* Bagian Kanan (Tabel Daftar Inovasi) */}
+  <div style={{ width: '55%' }}>
+    {selectedProvinsi && (
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
+          <strong>{provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama}</strong>
+          <br />
+          {provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.jumlah_inovasi} inovasi
+        </div>
+        {(kabupaten.length > 0 && (
+          <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
+            <strong>{inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0].id_kabkot)?.nama : 'NA'}</strong>
+            <br />
+            {inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.jumlah_inovasi : 'NA'} inovasi
+          </div>
+        )) || (kabupaten.length === 0 && (
+          <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '45%', textAlign: 'center' }}>
+            <strong>{kabupaten.find(kab => kab.id_kabkot === selectedKabkot)?.nama}</strong>
+            <br />
+            NA
+          </div>
+        ))}
+      </div>
+    )}
+    {currentInovasi.length > 0 ? (
+      <div style={{ width: '100%', overflowX: 'auto' }}>
+        <table
+        style={{
+          width: '100%',
+          borderCollapse: 'collapse',
+          tableLayout: 'fixed', // Memastikan lebar kolom tetap konsisten
+          fontSize: '0.8rem',
+        }}
+        >
+        {/* Header */}
+        <thead style={{ display: 'table', width: '100%', tableLayout: 'fixed' }}>
+          <tr style={{ backgroundColor: '#444', color: 'white', textAlign: 'left' }}>
+          <th style={{ padding: '15px', borderBottom: '1px solid #ddd', width: '30%' }}>Judul Inovasi</th>
+          <th style={{ padding: '15px', borderBottom: '1px solid #ddd', width: '15%' }}>Tahun</th>
+          <th style={{ padding: '15px', borderBottom: '1px solid #ddd', width: '20%' }}>Inovator</th>
+          <th style={{ padding: '15px', borderBottom: '1px solid #ddd', width: '35%' }}>Deskripsi</th>
+          </tr>
+        </thead>
+      
+        {/* Body */}
+        <tbody
           style={{
-            border: '1px solid #ccc',
-            borderRadius: '10px',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          display: 'block', // Membuat tbody dapat di-scroll
+          maxHeight: '300px', // Tinggi maksimum tbody
+          overflowY: 'auto', // Scroll vertikal
+          width: '100%', // Lebar tbody sama dengan tabel
           }}
         >
-          {kabupaten.map((kab) =>
-            kab.svg_path ? (
-              <path
-                key={kab.id_kabkot}
-                d={kab.svg_path.replace(/"/g, '')}
-                fill={getChoroplethColor(kab.jumlah_inovasi || 0)}
-                stroke="black"
-                strokeWidth="1"
-                onClick={() => loadInovasi(kab.id_kabkot)}
-              >
-                <title>{kab.nama}</title>
-              </path>
-            ) : null
-          )}
-        </svg>
-        
-
-        {/* Tabel Daftar Inovasi */}
-        <div style={{ flexGrow: 1 }}>
-        {selectedProvinsi && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                      <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
-                        <strong>{provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama}</strong>
-                        <br />
-                        {provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.jumlah_inovasi} inovasi
-                      </div>
-                      {(kabupaten.length > 0 && (
-                        <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '48%', textAlign: 'center' }}>
-                          <strong>{inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0].id_kabkot)?.nama : 'NA'}</strong>
-                          <br />
-                          {inovasiKabupaten.length > 0 ? kabupaten.find(kab => kab.id_kabkot === inovasiKabupaten[0]?.id_kabkot)?.jumlah_inovasi : 'NA'} inovasi
-                        </div>
-                      )) || (kabupaten.length === 0 && <div style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', width: '45%', textAlign: 'center' }}>
-                      <strong>{kabupaten.find(kab => kab.id_kabkot === selectedKabkot)?.nama}</strong>
-                      <br />
-                      NA
-                    </div>)}
-                    </div>
-                  )}
-          {currentInovasi.length > 0 ? (
-            <table
+          {currentInovasi.map((inovasi) => (
+          <tr
+            key={inovasi.id}
+            style={{
+            display: 'table', // Memastikan baris tetap seperti tabel
+            width: '100%', // Lebar baris sama dengan tabel
+            tableLayout: 'fixed', // Menjaga lebar kolom tetap konsisten
+            }}
+          >
+            <td style={{ padding: '15px', width: '30%' }}>{inovasi.judul_inovasi}</td>
+            <td style={{ padding: '15px', width: '15%' }}>{inovasi.tahun}</td>
+            <td style={{ padding: '15px', width: '20%' }}>{inovasi.inovator}</td>
+            <td style={{ padding: '15px', width: '35%' }}>
+            <span>{truncateText(inovasi.deskripsi, inovasi.id)}</span>
+            {inovasi.deskripsi && inovasi.deskripsi.length > maxLength && (
+              <button
+              onClick={() => toggleExpand(inovasi.id)}
               style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                margin: '20px 0',
-                fontSize: '0.8rem',
+                marginLeft: '5px',
+                color: 'blue',
+                cursor: 'pointer',
+                border: 'none',
+                background: 'transparent',
+                textDecoration: 'underline',
+              }}
+              >
+              {expandedIds.includes(inovasi.id) ? '[Less]' : '[More]'}
+              </button>
+            )}
+            </td>
+          </tr>
+          ))}
+        </tbody>
+        </table>
+      </div>
+    ) : (
+      <p>Kabupaten ini tidak memiliki inovasi.</p>
+    )}
+
+    {totalPages > 1 && (
+      <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+        {currentPage > 1 && (
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            style={{
+              padding: '5px 10px',
+              margin: '0 5px',
+              border: 'none',
+              borderRadius: '3px',
+              backgroundColor: '#f9f9f9',
+              color: '#000',
+              cursor: 'pointer',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            }}
+          >
+            Prev
+          </button>
+        )}
+        {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+          const pageNumber = currentPage > 3 ? currentPage - 2 + i : i + 1;
+          return (
+            <button
+              key={pageNumber}
+              onClick={() => handlePageChange(pageNumber)}
+              style={{
+                padding: '5px 10px',
+                margin: '0 5px',
+                border: 'none',
+                borderRadius: '3px',
+                backgroundColor: currentPage === pageNumber ? '#444' : '#f9f9f9',
+                color: currentPage === pageNumber ? '#fff' : '#000',
+                cursor: 'pointer',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
               }}
             >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: '#444',
-                    color: 'white',
-                    textAlign: 'left',
-                  }}
-                >
-                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
-                    Judul Inovasi
-                  </th>
-                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
-                    Tahun
-                  </th>
-                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
-                    Inovator
-                  </th>
-                  <th style={{ padding: '15px', borderBottom: '1px solid #ddd' }}>
-                    Deskripsi
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentInovasi.map((inovasi) => (
-                  <tr
-                    key={inovasi.id}
-                    style={{
-                      backgroundColor: '#fff',
-                      borderBottom: '1px solid #ddd',
-                    }}
-                  >
-                    <td style={{ padding: '15px' }}>{inovasi.judul_inovasi}</td>
-                    <td style={{ padding: '15px' }}>{inovasi.tahun}</td>
-                    <td style={{ padding: '15px' }}>{inovasi.inovator}</td>
-                    <td style={{ padding: '15px' }}>
-              {/* Tampilkan deskripsi dengan logika pemotongan */}
-              <span>{truncateText(inovasi.deskripsi, inovasi.id)}</span>
-              {/* Tombol [More] hanya ditampilkan jika teks lebih panjang dari maxLength */}
-              {inovasi.deskripsi && inovasi.deskripsi.length > maxLength && (
-                <button
-                  onClick={() => toggleExpand(inovasi.id)} // Toggle state expanded
-                  style={{
-                    marginLeft: '5px',
-                    color: 'blue',
-                    cursor: 'pointer',
-                    border: 'none',
-                    background: 'transparent',
-                    textDecoration: 'underline',
-                  }}
-                >
-                  {expandedIds.includes(inovasi.id) ? '[Less]' : '[More]'}
-                </button>
-              )}
-            </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p>Kabupaten ini tidak memiliki inovasi.</p>
-          )}
-
-{totalPages > 1 && (
-                        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
-                            {currentPage > 1 && (
-                                <button
-                                    onClick={() => handlePageChange(currentPage - 1)}
-                                    style={{
-                                        padding: '5px 10px',
-                                        margin: '0 5px',
-                                        border: 'none',
-                                        borderRadius: '3px',
-                                        backgroundColor: '#f9f9f9',
-                                        color: '#000',
-                                        cursor: 'pointer',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                    }}
-                                >
-                                    Prev
-                                </button>
-                            )}
-                            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                                const pageNumber = currentPage > 3 ? currentPage - 2 + i : i + 1;
-                                return (
-                                    <button
-                                        key={pageNumber}
-                                        onClick={() => handlePageChange(pageNumber)}
-                                        style={{
-                                            padding: '5px 10px',
-                                            margin: '0 5px',
-                                            border: 'none',
-                                            borderRadius: '3px',
-                                            backgroundColor: currentPage === pageNumber ? '#444' : '#f9f9f9',
-                                            color: currentPage === pageNumber ? '#fff' : '#000',
-                                            cursor: 'pointer',
-                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                        }}
-                                    >
-                                        {pageNumber}
-                                    </button>
-                                );
-                            })}
-                            {currentPage < totalPages && (
-                                <button
-                                    onClick={() => handlePageChange(currentPage + 1)}
-                                    style={{
-                                        padding: '5px 10px',
-                                        margin: '0 5px',
-                                        border: 'none',
-                                        borderRadius: '3px',
-                                        backgroundColor: '#f9f9f9',
-                                        color: '#000',
-                                        cursor: 'pointer',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                    }}
-                                >
-                                    Next
-                                </button>
-                            )}
-                        </div>
-                    )}
-        </div>
+              {pageNumber}
+            </button>
+          );
+        })}
+        {currentPage < totalPages && (
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            style={{
+              padding: '5px 10px',
+              margin: '0 5px',
+              border: 'none',
+              borderRadius: '3px',
+              backgroundColor: '#f9f9f9',
+              color: '#000',
+              cursor: 'pointer',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            }}
+          >
+            Next
+          </button>
+        )}
       </div>
+    )}
+  </div>
+</div>
     </div>
   </div>
 )}
