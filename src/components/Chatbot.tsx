@@ -5,19 +5,11 @@ const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  useEffect(() => {
-    fetch("/data.txt")
-      .then((response) => response.text())
-      .then((text) => setData(text))
-      .catch((error) => console.error("Error reading file:", error));
-  }, []);
 
   const createChatBotMessage = (text: string): Message => ({
     id: String(Date.now()),
@@ -26,14 +18,14 @@ const Chatbot: React.FC = () => {
   });
 
   const generateResponse = (userInput: string): string => {
-    const responses = {
+    const responses: { [key: string]: string[] } = {
       halo: ["Halo! Apa kabar? 😊", "Hai Sobat! 👋", "Halo, ada yang bisa saya bantu?"],
       berita: ["Cek berita terbaru di halaman utama! 📰", "Ada banyak berita menarik hari ini!"],
       inovasi: ["Inovasi terkini? Saya punya banyak rekomendasi!", "Lihat inovasi keren di website!"],
       default: ["Maaf, saya belum mengerti. 🤔", "Bisa ulangi dengan kata lain?", "Saya masih belajar, bantu saya dengan pertanyaan yang lebih spesifik!"],
     };
 
-    const key = Object.keys(responses).find((word) => userInput.toLowerCase().includes(word));
+    const key: string | undefined = Object.keys(responses).find((word) => userInput.toLowerCase().includes(word));
     return key ? responses[key][Math.floor(Math.random() * responses[key].length)] : responses.default[Math.floor(Math.random() * responses.default.length)];
   };
 
@@ -64,6 +56,10 @@ const Chatbot: React.FC = () => {
   useEffect(() => {
     if (isOpen) sendGreeting();
   }, [isOpen, sendGreeting]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -123,6 +119,7 @@ const Chatbot: React.FC = () => {
               className="bg-blue-500 text-white px-3 rounded hover:bg-blue-600"
             >
               Send
+              Send
             </button>
           </div>
         </div>
@@ -130,5 +127,5 @@ const Chatbot: React.FC = () => {
     </div>
   );
 };
-
 export default Chatbot;
+
