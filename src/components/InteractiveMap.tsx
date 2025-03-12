@@ -403,7 +403,7 @@ function InteractiveMap() {
           marginBottom: '20px',
         }}
       >
-        Daftar Inovasi di {provinces.find((prov) => prov.id_provinsi === selectedProvinsi)?.nama}
+        Daftar Inovasi di Provinsi {provinces.find((prov) => prov.id_provinsi === selectedProvinsi)?.nama}
       </h1>
       <hr
         style={{
@@ -554,7 +554,7 @@ function InteractiveMap() {
         </table>
       </div>
     ) : (
-      <p>Kabupaten ini tidak memiliki inovasi.</p>
+      <p>Tidak dapat ditemukan dalam inoland.</p>
     )}
 
     {totalPages > 1 && (
