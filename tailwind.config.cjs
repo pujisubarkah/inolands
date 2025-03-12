@@ -11,12 +11,25 @@ module.exports = {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"], // Menambahkan font Poppins
       },
+      animation: {
+        marquee: "marquee 10s linear infinite", // Animasi berjalan
+      },
+      keyframes: {
+        marquee: {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(-100%)" },
+        },
+      },
     },
   },
   plugins: [
     require('flowbite/plugin'), // Flowbite Tailwind plugin
   ],
 };
+
+
+
+
 
 
 
