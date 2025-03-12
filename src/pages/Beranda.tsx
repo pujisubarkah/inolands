@@ -1,10 +1,8 @@
 import ProperExpo from '../components/Properexpo';
-import StatsGrid from '../components/Statgrid';
+import StatsGrid from '../components/statgrid';
 import MyMap from '../components/Mymap';
-import { useNavigate } from 'react-router-dom';
 
 const Beranda = () => {
-  const navigate = useNavigate();
 
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center bg-gray-100 pt-40">
