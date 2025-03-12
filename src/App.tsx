@@ -90,7 +90,7 @@ const App = () => {
             <Route path="/referensi" element={<Referensi />} />
             <Route path="/pengetahuan" element={<Pengetahuan />} />
             <Route path="/berita" element={<Berita />} />
-            <Route path="/news/:id" element={<NewsDetail />} />
+            <Route path="/berita/:id" element={<NewsDetail />} />
             <Route path="/inovasi/:id" element={<InovasiDetail />} />
             <Route path="/direktori" element={<Pdflist />} />
             <Route path="/direktori/:id" element={<PdfDetail />} />
