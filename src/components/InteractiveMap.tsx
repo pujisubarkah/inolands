@@ -245,14 +245,26 @@ function InteractiveMap() {
         default: return '';
       }
     } else if (indexType === 'ipp_skor') {
-      return `Level ${level}`;
+      switch (level) {
+        case 1: return 'NA';
+        case 2: return 'F';
+        case 3: return 'E';
+        case 4: return 'D';
+        case 5: return 'C-';
+        case 6: return 'C';
+        case 7: return 'B-';
+        case 8: return 'B';
+        case 9: return 'A-';
+        case 10: return 'A';
+        default: return '';
+      }
     } else if (indexType === 'idsd_skor') {
       switch (level) {
-        case 1: return 'Sangat Rendah';
-        case 2: return 'Rendah';
-        case 3: return 'Sedang';
-        case 4: return 'Tinggi';
-        case 5: return 'Sangat Tinggi';
+        case 1: return 'NA';
+        case 2: return 'RENDAH';
+        case 3: return 'SEDANG';
+        case 4: return 'TINGGI';
+        case 5: return 'SANGAT TINGGI';
         default: return '';
       }
     }
