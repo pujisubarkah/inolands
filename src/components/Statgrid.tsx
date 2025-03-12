@@ -40,9 +40,14 @@ const StatsGrid = () => {
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 flex">
       {/* Judul di kiri */}
-      <div className="w-1/4 flex items-center justify-center bg-white-200 rounded-xl p-6 shadow-lg">
-        <h3 className="text-xl font-bold text-gray-700">LABINOV dalam Angka</h3>
-      </div>
+      <div className="w-1/4 flex items-start justify-center bg-white-200 rounded-xl p-6 shadow-lg relative">
+  {/* Garis vertikal dua warna biru */}
+  <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>
+  <div className="absolute left-1.5 top-0 bottom-0 w-1 bg-blue-700"></div>
+
+  <h3 className="text-xl font-bold text-gray-700 mt-4 ml-4">LABINOV dalam Angka</h3>
+</div>
+
 
       {/* Grid Stats */}
       <div className="w-3/4 grid gap-4 auto-rows-fr grid-cols-4">
