@@ -40,12 +40,18 @@ function InteractiveMap() {
     id_provinsi: number;
     id_kabkot: number;
     indeks_tahun: number;
-    indeks_skor: number;
-    indeks_predikat: string;
     nama_kabkot: string;
     nama_prov: string;
     level: string;
-    indeks_level: number;
+    indeks_skor: number; // IID skor
+    indeks_predikat: string; //IID predikat
+    indeks_level: number; //IID level
+    ipp_skor: number; //IPP skor
+    ipp_predikat: string; //IPP predikat
+    ipp_level: number; //IPP level
+    idsd_skor: number; //IDSD skor
+    idsd_predikat: string; //IDSD predikat
+    idsd_level: number; //IDSD level
   }
   const [indeksInovasi, setIndeksInovasi] = useState<IndeksInovasi[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -223,40 +229,58 @@ function InteractiveMap() {
 
   const sortedIndeksInovasi = indeksInovasi.sort((a, b) => a.indeks_tahun - b.indeks_tahun);
 
+  const [selectedIndex, setSelectedIndex] = useState<'indeks_skor' | 'ipp_skor' | 'idsd_skor'>('indeks_skor');
+
+  const handleIndexChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedIndex(event.target.value as 'indeks_skor' | 'ipp_skor' | 'idsd_skor');
+  };
+
+  const getLevelLabel = (level: number, indexType: 'indeks_skor' | 'ipp_skor' | 'idsd_skor') => {
+    if (indexType === 'indeks_skor') {
+      switch (level) {
+        case 1: return 'Belum Dapat Dinilai';
+        case 2: return 'Kurang Inovatif';
+        case 3: return 'Inovatif';
+        case 4: return 'Sangat Inovatif';
+        default: return '';
+      }
+    } else if (indexType === 'ipp_skor') {
+      return `Level ${level}`;
+    } else if (indexType === 'idsd_skor') {
+      switch (level) {
+        case 1: return 'Sangat Rendah';
+        case 2: return 'Rendah';
+        case 3: return 'Sedang';
+        case 4: return 'Tinggi';
+        case 5: return 'Sangat Tinggi';
+        default: return '';
+      }
+    }
+  };
+
   const lineChartData = {
     labels: sortedIndeksInovasi.map((data) => data.indeks_tahun),
     datasets: [
       {
-        label: 'Indeks Level',
-        data: sortedIndeksInovasi.map((data) => data.indeks_level),
+        label: selectedIndex === 'indeks_skor' ? 'Indeks Inovasi Daerah' : selectedIndex === 'ipp_skor' ? 'Indeks Pelayanan Publik' : 'Indeks Daya Saing Daerah',
+        data: sortedIndeksInovasi.map((data) => data[selectedIndex === 'indeks_skor' ? 'indeks_level' : selectedIndex === 'ipp_skor' ? 'ipp_level' : 'idsd_level']),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
       },
     ],
   };
-  
+
   const lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
     scales: {
       y: {
         min: 1,
-        max: 4,
+        max: selectedIndex === 'indeks_skor' ? 4 : selectedIndex === 'ipp_skor' ? 10 : 5,
         ticks: {
           callback: function (tickValue: string | number) {
             if (typeof tickValue === 'number' && tickValue % 1 === 0) {
-              switch (tickValue) {
-                case 1:
-                  return 'Belum Dapat Dinilai';
-                case 2:
-                  return 'Kurang Inovatif';
-                case 3:
-                  return 'Inovatif';
-                case 4:
-                  return 'Sangat Inovatif';
-                default:
-                  return tickValue;
-              }
+              return getLevelLabel(tickValue, selectedIndex);
             } else {
               return '';
             }
@@ -270,7 +294,7 @@ function InteractiveMap() {
       },
       title: {
         display: true,
-        text: `Indeks Inovasi Daerah - ${
+        text: `INDEKS ${selectedIndex === 'indeks_skor' ? 'INOVASI DAERAH' : selectedIndex === 'ipp_skor' ? 'PELAYANAN PUBLIK' : 'DAYA SAING DAERAH'} - ${
           kabupaten.find(kab => kab.id_kabkot === selectedKabkot)?.nama ||
           provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama ||
           ''
@@ -281,12 +305,11 @@ function InteractiveMap() {
           label: function (tooltipItem: any) {
             const dataIndex = tooltipItem.dataIndex;
             const dataPoint = sortedIndeksInovasi[dataIndex];
-  
-            // Format teks yang akan ditampilkan di tooltip
+
             return [
               `Tahun: ${dataPoint.indeks_tahun}`,
-              `Skor: ${dataPoint.indeks_skor}`,
-              `Predikat: ${dataPoint.indeks_predikat}`,
+              `Skor: ${dataPoint[selectedIndex]}`,
+              `Predikat: ${dataPoint[selectedIndex === 'indeks_skor' ? 'indeks_predikat' : selectedIndex === 'ipp_skor' ? 'ipp_predikat' : 'idsd_predikat']}`,
             ];
           },
         },
@@ -455,13 +478,34 @@ function InteractiveMap() {
         borderRadius: '10px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         padding: '10px',
-        height: '250px', // Sesuaikan tinggi grafik
+        height: '265px', // Sesuaikan tinggi grafik
       }}
     >
-      {/* Isi grafik di sini */}
-    
+      {/* Dropdown for selecting index */}
+      <select 
+        value={selectedIndex} 
+        onChange={handleIndexChange} 
+        style={{
+          marginBottom: '10px',
+          padding: '8px 12px', // Menambahkan padding agar lebih nyaman dilihat
+          fontSize: '14px',    // Mengatur ukuran font agar tidak terlalu besar
+          borderRadius: '8px',  // Membuat sudut melengkung
+          border: '1px solid #ccc', // Border tipis dengan warna abu-abu
+          boxShadow: 'none',   // Menghilangkan shadow default jika ada
+          outline: 'none',     // Menghilangkan outline saat dropdown aktif
+          width: '100%',       // Membuat lebar dropdown responsif
+          maxWidth: '300px',   // Membatasi lebar maksimum agar tidak terlalu besar
+          backgroundColor: '#fff', // Warna latar putih
+          cursor: 'pointer',   // Mengubah pointer saat hover
+          transition: 'border-color 0.3s ease', // Efek transisi halus saat hover
+        }}
+      >
+        <option value="indeks_skor">Indeks Inovasi Daerah</option>
+        <option value="ipp_skor">Indeks Pelayanan Publik</option>
+        <option value="idsd_skor">Indeks Daya Saing Daerah</option>
+      </select>
 
-    <Line data={lineChartData} options={lineChartOptions} />
+      <Line data={lineChartData} options={lineChartOptions} />
     </div>
   </div>
 
