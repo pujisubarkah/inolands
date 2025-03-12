@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
+import process from 'node:process';
 
 
 // Mengatur path file
@@ -10,7 +11,10 @@ const __dirname = path.dirname(__filename);
 
 // Membuat instance Express
 const app = express();
-const port = process.env.PORT || 5000; // Menentukan port untuk server
+let port = 5000; // Menentukan port untuk server
+if (typeof process !== 'undefined' && process.env.PORT) {
+  port = process.env.PORT;
+}
 
 // Gunakan CORS untuk memungkinkan permintaan dari frontend
 app.use(cors());
