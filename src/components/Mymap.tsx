@@ -3,7 +3,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet"; // Import Leaflet untuk custom icon
 
 // Custom icons berdasarkan tahun
-const icons = {
+const icons: { [key: number]: L.Icon } = {
   2015: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
   2016: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
   2017: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
@@ -177,10 +177,7 @@ const locations = [
 
 // Fungsi untuk memilih ikon berdasarkan tahun
 const getIconByYear = (year: number) => {
-  if (year === 2015) return redIcon;
-  if (year === 2016) return yellowIcon;
-  if (year === 2017) return greenIcon;
-  return redIcon; // Default merah jika tahun tidak sesuai
+  return icons[year] || icons[2015]; // Default merah jika tahun tidak sesuai
 };
 
 const MyMap = () => {
