@@ -1,5 +1,5 @@
 import ProperExpo from '../components/Properexpo';
-import StatsGrid from '../components/statgrid';
+import StatsGrid from '../components/Statgrid';
 import MyMap from '../components/Mymap';
 
 const Beranda = () => {
