@@ -1,19 +1,25 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet"; // Import Leaflet untuk custom icon
+import { FaMapMarkerAlt } from "react-icons/fa";
 
-// Custom icons berdasarkan tahun
-const icons: { [key: number]: L.Icon } = {
-  2015: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2016: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2017: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2018: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2019: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/purple-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2020: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/orange-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2021: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/pink-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2022: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/brown-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2023: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/black-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2024: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/grey-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+const iconStyles = {
+  fontSize: "24px",
+  color: "", // Warna akan di-set berdasarkan tahun
+};
+
+// Custom markers berdasarkan tahun
+const icons: { [key: number]: L.DivIcon } = {
+  2015: L.divIcon({ className: "custom-marker", html: `<div style="color: red;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2016: L.divIcon({ className: "custom-marker", html: `<div style="color: yellow;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2017: L.divIcon({ className: "custom-marker", html: `<div style="color: green;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2018: L.divIcon({ className: "custom-marker", html: `<div style="color: blue;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2019: L.divIcon({ className: "custom-marker", html: `<div style="color: purple;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2020: L.divIcon({ className: "custom-marker", html: `<div style="color: orange;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2021: L.divIcon({ className: "custom-marker", html: `<div style="color: pink;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2022: L.divIcon({ className: "custom-marker", html: `<div style="color: brown;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2023: L.divIcon({ className: "custom-marker", html: `<div style="color: black;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
+  2024: L.divIcon({ className: "custom-marker", html: `<div style="color: grey;">${FaMapMarkerAlt({})}</div>`, iconSize: [32, 32] }),
 };
 
 // Data lokasi dengan tahun
