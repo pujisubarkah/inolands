@@ -1,37 +1,20 @@
-import { renderToStaticMarkup } from "react-dom/server";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import L from "leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet"; // Import Leaflet untuk custom icon
 
-// Fungsi untuk membuat custom marker dengan FaMapMarkerAlt
-const createCustomIcon = (color: string) => {
-  const iconMarkup = renderToStaticMarkup(
-    <FaMapMarkerAlt style={{ color, fontSize: "24px" }} />
-  );
-
-  return L.divIcon({
-    className: "custom-marker",
-    html: iconMarkup,
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-  });
+// Custom icons berdasarkan tahun
+const icons: { [key: number]: L.Icon } = {
+  2015: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2016: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2017: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2018: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2019: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/purple-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2020: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/orange-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2021: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/pink-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2022: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/brown-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2023: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/black-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2024: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/grey-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
 };
-
-// Custom markers berdasarkan tahun dengan FaMapMarkerAlt
-const icons: { [key: number]: L.DivIcon } = {
-  2015: createCustomIcon("red"),
-  2016: createCustomIcon("yellow"),
-  2017: createCustomIcon("green"),
-  2018: createCustomIcon("blue"),
-  2019: createCustomIcon("purple"),
-  2020: createCustomIcon("orange"),
-  2021: createCustomIcon("pink"),
-  2022: createCustomIcon("brown"),
-  2023: createCustomIcon("black"),
-  2024: createCustomIcon("grey"),
-};
-
-
-
 
 // Data lokasi dengan tahun
 const locations = [
