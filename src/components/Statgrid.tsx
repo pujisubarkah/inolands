@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { FaUsers, FaBook, FaRocket, FaProjectDiagram, FaChalkboardTeacher } from "react-icons/fa";
 import { MdOutlineGroups, MdOutlineSupervisorAccount } from "react-icons/md";
 import { BsCalendar2Date, BsNewspaper } from "react-icons/bs";
@@ -26,11 +27,34 @@ interface AnimatedCounterProps {
 }
 
 const AnimatedCounter = ({ value, suffix }: AnimatedCounterProps) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const duration = 2000; // Durasi animasi dalam ms
+    const interval = 30; // Waktu jeda antar perubahan angka
+    const step = Math.ceil(value / (duration / interval));
+
+    let current = 0;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= value) {
+        setCount(value);
+        clearInterval(timer);
+      } else {
+        setCount(current);
+      }
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
   return (
-    <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2, ease: "easeOut" }}>
-        {value}
-      </motion.span>
+    <motion.span
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {count}
       {suffix}
     </motion.span>
   );
@@ -40,14 +64,13 @@ const StatsGrid = () => {
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 flex">
       {/* Judul di kiri */}
-      <div className="w-1/4 flex items-start justify-center bg-white-200 rounded-xl p-6 shadow-lg relative">
-  {/* Garis vertikal dua warna biru */}
-  <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>
-  <div className="absolute left-1.5 top-0 bottom-0 w-1 bg-blue-700"></div>
+      <div className="w-1/4 flex items-start justify-center bg-white rounded-xl p-6 shadow-lg relative">
+        {/* Garis vertikal dua warna biru */}
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>
+        <div className="absolute left-1.5 top-0 bottom-0 w-1 bg-blue-700"></div>
 
-  <h3 className="text-xl font-bold text-gray-700 mt-4 ml-4">LABINOV dalam Angka</h3>
-</div>
-
+        <h3 className="text-xl font-bold text-gray-700 mt-4 ml-4">LABINOV dalam Angka</h3>
+      </div>
 
       {/* Grid Stats */}
       <div className="w-3/4 grid gap-4 auto-rows-fr grid-cols-4">
