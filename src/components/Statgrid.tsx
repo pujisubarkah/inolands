@@ -7,15 +7,15 @@ import { TbWorld } from "react-icons/tb";
 const stats = [
   { value: 10, suffix: "+", label: "TAHUN", icon: <BsCalendar2Date size={30} />, size: "small" },
   { value: 13339, suffix: "+", label: "TOTAL IDE INOVASI", icon: <MdOutlineGroups size={30} />, size: "medium" },
-  { value: 9325, suffix: "+", label: "JUMLAH IDE YANG DILAUNCHING", icon: <FaRocket size={30} />, size: "small" },
-  { value: 80000, suffix: "+", label: "JUMLAH LOKUS", icon: <FaUsers size={30} />, size: "medium" },
-  { value: 20, suffix: "+", label: "JUMLAH KAB YANG DIFASILITASI", icon: <FaBook size={30} />, size: "small" },
-  { value: 10, suffix: "+", label: "JUMLAH KOTA YANG DIFASILITASI", icon: <TbWorld size={30} />, size: "small" },
-  { value: 1500, suffix: "+", label: "JUMLAH NGO YANG DILIBATKAN", icon: <MdOutlineSupervisorAccount size={30} />, size: "small" },
+  { value: 9625, suffix: "+", label: "JUMLAH IDE YANG DILAUNCHING", icon: <FaRocket size={30} />, size: "small" },
+  { value: 120, suffix: "+", label: "JUMLAH LOKUS", icon: <FaUsers size={30} />, size: "medium" },
+  { value: 89, suffix: "+", label: "JUMLAH KAB YANG DIFASILITASI", icon: <FaBook size={30} />, size: "small" },
+  { value: 30, suffix: "+", label: "JUMLAH KOTA YANG DIFASILITASI", icon: <TbWorld size={30} />, size: "small" },
+  { value: 2, suffix: "+", label: "JUMLAH NGO YANG DILIBATKAN", icon: <MdOutlineSupervisorAccount size={30} />, size: "small" },
   { value: 30, suffix: "+", label: "JUMLAH FASILITATOR", icon: <FaProjectDiagram size={30} />, size: "small" },
   { value: 120, suffix: "+", label: "JUMLAH PERANGKAT DAERAH", icon: <BsNewspaper size={30} />, size: "small" },
-  { value: 1025, suffix: "+", label: "JUMLAH ALUMNI WCI", icon: <MdOutlineGroups size={30} />, size: "medium" },
-  { value: 300, suffix: "+", label: "JUMLAH LOKUS WCI", icon: <FaChalkboardTeacher size={30} />, size: "medium" },
+  { value: 929, suffix: "+", label: "JUMLAH ALUMNI WCI", icon: <MdOutlineGroups size={30} />, size: "medium" },
+  { value: 20, suffix: "+", label: "JUMLAH LOKUS WCI", icon: <FaChalkboardTeacher size={30} />, size: "medium" },
 ];
 
 const colors = ["bg-blue-900", "bg-blue-700", "bg-blue-500", "bg-blue-400", "bg-blue-600"];
