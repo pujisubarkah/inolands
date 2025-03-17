@@ -527,6 +527,7 @@ function InteractiveMap() {
         <option value="indeks_skor">Indeks Inovasi Daerah</option>
         <option value="ipp_skor">Indeks Pelayanan Publik</option>
         <option value="idsd_skor">Indeks Daya Saing Daerah</option>
+        <option value="rb_predikat">Indeks Reformasi Birokrasi</option>
       </select>
 
       <Line data={lineChartData} options={lineChartOptions} />
