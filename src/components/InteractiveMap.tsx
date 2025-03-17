@@ -286,8 +286,8 @@ function InteractiveMap() {
     labels: sortedIndeksInovasi.map((data) => data.indeks_tahun),
     datasets: [
       {
-        label: selectedIndex === 'indeks_skor' ? 'Indeks Inovasi Daerah' : selectedIndex === 'ipp_skor' ? 'Indeks Pelayanan Publik' : selectedIndex === 'idsd_skor' ? 'Indeks Daya Saing Daerah' : Indeks Reformasi Birokrasi,
-        data: sortedIndeksInovasi.map((data) => data[selectedIndex === 'indeks_skor' ? 'indeks_level' : selectedIndex === 'ipp_skor' ? 'ipp_level' : selectedIndex === 'idsd_skor' ? 'idsd_level : rb_level']),
+        label: selectedIndex === 'indeks_skor' ? 'Indeks Inovasi Daerah' : selectedIndex === 'ipp_skor' ? 'Indeks Pelayanan Publik' : selectedIndex === 'idsd_skor' ? 'Indeks Daya Saing Daerah' : 'Indeks Reformasi Birokrasi',
+        data: sortedIndeksInovasi.map((data) => data[selectedIndex === 'indeks_skor' ? 'indeks_level' : selectedIndex === 'ipp_skor' ? 'ipp_level' : selectedIndex === 'idsd_skor' ? 'idsd_level' : 'rb_level']),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
