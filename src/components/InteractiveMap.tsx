@@ -280,6 +280,7 @@ function InteractiveMap() {
         case 7: return 'A';
         default: return '';
       }
+    }
   };
 
   const lineChartData = {
