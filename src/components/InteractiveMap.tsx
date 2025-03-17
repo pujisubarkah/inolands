@@ -52,6 +52,8 @@ function InteractiveMap() {
     idsd_skor: number; //IDSD skor
     idsd_predikat: string; //IDSD predikat
     idsd_level: number; //IDSD level
+    rb_predikat: string; //IDSD predikat
+    rb_level: number; //IDSD level
   }
   const [indeksInovasi, setIndeksInovasi] = useState<IndeksInovasi[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -229,13 +231,13 @@ function InteractiveMap() {
 
   const sortedIndeksInovasi = indeksInovasi.sort((a, b) => a.indeks_tahun - b.indeks_tahun);
 
-  const [selectedIndex, setSelectedIndex] = useState<'indeks_skor' | 'ipp_skor' | 'idsd_skor'>('indeks_skor');
+  const [selectedIndex, setSelectedIndex] = useState<'indeks_skor' | 'ipp_skor' | 'idsd_skor' | 'rb_predikat'>('indeks_skor');
 
   const handleIndexChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedIndex(event.target.value as 'indeks_skor' | 'ipp_skor' | 'idsd_skor');
+    setSelectedIndex(event.target.value as 'indeks_skor' | 'ipp_skor' | 'idsd_skor' | 'rb_predikat');
   };
 
-  const getLevelLabel = (level: number, indexType: 'indeks_skor' | 'ipp_skor' | 'idsd_skor') => {
+  const getLevelLabel = (level: number, indexType: 'indeks_skor' | 'ipp_skor' | 'idsd_skor' | 'rb_predikat') => {
     if (indexType === 'indeks_skor') {
       switch (level) {
         case 1: return 'Belum Dapat Dinilai';
@@ -267,15 +269,25 @@ function InteractiveMap() {
         case 5: return 'SANGAT TINGGI';
         default: return '';
       }
-    }
+    } else if (indexType === 'rb_predikat') {
+      switch (level) {
+        case 1: return 'NA';
+        case 2: return 'D';
+        case 3: return 'CC';
+        case 4: return 'C';
+        case 5: return 'BB';
+        case 6: return 'B';
+        case 7: return 'A';
+        default: return '';
+      }
   };
 
   const lineChartData = {
     labels: sortedIndeksInovasi.map((data) => data.indeks_tahun),
     datasets: [
       {
-        label: selectedIndex === 'indeks_skor' ? 'Indeks Inovasi Daerah' : selectedIndex === 'ipp_skor' ? 'Indeks Pelayanan Publik' : 'Indeks Daya Saing Daerah',
-        data: sortedIndeksInovasi.map((data) => data[selectedIndex === 'indeks_skor' ? 'indeks_level' : selectedIndex === 'ipp_skor' ? 'ipp_level' : 'idsd_level']),
+        label: selectedIndex === 'indeks_skor' ? 'Indeks Inovasi Daerah' : selectedIndex === 'ipp_skor' ? 'Indeks Pelayanan Publik' : selectedIndex === 'idsd_skor' ? 'Indeks Daya Saing Daerah' : Indeks Reformasi Birokrasi,
+        data: sortedIndeksInovasi.map((data) => data[selectedIndex === 'indeks_skor' ? 'indeks_level' : selectedIndex === 'ipp_skor' ? 'ipp_level' : selectedIndex === 'idsd_skor' ? 'idsd_level : rb_level']),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
@@ -288,7 +300,7 @@ function InteractiveMap() {
     scales: {
       y: {
         min: 1,
-        max: selectedIndex === 'indeks_skor' ? 4 : selectedIndex === 'ipp_skor' ? 10 : 5,
+        max: selectedIndex === 'indeks_skor' ? 4 : selectedIndex === 'ipp_skor' ? 10 : selectedIndex === 'idsd_skor' ? 5 : 7,
         ticks: {
           callback: function (tickValue: string | number) {
             if (typeof tickValue === 'number' && tickValue % 1 === 0) {
@@ -306,7 +318,7 @@ function InteractiveMap() {
       },
       title: {
         display: true,
-        text: `INDEKS ${selectedIndex === 'indeks_skor' ? 'INOVASI DAERAH' : selectedIndex === 'ipp_skor' ? 'PELAYANAN PUBLIK' : 'DAYA SAING DAERAH'} - ${
+        text: `INDEKS ${selectedIndex === 'indeks_skor' ? 'INOVASI DAERAH' : selectedIndex === 'ipp_skor' ? 'PELAYANAN PUBLIK' : selectedIndex === 'idsd_skor' ? 'DAYA SAING DAERAH' : 'REFORMASI BIROKRASI'} - ${
           kabupaten.find(kab => kab.id_kabkot === selectedKabkot)?.nama ||
           provinces.find(prov => prov.id_provinsi === selectedProvinsi)?.nama ||
           ''
@@ -321,7 +333,7 @@ function InteractiveMap() {
             return [
               `Tahun: ${dataPoint.indeks_tahun}`,
               `Skor: ${dataPoint[selectedIndex]}`,
-              `Predikat: ${dataPoint[selectedIndex === 'indeks_skor' ? 'indeks_predikat' : selectedIndex === 'ipp_skor' ? 'ipp_predikat' : 'idsd_predikat']}`,
+              `Predikat: ${dataPoint[selectedIndex === 'indeks_skor' ? 'indeks_predikat' : selectedIndex === 'ipp_skor' ? 'ipp_predikat' : selectedIndex === 'idsd_skor' ? 'idsd_predikat' : 'rb_predikat']}`,
             ];
           },
         },
