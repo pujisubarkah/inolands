@@ -1,6 +1,7 @@
 import ProperExpo from '../components/Properexpo';
 import StatsGrid from '../components/Statgrid';
 import MyMap from '../components/Mymap';
+import VideoBeranda from '../components/video_beranda';
 
 const Beranda = () => {
 
@@ -27,6 +28,11 @@ const Beranda = () => {
           INOLAND adalah web informasi oleh <span className="font-semibold text-white">Pusat Inovasi Administrasi Negara</span> yang juga merupakan sistem integrasi
           untuk penguatan kapasitas berinovasi, terdiri dari berbagai program advokasi pembelajaran inovasi.
         </p>
+      </div>
+
+       {/* Section untuk StatsGrid dan ProperExpo agar tidak tertimpa oleh peta */}
+      <div className="relative w-full max-w-6xl mt-[40vh] px-4 z-10">
+        <VideoBeranda />
       </div>
 
       {/* Section untuk StatsGrid dan ProperExpo agar tidak tertimpa oleh peta */}
