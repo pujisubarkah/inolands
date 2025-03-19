@@ -1,20 +1,38 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet"; // Import Leaflet untuk custom icon
+import { useState } from "react";
 
-// Custom icons berdasarkan tahun
+// Custom icons berdasarkan tahun dengan ikon berbeda
 const icons: { [key: number]: L.Icon } = {
-  2015: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2016: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2017: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/green-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2018: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2019: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/purple-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2020: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/orange-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2021: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/pink-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2022: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/brown-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2023: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/black-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
-  2024: new L.Icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/grey-dot.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+  2015: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2015" }),
+  2016: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2016" }),
+  2017: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2017" }),
+  2018: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2018" }),
+  2019: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2019" }),
+  2020: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2020" }),
+  2021: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2021" }),
+  2022: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2022" }),
+  2023: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2023" }),
+  2024: new L.Icon({ iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32], className: "icon-2024" }),
 };
+
+// CSS untuk warna berbeda berdasarkan tahun
+const style = document.createElement("style");
+style.innerHTML = `
+  .icon-2015 { filter: hue-rotate(0deg) brightness(1.2); } /* Merah */
+  .icon-2016 { filter: hue-rotate(45deg) brightness(1.2); } /* Kuning */
+  .icon-2017 { filter: hue-rotate(90deg) brightness(1.2); } /* Hijau */
+  .icon-2018 { filter: hue-rotate(180deg) brightness(1.2); } /* Biru */
+  .icon-2019 { filter: hue-rotate(270deg) brightness(1.2); } /* Ungu */
+  .icon-2020 { filter: hue-rotate(315deg) brightness(1.2); } /* Oranye */
+  .icon-2021 { filter: hue-rotate(330deg) brightness(1.2); } /* Pink */
+  .icon-2022 { filter: hue-rotate(330deg) brightness(1.5); } /* Pink terang */
+  .icon-2023 { filter: grayscale(100%) brightness(0.5); } /* Hitam */
+  .icon-2024 { filter: grayscale(100%) brightness(0.8); } /* Abu-abu */
+`;
+document.head.appendChild(style);
+  
 
 // Data lokasi dengan tahun
 const locations = [
@@ -180,32 +198,71 @@ const getIconByYear = (year: number) => {
   return icons[year] || icons[2015]; // Default merah jika tahun tidak sesuai
 };
 
-const MyMap = () => {
-  return (
-    <MapContainer 
-      center={[-2.5, 118]} // Posisi awal di tengah Indonesia
-      zoom={5} 
-      style={{ height: "500px", width: "100%" }}
-      dragging={false} // Mencegah geser peta
-      zoomControl={false} // Menghilangkan kontrol zoom
-      scrollWheelZoom={false} // Mencegah zoom dengan scroll
-      doubleClickZoom={false} // Mencegah zoom dengan double click
-      touchZoom={false} // Mencegah zoom dengan gesture di HP
-    >
-      {/* Layer Peta */}
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-      {/* Marker Lokasi */}
-      {locations.map((loc, index) => (
-        <Marker key={index} position={[loc.lat, loc.lng]} icon={getIconByYear(loc.year)}>
-          <Popup>
-            <b>{loc.name}</b> <br />
-            Tahun: {loc.year}
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+
+const MapComponent = () => {
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+
+  // Mendapatkan daftar tahun unik dari data lokasi
+  const years = Array.from(new Set(locations.map(loc => loc.year)));
+
+  // Filter lokasi berdasarkan tahun yang dipilih
+  const filteredLocations = selectedYear ? locations.filter(loc => loc.year === selectedYear) : locations;
+
+  return (
+    <div style={{ position: "relative", height: "500px", width: "100%" }}>
+      {/* Dropdown untuk memilih tahun */}
+      <select 
+        onChange={(e) => setSelectedYear(Number(e.target.value))} 
+        value={selectedYear || ''} 
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          zIndex: 1000, // Pastikan dropdown di atas peta
+          padding: "5px",
+          borderRadius: "5px",
+          backgroundColor: "white",
+          border: "1px solid #ccc"
+        }}
+      >
+        <option value="">Semua Tahun</option>
+        {years.map(year => (
+          <option key={year} value={year}>{year}</option>
+        ))}
+      </select>
+
+      {/* Overlay Teks di bawah Dropdown */}
+      <div style={{
+        position: "absolute",
+        top: "50px", // Sesuaikan dengan tinggi dropdown
+        right: "10px",
+        zIndex: 1000,
+        backgroundColor: "rgba(0, 0, 0, 0.7)", // Background semi-transparan
+        color: "white",
+        padding: "10px",
+        borderRadius: "5px",
+        maxWidth: "300px"
+      }}>
+        <p>INOLAND adalah web informasi oleh <span className="font-semibold">Pusat Inovasi Administrasi Negara</span> yang juga merupakan sistem integrasi untuk penguatan kapasitas berinovasi, terdiri dari berbagai program advokasi pembelajaran inovasi.</p>
+      </div>
+
+      <MapContainer center={[-2.5, 117.5]} zoom={5} style={{ height: "100%", width: "100%" }}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {filteredLocations.map((location, index) => (
+          <Marker 
+            key={index} 
+            position={[location.lat, location.lng]} 
+            icon={getIconByYear(location.year)}
+          >
+            <Popup>
+              {location.name} - {location.year}
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
   );
 };
 
-export default MyMap;
+export default MapComponent;
