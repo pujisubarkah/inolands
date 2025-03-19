@@ -179,15 +179,15 @@ function Navbar() {
         </button>
       )}
 
-      {/* Language Selector */}
-      <div className="flex gap-2">
-        <button onClick={() => changeLanguage('en')} className="bg-transparent border-none cursor-pointer">
-        <img src="/uk_flag.png" alt="English" className="border border-gray-300 rounded-md" width="30" height="20" />
-        </button>
-        <button onClick={() => changeLanguage('id')} className="bg-transparent border-none cursor-pointer">
-        <img src="/indonesia_flag.png" alt="Bahasa Indonesia" className="border border-gray-300 rounded-md" width="30" height="20" />
-        </button>
-      </div>
+    {/* Language Selector */}
+        <div className="flex gap-2">
+          <button onClick={() => changeLanguage('en')} className="bg-transparent border-none cursor-pointer">
+            <img src="/uk_flag.png" alt="English" className="border border-gray-300 rounded-md" width="30" height="20" />
+          </button>
+          <button onClick={() => changeLanguage('id')} className="bg-transparent border-none cursor-pointer">
+            <img src="/indonesia_flag.png" alt="Bahasa Indonesia" className="border border-gray-300 rounded-md" width="30" height="20" />
+          </button>
+        </div>
       </div>
 
       {/* Login Form Overlay */}
