@@ -19,16 +19,7 @@ const Beranda = () => {
         <MyMap />
       </div>
 
-      {/* Overlay untuk tulisan INOLAND di pojok kanan atas */}
-      <div className="absolute top-10 right-10 z-10 text-right bg-black bg-opacity-50 backdrop-blur-md p-6 rounded-2xl shadow-lg max-w-lg animate-fadeIn">
-        <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent drop-shadow-lg">
-          INOLAND
-        </h1>
-        <p className="text-lg md:text-xl text-gray-200 mt-3 leading-relaxed">
-          INOLAND adalah web informasi oleh <span className="font-semibold text-white">Pusat Inovasi Administrasi Negara</span> yang juga merupakan sistem integrasi
-          untuk penguatan kapasitas berinovasi, terdiri dari berbagai program advokasi pembelajaran inovasi.
-        </p>
-      </div>
+     
 
        {/* Section untuk StatsGrid dan ProperExpo agar tidak tertimpa oleh peta */}
       <div className="relative w-full max-w-6xl mt-[40vh] px-4 z-10">
