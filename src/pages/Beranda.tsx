@@ -27,7 +27,7 @@ const Beranda = () => {
       </div>
 
       {/* Section untuk StatsGrid dan ProperExpo agar tidak tertimpa oleh peta */}
-      <div className="relative w-full max-w-6xl mt-[40vh] px-4 z-10">
+      <div className="relative w-full max-w-6xl px-4 z-10">
         <StatsGrid />
       </div>
 
