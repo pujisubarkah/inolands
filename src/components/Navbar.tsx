@@ -6,18 +6,24 @@ import { supabase } from '../supabaseClient'; // Make sure you import Supabase c
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
+interface UserProfile {
+  nama_lengkap: string;
+  instansi: string;
+}
+
+interface User {
+  id: string;
+  // Add other user properties if needed
+}
+
 function Navbar() {
   const [isModalOpen, setModalOpen] = useState(false); // State for modal
-  const [user, setUser] = useState(null); // State to store user information
-  interface UserProfile {
-    nama_lengkap: string;
-    instansi: string;
-  }
-
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null); // State to store user profile
+  // const [user, setUser] = useState<User | null>(null); // State to store user
   const [isMenuOpen, setMenuOpen] = useState(false); // State for mobile menu
   const [isProfileOpen, setProfileOpen] = useState(false); // State for profile dropdown
   const { t, i18n } = useTranslation();
+
 
   const menu = [
     { name: t('Beranda'), path: '/' },
@@ -42,8 +48,8 @@ function Navbar() {
     if (error) {
       console.error('Error during logout:', error.message);
     } else {
-      setUser(null); // Reset user state to null after logout
-      setUserProfile(null); // Reset user profile state to null after logout
+      //setUser(null); // Reset user state to null after logout
+      //setUserProfile(null); // Reset user profile state to null after logout
     }
   };
 
