@@ -15,7 +15,7 @@ const stats = [
   { value: 2, suffix: "+", label: "JUMLAH NGO YANG DILIBATKAN", icon: <MdOutlineSupervisorAccount size={30} />, size: "small" },
   { value: 30, suffix: "+", label: "JUMLAH FASILITATOR", icon: <FaProjectDiagram size={30} />, size: "small" },
   { value: 120, suffix: "+", label: "JUMLAH PERANGKAT DAERAH", icon: <BsNewspaper size={30} />, size: "small" },
-  { value: 22.500, suffix: "+", label: "JUMLAH ASN/MASYARAKAT DIFASILITASI", icon: <BsNewspaper size={30} />, size: "small" },
+  { value: 22500, suffix: "+", label: "JUMLAH ASN/MASYARAKAT DIFASILITASI", icon: <BsNewspaper size={30} />, size: "small" },
   { value: 929, suffix: "+", label: "JUMLAH ALUMNI WCI", icon: <MdOutlineGroups size={30} />, size: "medium" },
   { value: 20, suffix: "+", label: "JUMLAH LOKUS WCI", icon: <FaChalkboardTeacher size={30} />, size: "medium" },
 ];
