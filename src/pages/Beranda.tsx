@@ -35,6 +35,12 @@ const Beranda = () => {
         <ProperExpo />
       </div>
 
+       {/* Section untuk BeritaCarousel */}
+      <div className="relative w-full max-w-6xl py-10 px-4 z-10">
+        <BeritaCarousel />
+      </div>
+
+
       <div className="py-10"></div>
     </div>
   );
