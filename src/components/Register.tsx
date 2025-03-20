@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface RegisterProps {
   isOpen: boolean;
@@ -8,85 +8,87 @@ interface RegisterProps {
 }
 
 const Register: React.FC<RegisterProps> = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
-    confirmPassword: "",
     password: "",
+    confirmPassword: "",
     username: "",
     instansi: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+
+  const SITE_KEY = '6LdPPfoqAAAAABZ-nF1TNZqd8qxJehYmk6fJWE6b'; // Ganti dengan Site Key reCAPTCHA Anda
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
+    setSuccessMessage("");
 
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage("Password dan konfirmasi password tidak cocok.");
       return;
     }
 
-    console.log("Attempting to register user with formData:", formData);
+    if (!captchaValue) {
+      setErrorMessage("Silakan verifikasi bahwa Anda bukan robot.");
+      return;
+    }
 
-    const { data, error: authError } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
+      options: {
+        data: {
+          username: formData.username,
+          instansi: formData.instansi,
+        },
+      },
     });
 
-    if (authError || !data.user) {
-      console.error("Auth error:", authError);
-      setErrorMessage(authError ? authError.message : "Registrasi gagal.");
+    if (error) {
+      setErrorMessage(error.message);
       return;
     }
 
-    const { error: dbError } = await supabase.from("users").insert([
-      {
-        auth_id: data.user.id,
-        username: formData.username,
-        email: formData.email,
-        instansi: formData.instansi,
-      },
-    ]);
+    // Pesan sukses menunggu verifikasi email
+    setSuccessMessage(
+      "Registrasi berhasil! Silakan cek email Anda untuk verifikasi sebelum login."
+    );
 
-    if (dbError) {
-      console.error("Database error:", dbError);
-      setErrorMessage(dbError.message);
-      return;
-    }
-
-    console.log("User  registered successfully, closing modal");
-    onClose();
-    navigate("/login");
+    // Kosongkan input
+    setFormData({
+      email: "",
+      password: "",
+      confirmPassword: "",
+      username: "",
+      instansi: "",
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleClose = () => {
-    onClose();
+  const handleCaptchaChange = (value: string | null) => {
+    setCaptchaValue(value);
   };
 
-  if (!isOpen) return null; // Menambahkan kondisi untuk tidak merender jika tidak terbuka
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 font-poppins">
-      <div className="fixed inset-0 bg-black opacity-50" onClick={handleClose}></div>
+      <div className="fixed inset-0 bg-black opacity-50" onClick={onClose}></div>
       <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 z-10 max-w-lg w-full mx-4">
-        <button onClick={handleClose} className="absolute top-2 right-4 text-2xl text-gray-700 hover:text-gray-900">
+        <button onClick={onClose} className="absolute top-2 right-4 text-2xl text-gray-700 hover:text-gray-900">
           &times;
         </button>
-
         <form onSubmit={handleRegister} className="w-full">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Daftar</h2>
-
           {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-
+          {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
           {[
             { label: "Username", name: "username", type: "text" },
             { label: "Instansi", name: "instansi", type: "text" },
@@ -107,7 +109,9 @@ const Register: React.FC<RegisterProps> = ({ isOpen, onClose }) => {
               />
             </div>
           ))}
-
+          <div className="mb-4">
+            <ReCAPTCHA  sitekey={SITE_KEY} onChange={handleCaptchaChange} />
+          </div>
           <div className="flex items-center justify-between">
             <button
               type="submit"
@@ -115,7 +119,6 @@ const Register: React.FC<RegisterProps> = ({ isOpen, onClose }) => {
             >
               Daftar
             </button>
-         
           </div>
         </form>
       </div>
