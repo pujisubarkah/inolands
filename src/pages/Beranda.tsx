@@ -37,7 +37,7 @@ const Beranda = () => {
       </div>
 
        {/* Section untuk BeritaCarousel */}
-      <div className="relative w-full max-w-6xl py-10 px-4 z-10">
+       <div className="relative w-full h-screen px-4 z-10">
         <BeritaCarousel />
       </div>
 
