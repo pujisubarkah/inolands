@@ -2,6 +2,7 @@ import ProperExpo from '../components/Properexpo';
 import StatsGrid from '../components/Statgrid';
 import MyMap from '../components/Mymap';
 import VideoBeranda from '../components/video_beranda';
+import BeritaCarousel from "../components/berita_carousel";
 
 const Beranda = () => {
 
