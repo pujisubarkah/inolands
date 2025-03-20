@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Register from './Register';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface LoginProps {
   isOpen: boolean;
@@ -13,10 +14,22 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const SITE_KEY = '6LdPPfoqAAAAABZ-nF1TNZqd8qxJehYmk6fJWE6b'; // Ganti dengan Site Key reCAPTCHA Anda
+
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
 
   const signInWithEmail = async () => {
     setError(null);
+
+    if (!recaptchaToken) {
+      setError('Harap selesaikan reCAPTCHA terlebih dahulu.');
+      return;
+    }
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -66,7 +79,6 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     await signInWithEmail();
   };
 
-  // Fungsi untuk menutup modal Register
   const closeRegisterModal = () => {
     setIsRegisterOpen(false);
   };
@@ -110,6 +122,13 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            <div className="mb-4">
+              <ReCAPTCHA
+                sitekey={SITE_KEY}
+                onChange={handleRecaptchaChange}
               />
             </div>
 
