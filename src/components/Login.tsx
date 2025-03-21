@@ -7,6 +7,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 interface LoginProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess: () => void;
 }
 
 const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
