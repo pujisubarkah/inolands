@@ -20,16 +20,16 @@ const icons: { [key: number]: L.Icon } = {
 // CSS untuk warna berbeda berdasarkan tahun
 const style = document.createElement("style");
 style.innerHTML = `
-  .icon-2015 { filter: hue-rotate(0deg) brightness(1.2); } /* Merah */
-  .icon-2016 { filter: hue-rotate(45deg) brightness(1.2); } /* Kuning */
-  .icon-2017 { filter: hue-rotate(90deg) brightness(1.2); } /* Hijau */
-  .icon-2018 { filter: hue-rotate(180deg) brightness(1.2); } /* Biru */
-  .icon-2019 { filter: hue-rotate(270deg) brightness(1.2); } /* Ungu */
-  .icon-2020 { filter: hue-rotate(315deg) brightness(1.2); } /* Oranye */
-  .icon-2021 { filter: hue-rotate(330deg) brightness(1.2); } /* Pink */
-  .icon-2022 { filter: hue-rotate(330deg) brightness(1.5); } /* Pink terang */
-  .icon-2023 { filter: grayscale(100%) brightness(0.5); } /* Hitam */
-  .icon-2024 { filter: grayscale(100%) brightness(0.8); } /* Abu-abu */
+  .icon-2015 { filter: hue-rotate(0deg) brightness(1.1); } /* Merah lembut */
+  .icon-2016 { filter: hue-rotate(40deg) brightness(1.1); } /* Kuning keemasan */
+  .icon-2017 { filter: hue-rotate(120deg) brightness(1.1); } /* Hijau segar */
+  .icon-2018 { filter: hue-rotate(200deg) brightness(1.1); } /* Biru lembut */
+  .icon-2019 { filter: hue-rotate(280deg) brightness(1.1); } /* Ungu pastel */
+  .icon-2020 { filter: hue-rotate(320deg) brightness(1.1); } /* Oranye lembut */
+  .icon-2021 { filter: hue-rotate(340deg) brightness(1.1); } /* Pink lembut */
+  .icon-2022 { filter: hue-rotate(340deg) brightness(1.3); } /* Pink terang */
+  .icon-2023 { filter: grayscale(100%) brightness(0.7); } /* Abu-abu gelap */
+  .icon-2024 { filter: grayscale(100%) brightness(0.9); } /* Abu-abu terang */
 `;
 document.head.appendChild(style);
   
@@ -214,16 +214,21 @@ const MapComponent = () => {
       {/* Dropdown untuk memilih tahun */}
       <select 
         onChange={(e) => setSelectedYear(Number(e.target.value))} 
-        value={selectedYear || ''} 
+        value={selectedYear !== null ? selectedYear : ''} 
         style={{
           position: "absolute",
           top: "10px",
           right: "10px",
-          zIndex: 1000, // Pastikan dropdown di atas peta
-          padding: "5px",
-          borderRadius: "5px",
+          zIndex: 10000, // Pastikan dropdown di atas peta
+          padding: "5px 10px", // Tambahkan padding horizontal agar tulisan tidak terlalu mepet
+          borderRadius: "10px",
           backgroundColor: "white",
-          border: "1px solid #ccc"
+          border: "1px solid #ccc",
+          appearance: "none", // Hilangkan default arrow browser
+          backgroundImage: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"%23000000\"><path d=\"M7 10l5 5 5-5z\"/></svg>')", // Tambahkan custom arrow
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "right 10px center",
+          backgroundSize: "12px",
         }}
       >
         <option value="">Semua Tahun</option>
@@ -231,20 +236,23 @@ const MapComponent = () => {
           <option key={year} value={year}>{year}</option>
         ))}
       </select>
-
       {/* Overlay Teks di bawah Dropdown */}
       <div style={{
         position: "absolute",
-        top: "50px", // Sesuaikan dengan tinggi dropdown
+        top: "60px", // Memberikan jarak lebih dari dropdown
         right: "10px",
         zIndex: 1000,
-        backgroundColor: "rgba(0, 0, 0, 0.7)", // Background semi-transparan
-        color: "white",
-        padding: "10px",
-        borderRadius: "5px",
-        maxWidth: "300px"
+        backgroundColor: "rgba(255, 255, 255, 0.9)", // Background putih semi-transparan
+        color: "#333", // Warna teks abu-abu gelap untuk kontras
+        padding: "15px", // Padding lebih besar untuk kenyamanan
+        borderRadius: "8px", // Sudut lebih halus
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Tambahkan bayangan untuk efek elegan
+        maxWidth: "320px",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", // Font modern dan bersih
+        fontSize: "14px", // Ukuran font yang nyaman dibaca
+        lineHeight: "1.6", // Jarak antar baris untuk keterbacaan
       }}>
-        <p>INOLAND adalah web informasi oleh <span className="font-semibold">Pusat Inovasi Administrasi Negara</span> yang juga merupakan sistem integrasi untuk penguatan kapasitas berinovasi, terdiri dari berbagai program advokasi pembelajaran inovasi.</p>
+        <p><strong>INOLAND</strong> adalah web informasi Laboratorium Inovasi yang juga merupakan sistem integrasi untuk penguatan kapasitas berinovasi, terdiri dari berbagai program advokasi pembelajaran inovasi.</p>
       </div>
 
       <MapContainer center={[-2.5, 117.5]} zoom={5} style={{ height: "100%", width: "100%" }}>
