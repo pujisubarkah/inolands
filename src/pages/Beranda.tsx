@@ -9,11 +9,11 @@ const Beranda = () => {
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center bg-gray-100 pt-40">
       {/* Teletext berjalan sebelum peta */}
-      <div className="absolute top-5 left-0 w-full overflow-hidden z-20">
+      {/* <div className="absolute top-5 left-0 w-full overflow-hidden z-20">
         <div className="whitespace-nowrap animate-marquee text-2xl md:text-3xl font-bold text-white drop-shadow-[2px_2px_0px_#0000ff] py-2">
           Everyone Can Innovate &nbsp; • &nbsp; Everyone Can Innovate &nbsp; • &nbsp; Everyone Can Innovate &nbsp; • &nbsp;
         </div>
-      </div>
+      </div> */}
 
       {/* Peta sebagai latar belakang */}
       <div className="absolute inset-0 w-full h-screen z-0">
