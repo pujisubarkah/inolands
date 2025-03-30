@@ -2,14 +2,14 @@
 const VideoSection = () => {
     return (
       <div className="flex flex-col md:flex-row items-center bg-[#1C2F5D] text-white p-6 md:p-10 rounded-xl shadow-lg relative">
-        {/* Video YouTube */}
+        {/* Video Google Drive */}
         <div className="relative w-full md:w-1/2">
           <iframe
             className="w-full h-64 md:h-80 rounded-lg shadow-md"
-            src="https://www.youtube.com/embed/SeE5cBzl26Q"
-            title="YouTube Video"
+            src="https://drive.google.com/file/d/1-siJEmmRhyvu6-EiBxD932-NeyaQm8kD/preview"
+            title="Google Drive Video"
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="autoplay; encrypted-media"
             allowFullScreen
           ></iframe>
   
@@ -43,4 +43,3 @@ const VideoSection = () => {
   };
   
   export default VideoSection;
-  
