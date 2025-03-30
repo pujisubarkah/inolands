@@ -15,18 +15,16 @@ const Beranda = () => {
         </div>
       </div> */}
 
-     {/* Section untuk StatsGrid dan ProperExpo agar tidak tertimpa oleh peta */}
-      <div className="relative w-full max-w-6xl mt-[40vh] px-4 z-10">
-        <VideoBeranda />
-      </div>
-      
-
       {/* Peta sebagai latar belakang */}
       <div className="absolute inset-0 w-full h-screen z-0">
         <MyMap />
       </div>
 
-     
+     {/* Section untuk StatsGrid dan ProperExpo agar tidak tertimpa oleh peta */}
+      <div className="relative w-full max-w-6xl mt-[40vh] px-4 z-10">
+        <VideoBeranda />
+      </div>
+      
       {/* Section untuk StatsGrid dan ProperExpo agar tidak tertimpa oleh peta */}
       <div className="relative w-full max-w-6xl px-4 z-10">
         <StatsGrid />
