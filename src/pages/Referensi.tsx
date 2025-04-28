@@ -1,7 +1,7 @@
 import React from 'react';
 import Infografis from '../components/Carousel';
 import Berita from '../components/Berita';
-import InovatifMap from '../components/InovatifMap';
+
 import Tuxedovation from '../components/Tuxedovation';
 import ProperExpo from '../components/Properexpo';
 import Jippnas from '../components/Jippnas';
@@ -14,10 +14,6 @@ const Referensi = () => {
   const [activeComponent, setActiveComponent] = React.useState('Indeks Inovasi');
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
-
-  const handleIndeksInovasiClick = () => {
-    setActiveComponent('Indeks Inovasi');
-  };
 
   const handleListInovasiClick = () => {
     setActiveComponent('List Inovasi');
@@ -224,7 +220,6 @@ const Referensi = () => {
         </ul>
       </div>
       <div style={{ flex: 1, padding: '10px' }}>
-        {activeComponent === 'Indeks Inovasi' && <InovatifMap />}
         {activeComponent === 'List Inovasi' && <InovasiLAN />}
         {activeComponent === 'Berita' && <Berita />}
         {activeComponent === 'Infografis' && <Infografis />}
