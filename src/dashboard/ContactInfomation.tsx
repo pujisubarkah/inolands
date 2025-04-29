@@ -11,7 +11,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ formData, handl
     <>
       <Box display="flex" alignItems="center" mb={2}>
         <Typography 
-          sx={{ width: "250px", flexShrink: 0, bgcolor: '#1E40AF', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
+          sx={{ width: "250px", flexShrink: 0, bgcolor: '#16578D', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
         >
           Nama OPD
         </Typography>
@@ -19,7 +19,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ formData, handl
       </Box>
       <Box display="flex" alignItems="center" mb={2}>
         <Typography 
-          sx={{ width: "250px", flexShrink: 0, bgcolor: '#1E40AF', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
+          sx={{ width: "250px", flexShrink: 0, bgcolor: '#16578D', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
         >
           Nama Penanggungjawab
         </Typography>
@@ -27,7 +27,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ formData, handl
       </Box>
       <Box display="flex" alignItems="center" mb={2}>
         <Typography 
-          sx={{ width: "250px", flexShrink: 0, bgcolor: '#1E40AF', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
+          sx={{ width: "250px", flexShrink: 0, bgcolor: '#16578D', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
         >
           Nomor Telp/HP
         </Typography>
@@ -35,7 +35,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ formData, handl
       </Box>
       <Box display="flex" alignItems="center" mb={2}>
         <Typography 
-          sx={{ width: "250px", flexShrink: 0, bgcolor: '#1E40AF', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
+          sx={{ width: "250px", flexShrink: 0, bgcolor: '#16578D', color: 'white', fontWeight: 'bold', px: 2, py: 2, borderRadius: 1 }}
         >
           Alamat Email
         </Typography>
