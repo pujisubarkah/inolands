@@ -151,13 +151,13 @@ const Rencana = () => {
         <div className="space-y-4">
           <h2 className="text-xl font-medium">Persiapan</h2>
           
-          <button
-            type="button"
-            onClick={addActivity}
-            className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-500"
-          >
-            Tambah Kegiatan
-          </button>
+     <button
+  type="button"
+  onClick={addActivity}
+  className="px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-500"
+>
+  Tambah Kegiatan
+</button>
 
           {/* Tabel */}
           <div className="overflow-x-auto mt-4">
@@ -274,12 +274,13 @@ const Rencana = () => {
               >
                 Batal
               </button>
-              <button
-                onClick={saveNewActivity}
-                className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-500"
-              >
-                Simpan
-              </button>
+            <button
+  onClick={saveNewActivity}
+  className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-500"
+>
+  Simpan
+</button>
+
             </div>
           </div>
         </div>
