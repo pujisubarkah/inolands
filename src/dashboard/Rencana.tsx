@@ -93,49 +93,79 @@ const Rencana = () => {
 
       <form onSubmit={handleSubmit}>
 
-        {/* Form OPD dan Kontak */}
-        <div className="flex flex-col gap-4 mb-5">
-          <input
-            type="text"
-            name="opdName"
-            value={formData.opdName}
-            onChange={handleChange}
-            placeholder="Nama OPD"
-            className="border p-2 rounded"
-          />
-          <input
-            type="text"
-            name="contactPerson"
-            value={formData.contactPerson}
-            onChange={handleChange}
-            placeholder="Contact Person"
-            className="border p-2 rounded"
-          />
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="Telp/HP"
-            className="border p-2 rounded"
-          />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email OPD"
-            className="border p-2 rounded"
-          />
-          <input
-            type="text"
-            name="innovationTitle"
-            value={formData.innovationTitle}
-            onChange={handleChange}
-            placeholder="Judul Inovasi"
-            className="border p-2 rounded"
-          />
-        </div>
+     {/* Form OPD dan Kontak */}
+<div className="flex flex-col gap-4 mb-5">
+  {/* Nama OPD */}
+  <div className="flex flex-col">
+    <label htmlFor="opdName" className="font-semibold text-gray-700 mb-1">Nama OPD</label>
+    <input
+      type="text"
+      id="opdName"
+      name="opdName"
+      value={formData.opdName}
+      onChange={handleChange}
+      placeholder="Masukkan nama OPD"
+      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+
+  {/* Contact Person */}
+  <div className="flex flex-col">
+    <label htmlFor="contactPerson" className="font-semibold text-gray-700 mb-1">Contact Person</label>
+    <input
+      type="text"
+      id="contactPerson"
+      name="contactPerson"
+      value={formData.contactPerson}
+      onChange={handleChange}
+      placeholder="Masukkan nama PIC"
+      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+
+  {/* Telepon / HP */}
+  <div className="flex flex-col">
+    <label htmlFor="phone" className="font-semibold text-gray-700 mb-1">Telp/HP</label>
+    <input
+      type="text"
+      id="phone"
+      name="phone"
+      value={formData.phone}
+      onChange={handleChange}
+      placeholder="Masukkan nomor telepon"
+      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+
+  {/* Email OPD */}
+  <div className="flex flex-col">
+    <label htmlFor="email" className="font-semibold text-gray-700 mb-1">Email OPD</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      value={formData.email}
+      onChange={handleChange}
+      placeholder="Masukkan email OPD"
+      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+
+  {/* Judul Inovasi */}
+  <div className="flex flex-col">
+    <label htmlFor="innovationTitle" className="font-semibold text-gray-700 mb-1">Judul Inovasi</label>
+    <input
+      type="text"
+      id="innovationTitle"
+      name="innovationTitle"
+      value={formData.innovationTitle}
+      onChange={handleChange}
+      placeholder="Masukkan judul inovasi"
+      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+</div>
+
 
         {/* Tombol Submit */}
         <div className="flex justify-end mb-5">
