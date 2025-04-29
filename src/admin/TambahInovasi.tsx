@@ -68,15 +68,16 @@ const TambahInovasi = () => {
 
     <div className="flex justify-end w-11/12 mx-auto">
         <div className="w-auto">
-            <button
-                onClick={() => setShowModalAdd(true)}
-                className="py-2 px-3 font-medium text-white rounded shadow flex items-center"
-                style={{ backgroundColor: '#a2003b', transition: 'background-color 0.3s' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#900028'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#a2003b'}
-            >
-                Tambah Inovasi
-            </button>
+          <button
+  onClick={() => setShowModalAdd(true)}
+  className="py-2 px-3 font-medium text-white rounded shadow flex items-center"
+  style={{ backgroundColor: '#2563eb', transition: 'background-color 0.3s' }}
+  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
+  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+>
+  Tambah Inovasi
+</button>
+
         </div>
     </div>
 
