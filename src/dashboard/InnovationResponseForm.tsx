@@ -34,7 +34,7 @@ const InnovationResponseForm: React.FC<InnovationIdeaFormProps> = ({ formData = 
         <div>
             {["latarBelakang", "ideInovasi", "tujuanInovasi", "targetPerubahan", "stakeholderInovasi", "sumberDayaInovasi", "penerimaManfaat", "kebaruan", "deskripsiSingkat", "keterangan"].map((field) => (
                 <div key={field} className="border border-black rounded-lg mt-4 p-4">
-                    <div className="bg-blue-600 p-2 text-center text-white font-bold rounded-t-lg">
+                    <div className="bg-[#16578D] p-2 text-center text-white font-bold rounded-t-lg">
                         {field.toUpperCase().replace(/_/g, " ")}
                     </div>
                     <textarea
