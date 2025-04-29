@@ -71,12 +71,12 @@ return (
 
 
         <div className="flex justify-end mb-5">
-            <button 
-                type="submit" 
-                className="bg-red-800 hover:bg-red-500 text-white font-bold py-2 px-4 rounded"
-            >
-                Kirim
-            </button>
+         <button 
+    type="submit" 
+    className="bg-blue-800 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
+>
+    Kirim
+</button>
         </div>
         <form onSubmit={handleSubmit}>
             {/* Compact flex layout for primary contact information */}
@@ -162,7 +162,8 @@ return (
         {/* Tombol Tambah Kegiatan */}
         <button
           onClick={addActivity}
-          className="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-500 focus:outline-none"
+          className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-500 focus:outline-none"
+
         >
           Tambah Kegiatan
         </button>
