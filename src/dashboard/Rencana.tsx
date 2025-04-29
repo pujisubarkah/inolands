@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaPaperPlane } from 'react-icons/fa'; // pakai icon FaSend alias PaperPlane
 
 const Rencana = () => {
   const [formData, setFormData] = useState({
@@ -15,37 +16,25 @@ const Rencana = () => {
     }
   });
 
-  // Fungsi untuk handle perubahan input OPD dan inovasi
+  const [showModal, setShowModal] = useState(false);
+  const [newActivity, setNewActivity] = useState({
+    phase: 'preparation',
+    activity: '',
+    executor: '',
+    output: '',
+    method: '',
+    timeline: Array(12).fill(false),
+  });
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Fungsi untuk menambah kegiatan baru ke tahap tertentu
-  const addActivity = (phase) => {
-    setFormData({
-      ...formData,
-      activities: {
-        ...formData.activities,
-        [phase]: [
-          ...formData.activities[phase],
-          { activity: '', executor: '', output: '', method: '', timeline: Array(12).fill(false) }
-        ]
-      }
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
   };
 
-  // Fungsi untuk handle perubahan tiap kegiatan
-  const handleActivityChange = (phase, index, field, value) => {
-    const updatedActivities = formData.activities[phase].map((activity, i) =>
-      i === index ? { ...activity, [field]: value } : activity
-    );
-    setFormData({
-      ...formData,
-      activities: { ...formData.activities, [phase]: updatedActivities }
-    });
-  };
-
-  // Fungsi untuk handle checkbox timeline per bulan
   const toggleTimeline = (phase, index, month) => {
     const updatedActivities = formData.activities[phase].map((activity, i) =>
       i === index ? {
@@ -59,186 +48,244 @@ const Rencana = () => {
     });
   };
 
-  // Fungsi untuk handle submit form
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
+  const handleActivityChange = (phase, index, field, value) => {
+    const updatedActivities = formData.activities[phase].map((activity, i) =>
+      i === index ? { ...activity, [field]: value } : activity
+    );
+    setFormData({
+      ...formData,
+      activities: { ...formData.activities, [phase]: updatedActivities }
+    });
   };
 
-return (
-    <div>
-        <h1 className="text-center text-3xl font-bold">FORM RENCANA AKSI INOVASI</h1>
+  const addActivity = () => {
+    setShowModal(true);
+  };
 
+  const saveNewActivity = () => {
+    setFormData({
+      ...formData,
+      activities: {
+        ...formData.activities,
+        [newActivity.phase]: [...formData.activities[newActivity.phase], {
+          activity: newActivity.activity,
+          executor: newActivity.executor,
+          output: newActivity.output,
+          method: newActivity.method,
+          timeline: newActivity.timeline,
+        }]
+      }
+    });
+    setNewActivity({
+      phase: 'preparation',
+      activity: '',
+      executor: '',
+      output: '',
+      method: '',
+      timeline: Array(12).fill(false),
+    });
+    setShowModal(false);
+  };
 
+  return (
+    <div className="p-5">
+      <h1 className="text-center text-3xl font-bold mb-5">FORM RENCANA AKSI INOVASI</h1>
+
+      <form onSubmit={handleSubmit}>
+
+        {/* Form OPD dan Kontak */}
+        <div className="flex flex-col gap-4 mb-5">
+          <input
+            type="text"
+            name="opdName"
+            value={formData.opdName}
+            onChange={handleChange}
+            placeholder="Nama OPD"
+            className="border p-2 rounded"
+          />
+          <input
+            type="text"
+            name="contactPerson"
+            value={formData.contactPerson}
+            onChange={handleChange}
+            placeholder="Contact Person"
+            className="border p-2 rounded"
+          />
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="Telp/HP"
+            className="border p-2 rounded"
+          />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email OPD"
+            className="border p-2 rounded"
+          />
+          <input
+            type="text"
+            name="innovationTitle"
+            value={formData.innovationTitle}
+            onChange={handleChange}
+            placeholder="Judul Inovasi"
+            className="border p-2 rounded"
+          />
+        </div>
+
+        {/* Tombol Submit */}
         <div className="flex justify-end mb-5">
-         <button 
-    type="submit" 
-    className="bg-blue-800 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded"
->
-    Kirim
-</button>
-        </div>
-        <form onSubmit={handleSubmit}>
-            {/* Compact flex layout for primary contact information */}
-        <div className="flex items-center mb-5">
-            <label htmlFor="namaOPD" className="inline-block w-24 mr-6 text-right font-bold text-gray-600">
-                Nama OPD
-            </label>
-            <input
-                type="text"
-                id="namaOPD"
-                name="namaOPD"
-                value={formData.namaOPD}
-                onChange={handleChange}
-                placeholder="Masukkan nama OPD"
-                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
-            />
+          <button 
+            type="submit"
+            className="bg-blue-800 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded flex items-center gap-2"
+          >
+            <FaPaperPlane /> Kirim
+          </button>
         </div>
 
-        <div className="flex items-center mb-5">
-            <label htmlFor="contactPerson" className="inline-block w-24 mr-6 text-right font-bold text-gray-600">
-                Contact Person
-            </label>
-            <input
-                type="text"
-                id="contactPerson"
-                name="contactPerson"
-                value={formData.contactPerson}
-                onChange={handleChange}
-                placeholder="Nama PIC inovasi"
-                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
-            />
-        </div>
+        {/* Section Persiapan */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-medium">Persiapan</h2>
+          
+          <button
+            type="button"
+            onClick={addActivity}
+            className="px-4 py-2 bg-green-700 text-white rounded-md hover:bg-green-500"
+          >
+            Tambah Kegiatan
+          </button>
 
-        <div className="flex items-center mb-5">
-            <label htmlFor="telp" className="inline-block w-24 mr-6 text-right font-bold text-gray-600">
-                Telp/HP
-            </label>
-            <input
-                type="text"
-                id="telp"
-                name="telp"
-                value={formData.telp}
-                onChange={handleChange}
-                placeholder="Nomor telepon"
-                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
-            />
-        </div>
-
-        <div className="flex items-center mb-5">
-            <label htmlFor="email" className="inline-block w-24 mr-6 text-right font-bold text-gray-600">
-                Email
-            </label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email OPD"
-                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
-            />
-        </div>
-
-        <div className="flex items-center mb-5">
-            <label htmlFor="email" className="inline-block w-24 mr-6 text-right font-bold text-gray-600">
-                JUDUL INOVASI
-            </label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email OPD"
-                className="flex-1 py-2 border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"
-            />
-        </div>
-
-             {/* Form Persiapan */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-medium">Persiapan</h2>
-        
-        {/* Tombol Tambah Kegiatan */}
-        <button
-          onClick={addActivity}
-          className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-500 focus:outline-none"
-
-        >
-          Tambah Kegiatan
-        </button>
-        
-        {/* Tabel kegiatan */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 mt-4">
-            <thead>
-              <tr>
-              <th className="px-4 py-2 border border-gray-300">Tahap</th>
-                <th className="px-4 py-2 border border-gray-300">Kegiatan</th>
-                <th className="px-4 py-2 border border-gray-300">Pelaksana</th>
-                <th className="px-4 py-2 border border-gray-300">Output</th>
-                <th className="px-4 py-2 border border-gray-300">Metode</th>
-                <th className="px-4 py-2 border border-gray-300">Rencana Waktu</th>
-                <th className="px-4 py-2 border border-gray-300">Timeline</th>
-              </tr>
-            </thead>
-            <tbody>
-              {formData.activities.preparation.map((activity, index) => (
-                <tr key={index} className="text-center">
-                  <td className="border border-gray-300 px-4 py-2">
-                    <input
-                      type="text"
-                      value={activity.activity}
-                      onChange={(e) => handleActivityChange(index, 'activity', e.target.value)}
-                      className="border p-2 w-full rounded"
-                      placeholder="Kegiatan"
-                    />
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <input
-                      type="text"
-                      value={activity.executor}
-                      onChange={(e) => handleActivityChange(index, 'executor', e.target.value)}
-                      className="border p-2 w-full rounded"
-                      placeholder="Pelaksana"
-                    />
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <input
-                      type="text"
-                      value={activity.output}
-                      onChange={(e) => handleActivityChange(index, 'output', e.target.value)}
-                      className="border p-2 w-full rounded"
-                      placeholder="Output"
-                    />
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <input
-                      type="text"
-                      value={activity.method}
-                      onChange={(e) => handleActivityChange(index, 'method', e.target.value)}
-                      className="border p-2 w-full rounded"
-                      placeholder="Metode"
-                    />
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <input
-                      type="checkbox"
-                      checked={activity.timeline}
-                      onChange={() => toggleTimeline('preparation', index, 0)}
-                    />
-                  </td>
+          {/* Tabel */}
+          <div className="overflow-x-auto mt-4">
+            <table className="min-w-full bg-white border border-gray-300">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2 border">Kegiatan</th>
+                  <th className="px-4 py-2 border">Pelaksana</th>
+                  <th className="px-4 py-2 border">Output</th>
+                  <th className="px-4 py-2 border">Metode</th>
+                  <th className="px-4 py-2 border">Timeline (Jan-Des)</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {formData.activities.preparation.map((activity, index) => (
+                  <tr key={index} className="text-center">
+                    <td className="border p-2">{activity.activity}</td>
+                    <td className="border p-2">{activity.executor}</td>
+                    <td className="border p-2">{activity.output}</td>
+                    <td className="border p-2">{activity.method}</td>
+                    <td className="border p-2">
+                      {activity.timeline.map((checked, month) => (
+                        <input
+                          key={month}
+                          type="checkbox"
+                          className="mr-1"
+                          checked={checked}
+                          onChange={() => toggleTimeline('preparation', index, month)}
+                        />
+                      ))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-    </form>
-  </div>
+      </form>
+
+      {/* Modal Tambah Kegiatan */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg w-[400px] space-y-4">
+            <h2 className="text-xl font-bold mb-4">Tambah Kegiatan</h2>
+
+            <div className="flex flex-col gap-2">
+              <label>Phase</label>
+              <select
+                value={newActivity.phase}
+                onChange={(e) => setNewActivity({ ...newActivity, phase: e.target.value })}
+                className="border p-2 rounded"
+              >
+                <option value="preparation">Persiapan</option>
+                <option value="implementation">Pelaksanaan</option>
+                <option value="monitoring">Monitoring</option>
+                <option value="evaluation">Evaluasi</option>
+              </select>
+
+              <input
+                type="text"
+                placeholder="Kegiatan"
+                value={newActivity.activity}
+                onChange={(e) => setNewActivity({ ...newActivity, activity: e.target.value })}
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Pelaksana"
+                value={newActivity.executor}
+                onChange={(e) => setNewActivity({ ...newActivity, executor: e.target.value })}
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Output"
+                value={newActivity.output}
+                onChange={(e) => setNewActivity({ ...newActivity, output: e.target.value })}
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Metode"
+                value={newActivity.method}
+                onChange={(e) => setNewActivity({ ...newActivity, method: e.target.value })}
+                className="border p-2 rounded"
+              />
+
+              <div>
+                <p className="mb-2 font-semibold">Timeline (Centang bulan pelaksanaan)</p>
+                <div className="grid grid-cols-6 gap-1">
+                  {newActivity.timeline.map((checked, idx) => (
+                    <label key={idx} className="flex items-center space-x-1 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => {
+                          const updatedTimeline = [...newActivity.timeline];
+                          updatedTimeline[idx] = !updatedTimeline[idx];
+                          setNewActivity({ ...newActivity, timeline: updatedTimeline });
+                        }}
+                      />
+                      <span>{idx + 1}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Tombol Aksi */}
+            <div className="flex justify-end gap-2 mt-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-400"
+              >
+                Batal
+              </button>
+              <button
+                onClick={saveNewActivity}
+                className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-500"
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
 export default Rencana;
-
-
