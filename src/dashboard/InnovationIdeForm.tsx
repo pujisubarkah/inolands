@@ -48,7 +48,7 @@ const generatePDF = () => {
 
       {/* Ide Inovasi Terpilih */}
       <div className="border border-black rounded-lg mt-4">
-        <div className="bg-blue-600 p-2 text-center rounded-t-lg">
+        <div className="bg-[#16578D] p-2 text-center rounded-t-lg">
           <strong className="text-white text-lg">IDE INOVASI TERPILIH <br /></strong>
         </div>
         <textarea
@@ -64,7 +64,7 @@ const generatePDF = () => {
       <div className="border border-black rounded-lg mt-4 grid grid-cols-2 gap-4">
   {/* Tujuan Inovasi */}
   <div className="w-full">
-    <div className="bg-blue-600 p-2 text-center text-white font-bold rounded-t-lg">
+    <div className="bg-[#16578D] p-2 text-center text-white font-bold rounded-t-lg">
       TUJUAN INOVASI
     </div>
     <textarea
@@ -79,7 +79,7 @@ const generatePDF = () => {
 
   {/* Target Perubahan */}
   <div className="w-full">
-    <div className="bg-blue-600 p-2 text-center text-white font-bold rounded-t-lg">
+    <div className="bg-[#16578D] p-2 text-center text-white font-bold rounded-t-lg">
       TARGET PERUBAHAN
     </div>
     <textarea
@@ -95,7 +95,7 @@ const generatePDF = () => {
 <div className="border border-black rounded-lg mt-4 grid grid-cols-4 gap-4">
   {/* Stakeholder Inovasi */}
   <div className="w-full">
-    <div className="bg-blue-600 p-2 text-center text-white font-bold rounded-t-lg">
+    <div className="bg-[#16578D] p-2 text-center text-white font-bold rounded-t-lg">
       STAKEHOLDER INOVASI
     </div>
     <textarea
@@ -110,7 +110,7 @@ const generatePDF = () => {
 
   {/* Sumber Daya Inovasi */}
   <div className="w-full">
-    <div className="bg-blue-600 p-2 text-center text-white font-bold rounded-t-lg">
+    <div className="bg-[#16578D] p-2 text-center text-white font-bold rounded-t-lg">
       SUMBER DAYA INOVASI
     </div>
     <textarea
@@ -125,7 +125,7 @@ const generatePDF = () => {
 
   {/* Penerima Manfaat */}
   <div className="w-full">
-    <div className="bg-blue-600 p-2 text-center text-white font-bold rounded-t-lg">
+    <div className="bg-[#16578D] p-2 text-center text-white font-bold rounded-t-lg">
       PENERIMA MANFAAT
     </div>
     <textarea
@@ -140,7 +140,7 @@ const generatePDF = () => {
 
   {/* Kebaruan */}
   <div className="w-full">
-    <div className="bg-blue-600 p-2 text-center text-white font-bold rounded-t-lg">
+    <div className="bg-[#16578D] p-2 text-center text-white font-bold rounded-t-lg">
       KEBARUAN
     </div>
     <textarea
@@ -156,7 +156,7 @@ const generatePDF = () => {
 
  {/* Deskripsi Singkat Inovasi*/}
  <div className="border border-black rounded-lg mt-4">
-        <div className="bg-blue-600 p-2 text-center rounded-t-lg">
+        <div className="bg-[#16578D] p-2 text-center rounded-t-lg">
           <strong className="text-white text-lg">DESKRIPSI SINGKAT INOVASI <br /></strong>
         </div>
         <textarea
@@ -171,7 +171,7 @@ const generatePDF = () => {
 
 {/* Deskripsi Singkat Inovasi*/}
 <div className="border border-black rounded-lg mt-4">
-        <div className="bg-blue-600 p-2 text-center rounded-t-lg">
+        <div className="bg-[#16578D] p-2 text-center rounded-t-lg">
           <strong className="text-white text-lg">DESKRIPSI SINGKAT INOVASI <br /></strong>
         </div>
         <textarea
@@ -186,7 +186,7 @@ const generatePDF = () => {
 
       {/* Keterangan */}
       <div className="border border-black rounded-lg mt-4">
-        <div className="bg-blue-600 p-2 text-center rounded-t-lg">
+        <div className="bg-[#16578D] p-2 text-center rounded-t-lg">
           <strong className="text-white text-lg">KETERANGAN <br /></strong>
         </div>
         <textarea
@@ -207,7 +207,7 @@ const generatePDF = () => {
           Kirim & Lanjut
         </button>
         <button 
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all ml-2" 
+          className="bg-[#16578D] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all ml-2" 
           onClick={generatePDF}
         >
           Download PDF
