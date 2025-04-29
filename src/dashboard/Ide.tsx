@@ -86,7 +86,7 @@ function Ide() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: activeStep === 0 ? '#FFFFFF' : '#0000FF',
+              backgroundColor: activeStep === 0 ? '#FFFFFF' : '#16578D',
               color: activeStep === 0 ? '#000' : '#FFFFFF',
               '&:hover': { backgroundColor: '#0000CC' },
             }}
@@ -100,7 +100,7 @@ function Ide() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: '#0000FF',
+              backgroundColor: '#16578D',
               color: '#FFFFFF',
               '&:hover': { backgroundColor: '#0000CC' },
             }}
