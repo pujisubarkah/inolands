@@ -106,22 +106,22 @@ const TambahBerita = () => {
     
 
                 <div className="flex justify-end w-11/12 mx-auto">
-                    <button
-                        className="py-2 px-3 font-medium text-white rounded shadow flex items-center"
-                        style={{
-                            backgroundColor: "#a2003b",
-                            transition: "background-color 0.3s",
-                        }}
-                        onMouseEnter={(e) =>
-                            (e.currentTarget.style.backgroundColor = "#900028")
-                        }
-                        onMouseLeave={(e) =>
-                            (e.currentTarget.style.backgroundColor = "#a2003b")
-                        }
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        Tambah Berita
-                    </button>
+                   <button
+  className="py-2 px-3 font-medium text-white rounded shadow flex items-center"
+  style={{
+    backgroundColor: "#2563eb", // biru primary Tailwind (#2563EB)
+    transition: "background-color 0.3s",
+  }}
+  onMouseEnter={(e) =>
+    (e.currentTarget.style.backgroundColor = "#1d4ed8") // biru lebih gelap saat hover (#1D4ED8)
+  }
+  onMouseLeave={(e) =>
+    (e.currentTarget.style.backgroundColor = "#2563eb") // kembali ke biru biasa
+  }
+  onClick={() => setIsModalOpen(true)}
+>
+  Tambah Berita
+</button>
                 </div>
 
                 <div className="w-full flex justify-center mt-16">
