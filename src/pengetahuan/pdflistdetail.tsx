@@ -51,6 +51,27 @@ const PdfDetail = () => {
         <>
           <h1 style={{ fontSize: '2.5em', fontWeight: 'bold', fontFamily: 'Georgia' }}>{inovasiDetail.pdf_judul}</h1>
           <p style={{ fontSize: '1.2em', color: '#555' }}>{inovasiDetail.pdf_publisher}</p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <a 
+              href={inovasiDetail.pdf_download} 
+              download 
+              style={{
+                padding: '12px 24px',
+                backgroundColor: '#007BFF',
+                color: '#fff',
+                textDecoration: 'none',
+                borderRadius: '8px',
+                fontSize: '1em',
+                fontWeight: 'bold',
+                transition: 'background-color 0.3s ease',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007BFF'}
+              >
+              Download PDF
+              </a>
+            </div>
           <br/>
           <div style={{ position: 'relative', paddingTop: 'max(60%, 324px)', width: '100%', height: '0' }}>
             <iframe
