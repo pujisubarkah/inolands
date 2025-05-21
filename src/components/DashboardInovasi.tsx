@@ -1,8 +1,112 @@
 import { useState, useEffect } from "react";
 import './InteractiveMap.css';
 import { supabase } from '../supabaseClient';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 function DashboardInovasi() {
+
+    const pieData = {
+        labels: ['KABUPATEN', 'KOTA', 'PROV'],
+        datasets: [
+            {
+                data: [89, 30, 1],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+            },
+        ],
+    };
+
+    const barData = {
+        labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+        datasets: [
+            {
+                label: 'KAB',
+                data: [3, 10, 12, 23, 15, 8, 12, 19, 9, 4],
+                backgroundColor: '#FF6384',
+            },
+            {
+                label: 'KOTA',
+                data: [1, 3, 7, 7, 9, 1, 2, 6, 1, 2],
+                backgroundColor: '#36A2EB',
+            },
+            {
+                label: 'PROV',
+                data: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+                backgroundColor: '#FFCE56',
+            },
+        ],
+    };
+
+    const optionsBarData = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top' as const,
+            },
+            title: {
+                display: true,
+                text: 'Lokus Lab Inovasi Per Tahun dan Jenis Daerah',
+            },
+        },
+        scales: {
+            x: {
+                stacked: true,
+            },
+            y: {
+                stacked: true,
+            },
+        },
+    };
+
+    const barDataJilid = {
+        labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+        datasets: [
+            {
+                label: 'JILID 1',
+                data: [4, 13, 20, 27, 21, 7, 11, 18, 6, 0],
+                backgroundColor: '#FF6384',
+            },
+            {
+                label: 'JILID 2',
+                data: [0, 0, 0, 3, 3, 1, 2, 6, 1, 3],
+                backgroundColor: '#36A2EB',
+            },
+            {
+                label: 'JILID 3',
+                data: [0, 0, 0, 0, 0, 1, 0, 1, 3, 1],
+                backgroundColor: '#FFCE56',
+            },
+            {
+                label: 'JILID 4',
+                data: [0, 0, 0, 0, 0, 0, 1, 0, 0, 2],
+                backgroundColor: '#4BC0C0',
+            },
+        ],
+    };
+
+    const optionsBarDataJilid = {
+        indexAxis: 'y' as const, // This makes the bar chart horizontal
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top' as const,
+            },
+            title: {
+                display: true,
+                text: 'Lokus Lab Inovasi Per Tahun dan Jilid',
+            },
+        },
+        scales: {
+            x: {
+                stacked: true,
+            },
+            y: {
+                stacked: true,
+            },
+        },
+    };
     
     interface LabinovData {
         Id_kabkot: number;
@@ -70,6 +174,21 @@ function DashboardInovasi() {
                     DASHBOARD LAB INOVASI
                 </h1>
                 <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
+
+                <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', width: '100%', padding: '16px' }}>
+                    <div style={{ flex: '1 1 0', maxWidth: '450px', height: '600px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', padding: '16px' }}>
+                        <Pie data={pieData} />
+                    </div>
+
+                    <div style={{ flex: '1 1 0', maxWidth: '650px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div style={{ height: '300px', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', padding: '12px' }}>
+                            <Bar data={barData} options={optionsBarData} />
+                        </div>
+                        <div style={{ height: '300px', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', padding: '12px' }}>
+                            <Bar data={barDataJilid} options={optionsBarDataJilid} />
+                        </div>
+                    </div>
+                </div>
 
                 <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                     <div style={{ position: 'relative' }}>
