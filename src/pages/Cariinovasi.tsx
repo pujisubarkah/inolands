@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faTable, faGlobe, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const Cariinovasi = () => {
-  const [activeComponent, setActiveComponent] = React.useState('DashboardInovasi');
+  const [activeComponent, setActiveComponent] = React.useState('SebaranInovasi');
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const handleSebaranInovasiClick = () => {
