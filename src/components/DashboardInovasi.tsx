@@ -1,73 +1,71 @@
 import { useState, useEffect } from "react";
 import './InteractiveMap.css';
-import axios from "axios";
+import { supabase } from '../supabaseClient';
 
 function DashboardInovasi() {
-    interface Inovasi {
-        id: number;
-        judul_inovasi: string;
-        sdgs?: {
-            image: string;
-            sdgs: string;
+    
+    interface LabinovData {
+        Id_kabkot: number;
+        DRUMP_UP: string;
+        DIAGNOSE: string;
+        DESAIN: string;
+        DELIVER_LAUNCHING: string;
+        DELIVER_MONITORING: string;
+        DISPLAY: string;
+        HASIL_AKHIR: string;
+        master_kabupaten: {
+            nama_kabkot: string;
+            master_provinsi: {
+                nama_provinsi: string;
+            };
         };
-        tahun: number;
-        kld: string;
-        inovator: string;
-        deskripsi: string;
     }
 
-    const [inovasiData, setInovasiData] = useState<Inovasi[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [itemsPerPage] = useState(5);
+    const [data, setData] = useState<LabinovData[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        loadInovasi();
+        const fetchData = async () => {
+            try {
+                const { data: labinovData, error } = await supabase
+                    .from('Labinov')
+                    .select(`
+                        Id_kabkot,
+                        DRUMP_UP,
+                        DIAGNOSE,
+                        DESAIN,
+                        DELIVER_LAUNCHING,
+                        DELIVER_MONITORING,
+                        DISPLAY,
+                        HASIL_AKHIR,
+                        master_kabupaten (
+                            nama_kabkot,
+                            master_provinsi (
+                                nama_provinsi
+                            )
+                        )
+                    `);
+
+                if (error) {
+                    console.error("Error fetching data:", error);
+                    return;
+                }
+
+                setData(labinovData);
+            } catch (err) {
+                console.error("Error:", err);
+            }
+        };
+
+        fetchData();
     }, []);
-
-    const loadInovasi = async () => {
-        try {
-            const response = await axios.get('/api/inolands');
-            setInovasiData(Array.isArray(response.data) ? response.data : []); 
-            setCurrentPage(1);
-        } catch (error) {
-            console.error("Error fetching inovasi:", error);
-        }
-    };
-
-    const filteredInovasi = (inovasiData || []).filter((inovasi) => {
-    return searchTerm === '' ||
-        (inovasi.judul_inovasi?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-        (inovasi.tahun?.toString() || '').includes(searchTerm.toLowerCase()) ||
-        (inovasi.kld?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-        (inovasi.inovator?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-        (inovasi.deskripsi?.toLowerCase() || '').includes(searchTerm.toLowerCase());
-});
-
-    const totalPages = Math.ceil(filteredInovasi.length / itemsPerPage);
-    const currentInovasi = filteredInovasi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-    const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage);
-    };
-
-    const handleSort = (field: keyof Inovasi) => {
-        const sortedData = [...inovasiData].sort((a, b) => {
-            if (a[field] === undefined) return 1;
-            if (b[field] === undefined) return -1;
-            if (a[field] < b[field]) return -1;
-            if (a[field] > b[field]) return 1;
-            return 0;
-        });
-        setInovasiData(sortedData);
-    };
 
     return (
         <div className="app">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
             <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '5px', width: '100%', maxWidth: '1200px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                 <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', fontSize: '2rem', textAlign: 'center', margin: '20px 0 10px 0' }}>
-                    TEMUKAN INOVASI
+                    DASHBOARD LAB INOVASI
                 </h1>
                 <hr style={{ width: '100px', border: 'none', height: '2px', background: 'linear-gradient(to right, #16578d, black, #16578d)', margin: '0 auto 20px auto' }} />
 
@@ -75,7 +73,7 @@ function DashboardInovasi() {
                     <div style={{ position: 'relative' }}>
                         <input
                             type="text"
-                            placeholder="Cari Ide Inovasi/Pemda/Inovator"
+                            placeholder="Cari Daerah Lab Inovasi"
                             onChange={(e) => setSearchTerm(e.target.value)}
                             style={{
                                 padding: '10px 10px 10px 30px',
@@ -89,110 +87,56 @@ function DashboardInovasi() {
                     </div>
                 </div>
 
-                {currentInovasi.length > 0 ? (
-                    <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', margin: '20px 0' }}>
-                        
-                        <thead>
-                            <tr style={{ backgroundColor: '#444', color: 'white', textAlign: 'left' }}>
-                                <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('judul_inovasi')}>
-                                    Judul Inovasi
-                                </th>
-                                <th style={{ padding: '15px', width: '175px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('sdgs')}>
-                                    SDGS
-                                </th>
-                                <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('tahun')}>
-                                    Tahun
-                                </th>
-                                <th style={{ padding: '15px', width: '125px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('kld')}>
-                                    Pemda
-                                </th>
-                                <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('inovator')}>
-                                    Inovator
-                                </th>
-                                <th style={{ padding: '15px', borderBottom: '1px solid #ddd', cursor: 'pointer' }} onClick={() => handleSort('deskripsi')}>
-                                    Deskripsi
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentInovasi.map((inovasi) => (
-                                <tr key={inovasi.id} style={{ backgroundColor: '#fff', borderBottom: '1px solid #ddd' }}>
-                                    <td style={{ padding: '15px' }}>{inovasi.judul_inovasi}</td>
-                                    <td style={{ padding: '15px', width: '175px' }}>
-                                        <img width='75px' src={inovasi.sdgs ? inovasi.sdgs.image : ''}></img>
-                                        <div>{inovasi.sdgs ? inovasi.sdgs.sdgs : 'N/A'}</div>
-                                    </td>
-                                    <td style={{ padding: '15px' }}>{inovasi.tahun}</td>
-                                    <td style={{ padding: '15px', width: '125px' }}>{inovasi.kld}</td>
-                                    <td style={{ padding: '15px' }}>{inovasi.inovator}</td>
-                                    <td style={{ padding: '15px' }}>{inovasi.deskripsi}</td>
-                                </tr>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                    <thead>
+                        <tr style={{ backgroundColor: '#f4f4f4', textAlign: 'left' }}>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>PROVINSI</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>KABUPATEN/KOTA</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>DRUM UP</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>DIAGNOSE</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>DESAIN</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>DELIVER<br/>LAUNCHING</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>DELIVER<br/>MONITORING</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>DISPLAY</th>
+                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Object.entries(
+                            data
+                                .filter(item =>
+                                    item.master_kabupaten.nama_kabkot.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                    item.master_kabupaten.master_provinsi.nama_provinsi.toLowerCase().includes(searchTerm.toLowerCase())
+                                )
+                                .reduce((acc, item) => {
+                                    const provinsi = item.master_kabupaten.master_provinsi.nama_provinsi;
+                                    if (!acc[provinsi]) acc[provinsi] = [];
+                                    acc[provinsi].push(item);
+                                    return acc;
+                                }, {} as Record<string, LabinovData[]>)
+                        ).map(([provinsi, items]) => (
+                                <>
+                                    <tr key={provinsi} style={{ backgroundColor: '#e9ecef', fontWeight: 'bold' }}>
+                                        <td style={{ padding: '10px', border: '1px solid #ddd' }} colSpan={9}>{provinsi}</td>
+                                    </tr>
+                                    {items.map((item, index) => (
+                                        <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}></td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.master_kabupaten.nama_kabkot}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DRUMP_UP}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DIAGNOSE}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DESAIN}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DELIVER_LAUNCHING}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DELIVER_MONITORING}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DISPLAY}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.HASIL_AKHIR}</td>
+                                        </tr>
+                                    ))}
+                                </>
                             ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <p style={{ textAlign: 'center' }}>Tidak ada inovasi yang ditemukan.</p>
-                )}
+                    </tbody>
+                </table>
 
-                {totalPages > 1 && (
-                    <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
-                        {currentPage > 1 && (
-                            <button
-                                onClick={() => handlePageChange(currentPage - 1)}
-                                style={{
-                                    padding: '5px 10px',
-                                    margin: '0 5px',
-                                    border: 'none',
-                                    borderRadius: '3px',
-                                    backgroundColor: '#f9f9f9',
-                                    color: '#000',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                }}
-                            >
-                                Prev
-                            </button>
-                        )}
-                        {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                            const pageNumber = currentPage > 3 ? currentPage - 2 + i : i + 1;
-                            return (
-                                <button
-                                    key={pageNumber}
-                                    onClick={() => handlePageChange(pageNumber)}
-                                    style={{
-                                        padding: '5px 10px',
-                                        margin: '0 5px',
-                                        border: 'none',
-                                        borderRadius: '3px',
-                                        backgroundColor: currentPage === pageNumber ? '#444' : '#f9f9f9',
-                                        color: currentPage === pageNumber ? '#fff' : '#000',
-                                        cursor: 'pointer',
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                    }}
-                                >
-                                    {pageNumber}
-                                </button>
-                            );
-                        })}
-                        {currentPage < totalPages && (
-                            <button
-                                onClick={() => handlePageChange(currentPage + 1)}
-                                style={{
-                                    padding: '5px 10px',
-                                    margin: '0 5px',
-                                    border: 'none',
-                                    borderRadius: '3px',
-                                    backgroundColor: '#f9f9f9',
-                                    color: '#000',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                }}
-                            >
-                                Next
-                            </button>
-                        )}
-                    </div>
-                )}
             </div>
         </div>
     </div>
