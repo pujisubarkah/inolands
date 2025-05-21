@@ -6,6 +6,7 @@ function DashboardInovasi() {
     
     interface LabinovData {
         Id_kabkot: number;
+        session: number;
         DRUMP_UP: string;
         DIAGNOSE: string;
         DESAIN: string;
@@ -31,6 +32,7 @@ function DashboardInovasi() {
                     .from('Labinov')
                     .select(`
                         Id_kabkot,
+                        session,
                         DRUMP_UP,
                         DIAGNOSE,
                         DESAIN,
@@ -122,7 +124,7 @@ function DashboardInovasi() {
                                     {items.map((item, index) => (
                                         <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}>
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}></td>
-                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.master_kabupaten.nama_kabkot}</td>
+                                            <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.master_kabupaten.nama_kabkot} {item.session}</td>
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DRUMP_UP}</td>
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DIAGNOSE}</td>
                                             <td style={{ padding: '10px', border: '1px solid #ddd' }}>{item.DESAIN}</td>
