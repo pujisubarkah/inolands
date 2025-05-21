@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import './InteractiveMap.css';
 import axios from "axios";
 
-function InteractiveMap() {
+function DashboardInovasi() {
     interface Inovasi {
         id: number;
         judul_inovasi: string;
@@ -35,7 +35,7 @@ function InteractiveMap() {
         }
     };
 
-    const filteredInovasi = (inovasiData ?? []).filter((inovasi) => {
+    const filteredInovasi = (inovasiData || []).filter((inovasi) => {
     return searchTerm === '' ||
         (inovasi.judul_inovasi?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (inovasi.tahun?.toString() || '').includes(searchTerm.toLowerCase()) ||
@@ -200,4 +200,4 @@ function InteractiveMap() {
 }
 
 
-export default InteractiveMap;
+export default DashboardInovasi;

@@ -3,11 +3,12 @@
 import React from 'react';
 import InteractiveMap from '../components/InteractiveMap';
 import ListInovasi from '../components/ListInovasi';
+import DashboardInovasi from '../components/DashboardInovasi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronLeft, faTable, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faChevronLeft, faTable, faGlobe, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const Cariinovasi = () => {
-  const [activeComponent, setActiveComponent] = React.useState('SebaranInovasi');
+  const [activeComponent, setActiveComponent] = React.useState('DashboardInovasi');
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const handleSebaranInovasiClick = () => {
@@ -16,6 +17,10 @@ const Cariinovasi = () => {
 
   const handleListInovasiClick = () => {
     setActiveComponent('ListInovasi');
+  };
+
+  const handleDashboardInovasiClick = () => {
+    setActiveComponent('DashboardInovasi');
   };
 
   const toggleSidebar = () => {
@@ -71,7 +76,7 @@ const Cariinovasi = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Sebaran Inovasi</span>}
             </button>
           </li>
-          <li>
+          <li style={{ marginBottom: '10px' }}>
             <button 
               onClick={handleListInovasiClick} 
               style={{
@@ -91,11 +96,32 @@ const Cariinovasi = () => {
               {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Daftar Inovasi</span>}
             </button>
           </li>
+          <li style={{ marginBottom: '10px' }}>
+            <button 
+              onClick={handleDashboardInovasiClick} 
+              style={{
+              backgroundColor: '#444',
+              color: '#fff',
+              border: 'none',
+              padding: '10px 20px',
+              cursor: 'pointer',
+              borderRadius: '5px',
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <FontAwesomeIcon icon={faChartBar} />
+              {isSidebarOpen && <span style={{ marginLeft: '10px' }}>Dashboard Inovasi</span>}
+            </button>
+          </li>
         </ul>
       </div>
       <div style={{ flex: 1, padding: '10px' }}>
         {activeComponent === 'SebaranInovasi' && <InteractiveMap />}
         {activeComponent === 'ListInovasi' && <ListInovasi />}
+        {activeComponent === 'DashboardInovasi' && <DashboardInovasi />}
       </div>
     </div>
   );
